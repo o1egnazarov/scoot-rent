@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.repository;
+package ru.noleg.scootrent.repository.util;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public abstract class BaseRepositoryImpl<T, ID> implements BaseRepository<T, ID> {
 
-    @PersistenceContext(unitName = "scoot-rent-unit")
+    @PersistenceContext
     protected EntityManager entityManager;
 
     protected abstract Class<T> getEntityClass();

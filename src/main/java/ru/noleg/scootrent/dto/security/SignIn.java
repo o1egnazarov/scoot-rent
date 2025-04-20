@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.dto;
+package ru.noleg.scootrent.dto.security;
 
 public record SignIn(
         String username,

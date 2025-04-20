@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.entity;
+package ru.noleg.scootrent.entity.user;
 
 public enum Role {
     ROLE_ADMIN,

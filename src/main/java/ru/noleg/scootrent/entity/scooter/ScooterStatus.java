@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.entity;
+package ru.noleg.scootrent.entity.scooter;
 
 public enum ScooterStatus {
     TAKEN,

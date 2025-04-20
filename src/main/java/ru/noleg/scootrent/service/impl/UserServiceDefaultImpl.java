@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.service;
+package ru.noleg.scootrent.service.impl;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.noleg.scootrent.entity.user.User;
 import ru.noleg.scootrent.exception.UserNotFoundException;
 import ru.noleg.scootrent.repository.UserRepository;
+import ru.noleg.scootrent.service.UserService;
 
 import java.util.List;
 
@@ -17,7 +18,6 @@ public class UserServiceDefaultImpl implements UserService {
     @PersistenceContext
     private EntityManager entityManager;
     private final UserRepository userRepository;
-
 
     public UserServiceDefaultImpl(UserRepository userRepository) {
         this.userRepository = userRepository;

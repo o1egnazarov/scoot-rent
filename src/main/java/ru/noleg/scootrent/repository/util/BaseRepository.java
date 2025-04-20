@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.repository;
+package ru.noleg.scootrent.repository.util;
 
 import java.util.List;
 import java.util.Optional;

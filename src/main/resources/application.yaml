@@ -1,1 +1,26 @@
-spring.application.name=scoot-rent
+spring:
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/scoot_rent_db
+    password: root
+    username: noleg
+    driver-class-name: org.postgresql.Driver
+
+  # TODO эти настройки игнорируются
+#  jpa:
+#    hibernate:
+#      ddl-auto: create-drop
+#    show-sql: true
+#    properties:
+#      hibernate:
+#        format_sql: true
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+#logging:
+#  level:
+#    org.hibernate.SQL: DEBUG
+#    org.hibernate.tool.schema: DEBUG

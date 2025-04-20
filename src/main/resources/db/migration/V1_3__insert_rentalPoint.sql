@@ -1,4 +1,4 @@
-INSERT INTO t_rental_point(c_id, c_address, c_latitude, c_longitude, c_title, parent_c_id)
+INSERT INTO t_rental_point(c_id, c_address, c_latitude, c_longitude, c_title, c_parent)
 VALUES -- Главные (родительские) точки проката
        (1, 'ул. Ленина, 23', 54.984856, 73.367790, 'Центральный прокат', NULL),
        (2, 'ул. Карла Маркса, 18', 54.987522, 73.369214, 'Прокат на Карла Маркса', NULL),

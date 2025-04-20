@@ -1,5 +1,6 @@
-package ru.noleg.scootrent.entity;
+package ru.noleg.scootrent.entity.rental;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,7 +30,7 @@ public class RentalPoint {
     @Column(name = "c_id")
     private Long id;
 
-    @Column(name = "c_title", nullable = false)
+    @Column(name = "c_title", nullable = false, length = 50)
     private String title;
 
     @Column(name = "c_latitude")
@@ -38,10 +39,13 @@ public class RentalPoint {
     @Column(name = "c_longitude")
     private Double longitude;
 
-    @Column(name = "c_address")
+    @Column(name = "c_address", length = 100)
     private String address;
 
     @ManyToOne
+    // TODO добавить адекватный parent_id
+    @JoinColumn(name = "c_parent")
+    @JsonIgnore
     private RentalPoint parent;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)

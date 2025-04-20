@@ -1,4 +1,4 @@
-package ru.noleg.autoworkshoprest.util.handler;
+package ru.noleg.scootrent.exception.handler;
 
 import java.util.List;
 

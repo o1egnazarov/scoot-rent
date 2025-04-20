@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.entity;
+package ru.noleg.scootrent.entity.scooter;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,7 +15,7 @@ public class ScooterModel {
     @Column(name = "c_id")
     private Long id;
 
-    @Column(name = "c_title", nullable = false)
+    @Column(name = "c_title", nullable = false, length = 50)
     private String title;
 
     @Column(name = "c_max_speed", nullable = false)
