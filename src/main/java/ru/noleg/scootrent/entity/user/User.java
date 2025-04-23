@@ -79,6 +79,10 @@ public class User {
         this.userSubscriptions = userSubscriptions;
     }
 
+    public void addRental(Rental rental) {
+        this.rentals.add(rental);
+    }
+
     public Long getId() {
         return id;
     }

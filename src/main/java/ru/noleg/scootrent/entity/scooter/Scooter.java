@@ -1,7 +1,5 @@
 package ru.noleg.scootrent.entity.scooter;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -10,8 +8,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -20,9 +16,7 @@ import ru.noleg.scootrent.entity.rental.RentalPoint;
 
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "t_scooter")
@@ -47,12 +41,9 @@ public class Scooter {
     @JoinColumn(name = "c_model", nullable = false)
     private ScooterModel model;
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinTable(name = "t_scooter_rental_point",
-            joinColumns = @JoinColumn(name = "c_scooter_id", referencedColumnName = "c_id"),
-            inverseJoinColumns = @JoinColumn(name = "c_rental_point_id", referencedColumnName = "c_id"))
-    @JsonIgnore
-    private Set<RentalPoint> rentalPoints = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "c_rental_point")
+    private RentalPoint rentalPoint;
 
     @OneToMany(mappedBy = "scooter")
     private List<Rental> rentals = new ArrayList<>();
@@ -65,15 +56,15 @@ public class Scooter {
                    ScooterStatus status,
                    Duration durationInUsed,
                    ScooterModel model,
-                   Set<RentalPoint> rentalPoints,
+                   RentalPoint rentalPoint,
                    List<Rental> rentals) {
         this.id = id;
         this.numberPlate = numberPlate;
         this.status = status;
         this.durationInUsed = durationInUsed;
         this.model = model;
-        this.rentalPoints = rentalPoints;
         this.rentals = rentals;
+        this.rentalPoint = rentalPoint;
     }
 
     public Long getId() {
@@ -116,13 +107,6 @@ public class Scooter {
         this.model = model;
     }
 
-    public Set<RentalPoint> getRentalPoints() {
-        return rentalPoints;
-    }
-
-    public void setRentalPoints(Set<RentalPoint> rentalPoints) {
-        this.rentalPoints = rentalPoints;
-    }
 
     public List<Rental> getRentals() {
         return rentals;
@@ -130,5 +114,13 @@ public class Scooter {
 
     public void setRentals(List<Rental> rentals) {
         this.rentals = rentals;
+    }
+
+    public RentalPoint getRentalPoint() {
+        return rentalPoint;
+    }
+
+    public void setRentalPoint(RentalPoint rentalPoint) {
+        this.rentalPoint = rentalPoint;
     }
 }

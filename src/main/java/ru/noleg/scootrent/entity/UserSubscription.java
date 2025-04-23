@@ -42,7 +42,8 @@ public class UserSubscription {
     @Column(name = "c_end_date")
     private LocalDateTime endDate;
 
-    public UserSubscription() {}
+    public UserSubscription() {
+    }
 
     public UserSubscription(Long id,
                             User user,
@@ -58,6 +59,10 @@ public class UserSubscription {
         this.minutesUsed = minutesUsed;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    public void addMinutes(long minutes) {
+        this.minutesUsed += (int) minutes;
     }
 
     public Long getId() {

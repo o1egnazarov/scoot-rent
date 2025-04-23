@@ -16,7 +16,7 @@ import ru.noleg.scootrent.entity.tariff.Tariff;
 import ru.noleg.scootrent.entity.user.User;
 import ru.noleg.scootrent.exception.BusinessLogicException;
 
-import java.time.Duration;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -44,12 +44,20 @@ public class Rental {
     @JoinColumn(name = "c_subscription_id")
     private UserSubscription subscription;
 
+    @ManyToOne
+    @JoinColumn(name = "c_start_point")
+    private RentalPoint startPoint;
+
+    @ManyToOne
+    @JoinColumn(name = "c_end_point")
+    private RentalPoint endPoint;
+
     @Column(name = "c_rental_status")
     @Enumerated(value = EnumType.STRING)
     private RentalStatus rentalStatus;
 
     @Column(name = "c_cost")
-    private Integer cost;
+    private BigDecimal cost;
 
     @Column(name = "c_start_time")
     private LocalDateTime startTime;
@@ -65,9 +73,11 @@ public class Rental {
                   Scooter scooter,
                   Tariff tariff,
                   UserSubscription subscription,
-                  Integer cost,
+                  BigDecimal cost,
                   LocalDateTime startTime,
-                  LocalDateTime endTime) {
+                  LocalDateTime endTime,
+                  RentalPoint startPoint,
+                  RentalPoint endPoint) {
         this.id = id;
         this.user = user;
         this.scooter = scooter;
@@ -76,22 +86,19 @@ public class Rental {
         this.cost = cost;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.startPoint = startPoint;
+        this.endPoint = endPoint;
     }
 
-    public void stopRental(RentalPoint endPoint, Integer pricePerUnit) {
+    public void stopRental(RentalPoint endPoint, BigDecimal cost) {
         if (this.rentalStatus == RentalStatus.COMPLETED) {
             throw new BusinessLogicException("Rental already completed.");
         }
 
         this.rentalStatus = RentalStatus.COMPLETED;
         this.endTime = LocalDateTime.now();
-        this.cost = this.calculateCost(pricePerUnit);
-    }
-
-    // TODO допилить
-    private Integer calculateCost(Integer pricePerUnit) {
-        long duration = Duration.between(startTime, endTime).toMinutes();
-        return pricePerUnit * (int) duration;
+        this.cost = cost;
+        this.endPoint = endPoint;
     }
 
     public Long getId() {
@@ -134,11 +141,11 @@ public class Rental {
         this.subscription = subscription;
     }
 
-    public Integer getCost() {
+    public BigDecimal getCost() {
         return cost;
     }
 
-    public void setCost(Integer cost) {
+    public void setCost(BigDecimal cost) {
         this.cost = cost;
     }
 
@@ -156,5 +163,29 @@ public class Rental {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
+    }
+
+    public RentalPoint getStartPoint() {
+        return startPoint;
+    }
+
+    public void setStartPoint(RentalPoint startPoint) {
+        this.startPoint = startPoint;
+    }
+
+    public RentalPoint getEndPoint() {
+        return endPoint;
+    }
+
+    public void setEndPoint(RentalPoint endPoint) {
+        this.endPoint = endPoint;
+    }
+
+    public RentalStatus getRentalStatus() {
+        return rentalStatus;
+    }
+
+    public void setRentalStatus(RentalStatus rentalStatus) {
+        this.rentalStatus = rentalStatus;
     }
 }

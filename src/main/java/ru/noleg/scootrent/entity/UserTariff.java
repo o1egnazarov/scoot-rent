@@ -12,6 +12,7 @@ import jakarta.persistence.Transient;
 import ru.noleg.scootrent.entity.tariff.Tariff;
 import ru.noleg.scootrent.entity.user.User;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -36,7 +37,7 @@ public class UserTariff {
 
     // TODO или BigDecimal
     @Transient
-    private Integer customPricePerUnit;
+    private BigDecimal customPricePerUnit;
 
     @Column(name = "c_valid_from")
     private LocalDateTime validFrom;
@@ -51,7 +52,7 @@ public class UserTariff {
                       User user,
                       Tariff tariff,
                       Integer discountPct,
-                      Integer customPricePerUnit,
+                      BigDecimal customPricePerUnit,
                       LocalDateTime validFrom,
                       LocalDateTime validUntil) {
         this.id = id;
@@ -95,11 +96,11 @@ public class UserTariff {
         this.discountPct = discountPct;
     }
 
-    public Integer getCustomPricePerUnit() {
+    public BigDecimal getCustomPricePerUnit() {
         return customPricePerUnit;
     }
 
-    public void setCustomPricePerUnit(Integer customPricePerUnit) {
+    public void setCustomPricePerUnit(BigDecimal customPricePerUnit) {
         this.customPricePerUnit = customPricePerUnit;
     }
 

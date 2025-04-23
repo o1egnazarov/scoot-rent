@@ -1,16 +1,11 @@
 package ru.noleg.scootrent.repository;
 
 import ru.noleg.scootrent.entity.UserTariff;
+import ru.noleg.scootrent.repository.util.BaseRepository;
 
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
-public interface UserTariffRepository {
-    Long save(UserTariff userTariff);
-
-    void removeById(Long id);
-
-    List<UserTariff> getAll();
-
-    Optional<UserTariff> findById(Long id);
+public interface UserTariffRepository extends BaseRepository<UserTariff, Long> {
+    Optional<UserTariff> findActiveTariffByUserAndTime(Long userId, LocalDateTime time);
 }

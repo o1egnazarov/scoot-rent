@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 public class Tariff {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "c_id")
     private Long id;
 
     @Column(name = "c_title", nullable = false, length = 50)
@@ -26,7 +28,7 @@ public class Tariff {
     private TariffType type;
 
     @Column(name = "c_price_per_unit", nullable = false)
-    private Integer pricePerUnit;
+    private BigDecimal pricePerUnit;
 
     @Column(name = "c_unlock_fee")
     private int unlockFee;
@@ -50,12 +52,13 @@ public class Tariff {
     @Column(name = "c_valid_untill")
     private LocalDateTime validUntil;
 
-    public Tariff() {}
+    public Tariff() {
+    }
 
     public Tariff(Long id,
                   String title,
                   TariffType type,
-                  Integer pricePerUnit,
+                  BigDecimal pricePerUnit,
                   int unlockFee,
                   DurationType durationUnit,
                   Integer durationValue,
@@ -74,6 +77,11 @@ public class Tariff {
         this.isActive = isActive;
         this.validFrom = validFrom;
         this.validUntil = validUntil;
+    }
+
+    public void deactivateTariff() {
+        this.isActive = false;
+        this.validUntil = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -100,11 +108,11 @@ public class Tariff {
         this.type = type;
     }
 
-    public Integer getPricePerUnit() {
+    public BigDecimal getPricePerUnit() {
         return pricePerUnit;
     }
 
-    public void setPricePerUnit(Integer pricePerUnit) {
+    public void setPricePerUnit(BigDecimal pricePerUnit) {
         this.pricePerUnit = pricePerUnit;
     }
 

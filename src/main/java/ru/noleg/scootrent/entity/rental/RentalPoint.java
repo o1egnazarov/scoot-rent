@@ -8,8 +8,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -51,10 +49,7 @@ public class RentalPoint {
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<RentalPoint> children = new ArrayList<>();
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinTable(name = "t_scooter_rental_point",
-            joinColumns = @JoinColumn(name = "c_rental_point_id", referencedColumnName = "c_id"),
-            inverseJoinColumns = @JoinColumn(name = "c_scooter_id", referencedColumnName = "c_id"))
+    @OneToMany(mappedBy = "rentalPoint")
     private Set<Scooter> scooters = new HashSet<>();
 
     public RentalPoint() {
