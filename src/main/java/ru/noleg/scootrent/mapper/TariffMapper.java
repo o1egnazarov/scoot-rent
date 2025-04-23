@@ -2,7 +2,8 @@ package ru.noleg.scootrent.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
-import ru.noleg.scootrent.dto.TariffDto;
+import ru.noleg.scootrent.dto.tariff.ShortTariffDto;
+import ru.noleg.scootrent.dto.tariff.TariffDto;
 import ru.noleg.scootrent.entity.tariff.Tariff;
 
 import java.util.List;
@@ -14,6 +15,8 @@ public interface TariffMapper extends BaseMapper<Tariff, TariffDto> {
 
     @Override
     TariffDto mapToDto(Tariff tariff);
+
+    ShortTariffDto mapToShortDto(Tariff tariff);
 
     @Override
     List<Tariff> mapToEntities(List<TariffDto> dtos);

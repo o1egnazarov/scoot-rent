@@ -2,7 +2,8 @@ package ru.noleg.scootrent.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
-import ru.noleg.scootrent.dto.RentalDto;
+import ru.noleg.scootrent.dto.rental.RentalDto;
+import ru.noleg.scootrent.dto.rental.ShortRentalDto;
 import ru.noleg.scootrent.entity.rental.Rental;
 
 import java.util.List;
@@ -15,6 +16,10 @@ public interface RentalMapper extends BaseMapper<Rental, RentalDto> {
 
     @Override
     RentalDto mapToDto(Rental rental);
+
+    ShortRentalDto mapToShortDto(Rental rental);
+
+    List<ShortRentalDto> mapToShorDtos(List<Rental> rentals);
 
     @Override
     List<Rental> mapToEntities(List<RentalDto> dtos);

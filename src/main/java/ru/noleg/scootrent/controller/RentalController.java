@@ -7,10 +7,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.noleg.scootrent.dto.RentalDto;
-import ru.noleg.scootrent.entity.rental.Rental;
+import ru.noleg.scootrent.dto.rental.RentalDto;
+import ru.noleg.scootrent.dto.rental.ShortRentalDto;
 import ru.noleg.scootrent.mapper.RentalMapper;
-import ru.noleg.scootrent.repository.RentalRepository;
 import ru.noleg.scootrent.service.RentalService;
 
 import java.util.List;
@@ -45,7 +44,7 @@ public class RentalController {
     }
 
     @GetMapping
-    public List<RentalDto> getRentals() {
-        return this.rentalMapper.mapToDtos(this.rentalService.getRentals());
+    public List<ShortRentalDto> getRentals() {
+        return this.rentalMapper.mapToShorDtos(this.rentalService.getRentals());
     }
 }

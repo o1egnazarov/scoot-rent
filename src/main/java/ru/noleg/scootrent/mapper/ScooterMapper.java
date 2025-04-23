@@ -8,6 +8,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import ru.noleg.scootrent.dto.scooter.ScooterDto;
 import ru.noleg.scootrent.dto.scooter.ScooterDtoWithModel;
+import ru.noleg.scootrent.dto.scooter.ShortScooterDtoWithModel;
 import ru.noleg.scootrent.dto.scooter.UpdateScooterDto;
 import ru.noleg.scootrent.entity.scooter.Scooter;
 
@@ -21,6 +22,9 @@ public interface ScooterMapper extends BaseMapper<Scooter, ScooterDto> {
 
     ScooterDtoWithModel mapToDtoWithModel(Scooter scooter);
 
+    @Mapping(source = "model.title", target = "modelTitle")
+    ShortScooterDtoWithModel mapToShortDtoWithModel(Scooter scooter);
+
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateScooterFromDto(UpdateScooterDto dto, @MappingTarget Scooter entity);
 
@@ -32,5 +36,5 @@ public interface ScooterMapper extends BaseMapper<Scooter, ScooterDto> {
     List<Scooter> mapToEntities(List<ScooterDto> dtos);
 
     @Override
-    List<ScooterDto> mapToDtos(List<Scooter> entities);
+    List<ScooterDto> mapToDtos(List<Scooter> scooters);
 }

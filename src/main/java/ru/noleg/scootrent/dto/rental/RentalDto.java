@@ -1,7 +1,8 @@
-package ru.noleg.scootrent.dto;
+package ru.noleg.scootrent.dto.rental;
 
 import ru.noleg.scootrent.dto.rentalPoint.RentalPointDto;
 import ru.noleg.scootrent.dto.scooter.ScooterDto;
+import ru.noleg.scootrent.dto.tariff.TariffDto;
 import ru.noleg.scootrent.dto.user.UserDto;
 import ru.noleg.scootrent.entity.UserSubscription;
 import ru.noleg.scootrent.entity.rental.RentalStatus;
@@ -21,3 +22,5 @@ public record RentalDto(Long id,
                         LocalDateTime startTime,
                         LocalDateTime endTime) {
 }
+
+

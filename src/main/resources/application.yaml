@@ -20,6 +20,10 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
 
+subscription:
+  overused:
+    pricePerMinute: 1,01
+
 #logging:
 #  level:
 #    org.hibernate.SQL: DEBUG

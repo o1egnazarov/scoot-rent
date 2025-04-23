@@ -27,7 +27,8 @@ public class Tariff {
     @Enumerated(value = EnumType.STRING)
     private TariffType type;
 
-    @Column(name = "c_price_per_unit", nullable = false)
+    // TODO я бы сделал строго поминутно ну пока так
+    @Column(name = "c_price_per_unit")
     private BigDecimal pricePerUnit;
 
     @Column(name = "c_unlock_fee")

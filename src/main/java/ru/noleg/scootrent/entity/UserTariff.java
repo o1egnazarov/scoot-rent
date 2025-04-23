@@ -35,7 +35,7 @@ public class UserTariff {
     @Column(name = "c_discount_pct")
     private Integer discountPct;
 
-    // TODO или BigDecimal
+    // TODO я бы сделал строго поминутно ну пока так
     @Transient
     private BigDecimal customPricePerUnit;
 

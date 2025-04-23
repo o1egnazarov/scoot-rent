@@ -1,6 +1,7 @@
 package ru.noleg.scootrent.entity.tariff;
 
 public enum TariffType {
-    PER_HOUR,
+    DEFAULT_TARIFF,
+    SPECIAL_TARIFF,
     SUBSCRIPTION
 }

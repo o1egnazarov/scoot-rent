@@ -1,10 +1,10 @@
 package ru.noleg.scootrent.service.impl;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.noleg.scootrent.entity.UserSubscription;
 import ru.noleg.scootrent.entity.UserTariff;
-import ru.noleg.scootrent.entity.tariff.DurationType;
 import ru.noleg.scootrent.entity.user.User;
 import ru.noleg.scootrent.exception.BusinessLogicException;
 import ru.noleg.scootrent.exception.ServiceException;
@@ -22,6 +22,9 @@ public class BillingServiceDefaultImpl implements BillingService {
 
     private final UserTariffRepository userTariffRepository;
     private final UserSubscriptionRepository userSubscriptionRepository;
+
+    @Value("${subscription.overused.pricePerMinute}")
+    private String extraPricePerMinute;
 
 
     public BillingServiceDefaultImpl(UserTariffRepository userTariffRepository,
@@ -76,7 +79,7 @@ public class BillingServiceDefaultImpl implements BillingService {
             userSubscription.addMinutes(rentalMinutes);
             this.userSubscriptionRepository.save(userSubscription);
             // TODO цена за лишнюю минуту (дорабоать)
-            return new BigDecimal(overused).multiply(new BigDecimal("1.01"));
+            return new BigDecimal(overused).multiply(new BigDecimal(this.extraPricePerMinute));
         }
     }
 
@@ -98,35 +101,11 @@ public class BillingServiceDefaultImpl implements BillingService {
         // теперь надо посчитать количество таких unit, использованных за поездку
         // все перемножить
 
-        long usedUnits = this.getUsedUnits(userTariff, rentalDuration);
-
-        BigDecimal result = price.multiply(new BigDecimal(usedUnits));
+        BigDecimal rentalMinutes = BigDecimal.valueOf(rentalDuration.toMinutes());
+        BigDecimal result = price.multiply(rentalMinutes);
 
         // плюс цена за старт (если есть)
         return result.add(new BigDecimal(userTariff.getTariff().getUnlockFee()));
     }
-
-    // TODO додумать надо
-    private long getUsedUnits(UserTariff userTariff, Duration rentalDuration) {
-        int unitValue = userTariff.getTariff().getDurationValue();
-
-
-        System.out.println("used unit: " + (long) Math.ceil((double) rentalDuration.toDays() / unitValue));
-
-        DurationType unit = userTariff.getTariff().getDurationUnit();
-        return switch (unit) {
-//            case MINUTES -> (long) Math.ceil((double) rentalDuration.toMinutes() / unitValue);
-            case HOUR -> (long) Math.ceil((double) rentalDuration.toHours() / unitValue);
-//            case DAY -> {
-//                long minutes = rentalDuration.toMinutes();
-//                BigDecimal hours = BigDecimal.valueOf(minutes).divide(BigDecimal.valueOf(60), 3, RoundingMode.HALF_DOWN);
-//
-//                long ceil = (long) Math.ceil(((double) rentalDuration.toDays()) / unitValue);
-//            }
-            case DAY -> (long) Math.ceil((double) rentalDuration.toDays() / unitValue);
-            case WEEK -> (long) Math.ceil((double) (rentalDuration.toDays() * 7) / unitValue);
-            case MONTH -> (long) Math.ceil((double) (rentalDuration.toDays() * 30) / unitValue);
-            case YEAR -> (long) Math.ceil((double) (rentalDuration.toDays() * 365) / unitValue);
-        };
-    }
+    // TODO убрал расчет по конкретным unit так как все будет по минутам
 }

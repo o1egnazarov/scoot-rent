@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.dto;
+package ru.noleg.scootrent.dto.tariff;
 
 import jakarta.validation.constraints.NotNull;
 

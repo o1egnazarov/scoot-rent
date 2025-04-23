@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.noleg.scootrent.dto.AssignTariffDto;
-import ru.noleg.scootrent.dto.SubscribeUserDto;
+import ru.noleg.scootrent.dto.tariff.AssignTariffDto;
+import ru.noleg.scootrent.dto.tariff.SubscribeUserDto;
 import ru.noleg.scootrent.service.SubscriptionService;
 import ru.noleg.scootrent.service.TariffAssignmentService;
 
