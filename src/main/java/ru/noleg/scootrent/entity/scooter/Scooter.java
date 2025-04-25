@@ -35,7 +35,7 @@ public class Scooter {
     private ScooterStatus status = ScooterStatus.FREE;
 
     @Column(name = "c_duration_in_used")
-    private Duration durationInUsed;
+    private Duration durationInUsed = Duration.ZERO;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "c_model", nullable = false)
@@ -65,6 +65,10 @@ public class Scooter {
         this.model = model;
         this.rentals = rentals;
         this.rentalPoint = rentalPoint;
+    }
+
+    public void addDurationInUsed(Duration usedTime) {
+        this.durationInUsed = this.durationInUsed.plus(usedTime);
     }
 
     public Long getId() {

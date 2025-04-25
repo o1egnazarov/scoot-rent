@@ -13,12 +13,12 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import ru.noleg.scootrent.entity.scooter.Scooter;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-// todo доработать с широтой и долготой
 @Entity
 @Table(name = "t_rental_point")
 public class RentalPoint {
@@ -31,19 +31,18 @@ public class RentalPoint {
     @Column(name = "c_title", nullable = false, length = 50)
     private String title;
 
-    @Column(name = "c_latitude")
-    private Double latitude;
+    @Column(name = "c_latitude", precision = 10, scale = 8)
+    private BigDecimal latitude;
 
-    @Column(name = "c_longitude")
-    private Double longitude;
+    @Column(name = "c_longitude", precision = 11, scale = 8)
+    private BigDecimal longitude;
 
     @Column(name = "c_address", length = 100)
     private String address;
 
     @ManyToOne
-    // TODO добавить адекватный parent_id
-    @JoinColumn(name = "c_parent")
     @JsonIgnore
+    @JoinColumn(name = "c_parent")
     private RentalPoint parent;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
@@ -57,8 +56,8 @@ public class RentalPoint {
 
     public RentalPoint(Long id,
                        String title,
-                       Double latitude,
-                       Double longitude,
+                       BigDecimal latitude,
+                       BigDecimal longitude,
                        String address,
                        RentalPoint parent,
                        List<RentalPoint> children,
@@ -89,19 +88,19 @@ public class RentalPoint {
         this.title = title;
     }
 
-    public Double getLatitude() {
+    public BigDecimal getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Double latitude) {
+    public void setLatitude(BigDecimal latitude) {
         this.latitude = latitude;
     }
 
-    public Double getLongitude() {
+    public BigDecimal getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Double longitude) {
+    public void setLongitude(BigDecimal longitude) {
         this.longitude = longitude;
     }
 

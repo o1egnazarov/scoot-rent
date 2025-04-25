@@ -8,6 +8,7 @@ import ru.noleg.scootrent.exception.ServiceException;
 import ru.noleg.scootrent.repository.RentalPointRepository;
 import ru.noleg.scootrent.service.RentalPointService;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -29,9 +30,6 @@ public class RentalPointServiceDefaultImpl implements RentalPointService {
             }
 
             return this.rentalPointRepository.save(rentalPoint).getId();
-        } catch (NotFoundException e) {
-
-            throw e;
         } catch (Exception e) {
 
             throw new ServiceException("Error on add rental point.", e);
@@ -83,12 +81,15 @@ public class RentalPointServiceDefaultImpl implements RentalPointService {
     }
 
     @Override
-    public RentalPoint getRentalPointByCoordinates(double latitude, double longitude) {
+    public RentalPoint getRentalPointByCoordinates(BigDecimal latitude, BigDecimal longitude) {
         // TODO кидать ли тут исключение
+        // TODO сравнивать через compareTo
         return this.rentalPointRepository.findAll()
                 .stream()
-                .filter(rp -> rp.getLatitude().equals(latitude) && rp.getLongitude().equals(longitude))
+                .filter(rp -> rp.getLatitude().compareTo(latitude) == 0 && rp.getLongitude().compareTo(longitude) == 0)
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(
+                        () -> new NotFoundException("No rental point at the coordinates: " + latitude + ", " + longitude)
+                );
     }
 }

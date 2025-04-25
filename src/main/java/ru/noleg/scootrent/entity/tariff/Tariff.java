@@ -32,6 +32,7 @@ public class Tariff {
     private BigDecimal pricePerUnit;
 
     @Column(name = "c_unlock_fee")
+    // TODO тут бы тоже сделал BigDecimal
     private int unlockFee;
 
     @Column(name = "c_duration_unit")

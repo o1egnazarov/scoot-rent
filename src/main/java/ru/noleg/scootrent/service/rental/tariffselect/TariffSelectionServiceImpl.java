@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.service.impl;
+package ru.noleg.scootrent.service.rental.tariffselect;
 
 import org.springframework.stereotype.Service;
 import ru.noleg.scootrent.entity.UserSubscription;
@@ -9,21 +9,20 @@ import ru.noleg.scootrent.exception.ServiceException;
 import ru.noleg.scootrent.repository.TariffRepository;
 import ru.noleg.scootrent.repository.UserSubscriptionRepository;
 import ru.noleg.scootrent.repository.UserTariffRepository;
-import ru.noleg.scootrent.service.TariffSelectionService;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
-public class TariffSelectionServiceDefaultImpl implements TariffSelectionService {
+public class TariffSelectionServiceImpl implements TariffSelectionService {
 
     private final TariffRepository tariffRepository;
     private final UserTariffRepository userTariffRepository;
     private final UserSubscriptionRepository userSubscriptionRepository;
 
-    public TariffSelectionServiceDefaultImpl(TariffRepository tariffRepository,
-                                             UserTariffRepository userTariffRepository,
-                                             UserSubscriptionRepository userSubscriptionRepository) {
+    public TariffSelectionServiceImpl(TariffRepository tariffRepository,
+                                      UserTariffRepository userTariffRepository,
+                                      UserSubscriptionRepository userSubscriptionRepository) {
         this.tariffRepository = tariffRepository;
         this.userTariffRepository = userTariffRepository;
         this.userSubscriptionRepository = userSubscriptionRepository;

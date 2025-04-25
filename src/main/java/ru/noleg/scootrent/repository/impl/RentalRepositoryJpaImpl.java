@@ -36,4 +36,20 @@ public class RentalRepositoryJpaImpl extends BaseRepositoryImpl<Rental, Long> im
             throw new RepositoryException("Repository error on fetch user by username", e);
         }
     }
+
+    @Override
+    public List<Rental> findRentalsForUser(Long userId) {
+        try {
+
+            final String ql = "SELECT r FROM Rental r WHERE r.user.id = :userId";
+
+            TypedQuery<Rental> query = entityManager.createQuery(ql, Rental.class);
+            query.setParameter("userId", userId);
+
+            List<Rental> resultList = query.getResultList();
+            return resultList == null ? List.of() : resultList;
+        } catch (Exception e) {
+            throw new RepositoryException("Repository error on fetch user by username", e);
+        }
+    }
 }

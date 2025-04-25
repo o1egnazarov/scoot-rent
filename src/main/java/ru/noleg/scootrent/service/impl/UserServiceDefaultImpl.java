@@ -1,7 +1,5 @@
 package ru.noleg.scootrent.service.impl;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,8 +13,6 @@ import java.util.List;
 @Service
 public class UserServiceDefaultImpl implements UserService {
 
-    @PersistenceContext
-    private EntityManager entityManager;
     private final UserRepository userRepository;
 
     public UserServiceDefaultImpl(UserRepository userRepository) {

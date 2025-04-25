@@ -1,6 +1,7 @@
 package ru.noleg.scootrent.exception.handler;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-public record ExceptionResponse(int status, List<String> message, String cause) {
+public record ExceptionResponse(LocalDateTime timestamp, List<String> message, String cause) {
 }

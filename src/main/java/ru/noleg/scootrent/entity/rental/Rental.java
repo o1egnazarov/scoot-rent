@@ -17,6 +17,7 @@ import ru.noleg.scootrent.entity.user.User;
 import ru.noleg.scootrent.exception.BusinessLogicException;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Entity
@@ -62,6 +63,12 @@ public class Rental {
     @Column(name = "c_start_time")
     private LocalDateTime startTime;
 
+    @Column(name = "c_last_pause_time")
+    private LocalDateTime lastPauseTime;
+
+    @Column(name = "c_duration_in_pause")
+    private Duration durationInPause = Duration.ZERO;
+
     @Column(name = "c_end_time")
     private LocalDateTime endTime;
 
@@ -88,6 +95,10 @@ public class Rental {
         this.endTime = endTime;
         this.startPoint = startPoint;
         this.endPoint = endPoint;
+    }
+
+    public void addPause(Duration pause){
+        this.durationInPause = this.durationInPause.plus(pause);
     }
 
     public void stopRental(RentalPoint endPoint, BigDecimal cost) {
@@ -187,5 +198,21 @@ public class Rental {
 
     public void setRentalStatus(RentalStatus rentalStatus) {
         this.rentalStatus = rentalStatus;
+    }
+
+    public LocalDateTime getLastPauseTime() {
+        return lastPauseTime;
+    }
+
+    public void setLastPauseTime(LocalDateTime lastResumeTime) {
+        this.lastPauseTime = lastResumeTime;
+    }
+
+    public Duration getDurationInPause() {
+        return durationInPause;
+    }
+
+    public void setDurationInPause(Duration durationInPause) {
+        this.durationInPause = durationInPause;
     }
 }

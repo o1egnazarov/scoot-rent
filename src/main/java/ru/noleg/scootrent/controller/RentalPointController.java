@@ -18,6 +18,7 @@ import ru.noleg.scootrent.entity.rental.RentalPoint;
 import ru.noleg.scootrent.mapper.RentalPointMapper;
 import ru.noleg.scootrent.service.RentalPointService;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -79,8 +80,8 @@ public class RentalPointController {
     }
 
     @GetMapping("/coordinates")
-    public ResponseEntity<RentalPointDto> getRentalPointByCoordinates(@RequestParam("latitude") double latitude,
-                                                                      @RequestParam("longitude") double longitude) {
+    public ResponseEntity<RentalPointDto> getRentalPointByCoordinates(@RequestParam("latitude") BigDecimal latitude,
+                                                                      @RequestParam("longitude") BigDecimal longitude) {
         RentalPoint rentalPoint = this.rentalPointService.getRentalPointByCoordinates(latitude, longitude);
         return ResponseEntity
                 .status(HttpStatus.OK)

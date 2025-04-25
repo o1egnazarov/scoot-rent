@@ -1,12 +1,14 @@
 package ru.noleg.scootrent.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.noleg.scootrent.entity.UserTariff;
 import ru.noleg.scootrent.entity.tariff.Tariff;
 import ru.noleg.scootrent.entity.tariff.TariffType;
 import ru.noleg.scootrent.entity.user.User;
 import ru.noleg.scootrent.exception.BusinessLogicException;
 import ru.noleg.scootrent.exception.NotFoundException;
+import ru.noleg.scootrent.exception.ServiceException;
 import ru.noleg.scootrent.exception.UserNotFoundException;
 import ru.noleg.scootrent.repository.TariffRepository;
 import ru.noleg.scootrent.repository.UserRepository;
@@ -32,33 +34,43 @@ public class TariffAssignmentServiceDefaultImpl implements TariffAssignmentServi
     }
 
     @Override
+    @Transactional
     public void assignTariffToUser(Long userId, Long tariffId, BigDecimal customPrice, Integer discountPct) {
-        User user = this.userRepository.findById(userId).orElseThrow(
-                () -> new UserNotFoundException("User with id " + userId + " not found.")
-        );
+        try {
 
-        Tariff tariff = this.tariffRepository.findById(tariffId).orElseThrow(
-                () -> new NotFoundException("Tariff with id " + tariffId + " not found.")
-        );
+            User user = this.userRepository.findById(userId).orElseThrow(
+                    () -> new UserNotFoundException("User with id " + userId + " not found.")
+            );
 
-        if (!tariff.getActive()) {
-            throw new BusinessLogicException("Tariff with id: " + tariffId + " is not active.");
+            Tariff tariff = this.tariffRepository.findById(tariffId).orElseThrow(
+                    () -> new NotFoundException("Tariff with id " + tariffId + " not found.")
+            );
+
+            if (!tariff.getActive()) {
+                throw new BusinessLogicException("Tariff with id: " + tariffId + " is not active.");
+            }
+
+            if (tariff.getType() == TariffType.SUBSCRIPTION) {
+                throw new BusinessLogicException("Tariff with id: " + tariffId + " is a subscription.");
+            }
+
+            UserTariff userTariff = new UserTariff(
+                    null,
+                    user,
+                    tariff,
+                    discountPct,
+                    customPrice,
+                    LocalDateTime.now(),
+                    tariff.getValidUntil()
+            );
+
+            this.userTariffRepository.save(userTariff);
+        } catch (UserNotFoundException | NotFoundException | BusinessLogicException e) {
+
+            throw e;
+        } catch (Exception e) {
+
+            throw new ServiceException("Error in assign tariff to user.");
         }
-
-        if (tariff.getType() == TariffType.SUBSCRIPTION) {
-            throw new BusinessLogicException("Tariff with id: " + tariffId + " is a subscription.");
-        }
-
-        UserTariff userTariff = new UserTariff(
-                null,
-                user,
-                tariff,
-                discountPct,
-                customPrice,
-                LocalDateTime.now(),
-                tariff.getValidUntil()
-        );
-
-        this.userTariffRepository.save(userTariff);
     }
 }

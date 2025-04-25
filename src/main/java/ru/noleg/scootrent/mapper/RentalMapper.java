@@ -19,7 +19,7 @@ public interface RentalMapper extends BaseMapper<Rental, RentalDto> {
 
     ShortRentalDto mapToShortDto(Rental rental);
 
-    List<ShortRentalDto> mapToShorDtos(List<Rental> rentals);
+    List<ShortRentalDto> mapToShortDtos(List<Rental> rentals);
 
     @Override
     List<Rental> mapToEntities(List<RentalDto> dtos);

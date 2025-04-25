@@ -1,5 +1,4 @@
 spring:
-
   datasource:
     url: jdbc:postgresql://localhost:5432/scoot_rent_db
     password: root
@@ -7,13 +6,13 @@ spring:
     driver-class-name: org.postgresql.Driver
 
   # TODO эти настройки игнорируются
-#  jpa:
-#    hibernate:
-#      ddl-auto: create-drop
-#    show-sql: true
-#    properties:
-#      hibernate:
-#        format_sql: true
+  #  jpa:
+  #    hibernate:
+  #      ddl-auto: create-drop
+  #    show-sql: true
+  #    properties:
+  #      hibernate:
+  #        format_sql: true
 
   flyway:
     enabled: true
@@ -22,9 +21,14 @@ spring:
 
 subscription:
   overused:
-    pricePerMinute: 1,01
+    pricePerMinute: 1.01
 
-#logging:
-#  level:
-#    org.hibernate.SQL: DEBUG
-#    org.hibernate.tool.schema: DEBUG
+logging:
+  level:
+    ru.noleg.scootrent: DEBUG
+    org.hibernate.SQL: ERROR
+    org.hibernate.tool.schema: ERROR
+  file:
+    name: logs/scootrent.log
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

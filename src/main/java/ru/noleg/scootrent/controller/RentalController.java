@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.noleg.scootrent.dto.rental.RentalDto;
 import ru.noleg.scootrent.dto.rental.ShortRentalDto;
 import ru.noleg.scootrent.mapper.RentalMapper;
 import ru.noleg.scootrent.service.RentalService;
@@ -35,9 +34,25 @@ public class RentalController {
                 .body(this.rentalService.startRental(userId, scooterId, rentalPointId));
     }
 
+    @PostMapping("/pause")
+    public ResponseEntity<Void> pauseRental(@RequestParam("rentalId") Long rentalId) {
+        this.rentalService.pauseRental(rentalId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .build();
+    }
+
+    @PostMapping("/resume")
+    public ResponseEntity<Void> resumeRental(@RequestParam("rentalId") Long rentalId) {
+        this.rentalService.resumeRental(rentalId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .build();
+    }
+
     @PostMapping("/end")
     public ResponseEntity<Void> endRental(@RequestParam("rentalId") Long rentalId,
-                                           @RequestParam("rentalPointId") Long rentalPointId) {
+                                          @RequestParam("rentalPointId") Long rentalPointId) {
 
         this.rentalService.stopRental(rentalId, rentalPointId);
         return ResponseEntity.status(HttpStatus.OK).build();
@@ -45,6 +60,6 @@ public class RentalController {
 
     @GetMapping
     public List<ShortRentalDto> getRentals() {
-        return this.rentalMapper.mapToShorDtos(this.rentalService.getRentals());
+        return this.rentalMapper.mapToShortDtos(this.rentalService.getRentals());
     }
 }

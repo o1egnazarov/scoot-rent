@@ -9,10 +9,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.noleg.scootrent.dto.rental.ShortRentalDto;
 import ru.noleg.scootrent.dto.user.UpdateUserDto;
 import ru.noleg.scootrent.dto.user.UserDto;
+import ru.noleg.scootrent.entity.rental.Rental;
 import ru.noleg.scootrent.entity.user.User;
+import ru.noleg.scootrent.mapper.RentalMapper;
 import ru.noleg.scootrent.mapper.UserMapper;
+import ru.noleg.scootrent.service.RentalService;
 import ru.noleg.scootrent.service.UserService;
 
 import java.util.List;
@@ -22,10 +26,17 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final RentalService rentalService;
+    private final RentalMapper rentalMapper;
     private final UserMapper userMapper;
 
-    public UserController(UserService userService, UserMapper userMapper) {
+    public UserController(UserService userService,
+                          RentalService rentalService,
+                          RentalMapper rentalMapper,
+                          UserMapper userMapper) {
         this.userService = userService;
+        this.rentalService = rentalService;
+        this.rentalMapper = rentalMapper;
         this.userMapper = userMapper;
     }
 
@@ -40,6 +51,14 @@ public class UserController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.userMapper.mapToDto(updateUser));
+    }
+
+    @GetMapping("/{id}") // будет браться из security context
+    public ResponseEntity<List<ShortRentalDto>> getRentalHistory(@PathVariable("id") Long id) {
+        List<Rental> rentals = this.rentalService.getRentalHistoryForUser(id);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(this.rentalMapper.mapToShortDtos(rentals));
     }
 
     // TODO убрать в admin панель

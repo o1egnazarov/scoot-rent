@@ -8,6 +8,7 @@ import ru.noleg.scootrent.entity.UserSubscription;
 import ru.noleg.scootrent.entity.rental.RentalStatus;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 public record ShortRentalDto(Long id,
@@ -20,5 +21,7 @@ public record ShortRentalDto(Long id,
                              RentalStatus rentalStatus,
                              BigDecimal cost,
                              LocalDateTime startTime,
-                             LocalDateTime endTime) {
+                             LocalDateTime endTime,
+                             LocalDateTime lastPauseTime,
+                             Duration durationInPause) {
 }

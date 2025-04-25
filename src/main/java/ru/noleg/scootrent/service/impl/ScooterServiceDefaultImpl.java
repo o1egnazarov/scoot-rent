@@ -82,7 +82,7 @@ public class ScooterServiceDefaultImpl implements ScooterService {
             return this.scooterRepository.findAll();
         } catch (Exception e) {
 
-            throw new ServiceException("Error on getAllScooters.", e);
+            throw new ServiceException("Error on get all scooters.", e);
         }
     }
 }
