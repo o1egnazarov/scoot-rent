@@ -5,7 +5,8 @@ import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 
-public record UpdateRentalPointDto(@NotBlank @Size(min = 5, max = 100) String address,
+public record CreateRentalPointDto(Long id,
+                                   @NotBlank @Size(min = 5, max = 100) String address,
                                    @NotBlank @Size(min = 5, max = 50) String title,
                                    BigDecimal latitude,
                                    BigDecimal longitude,

@@ -53,7 +53,7 @@ public class UserController {
                 .body(this.userMapper.mapToDto(updateUser));
     }
 
-    @GetMapping("/{id}") // будет браться из security context
+    @GetMapping("/{id}/rentalHistory") // будет браться из security context
     public ResponseEntity<List<ShortRentalDto>> getRentalHistory(@PathVariable("id") Long id) {
         List<Rental> rentals = this.rentalService.getRentalHistoryForUser(id);
         return ResponseEntity

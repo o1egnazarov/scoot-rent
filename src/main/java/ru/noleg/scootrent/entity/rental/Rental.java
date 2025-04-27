@@ -80,6 +80,7 @@ public class Rental {
                   Scooter scooter,
                   Tariff tariff,
                   UserSubscription subscription,
+                  RentalStatus status,
                   BigDecimal cost,
                   LocalDateTime startTime,
                   LocalDateTime endTime,
@@ -90,6 +91,7 @@ public class Rental {
         this.scooter = scooter;
         this.tariff = tariff;
         this.subscription = subscription;
+        this.rentalStatus = status;
         this.cost = cost;
         this.startTime = startTime;
         this.endTime = endTime;

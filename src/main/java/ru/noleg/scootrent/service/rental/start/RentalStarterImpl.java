@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.noleg.scootrent.entity.rental.Rental;
 import ru.noleg.scootrent.entity.rental.RentalPoint;
+import ru.noleg.scootrent.entity.rental.RentalStatus;
 import ru.noleg.scootrent.entity.scooter.Scooter;
 import ru.noleg.scootrent.entity.scooter.ScooterStatus;
 import ru.noleg.scootrent.entity.user.User;
@@ -74,6 +75,7 @@ public class RentalStarterImpl implements RentalStarter {
                     scooter,
                     tariff.tariff(),
                     tariff.subscription(),
+                    RentalStatus.ACTIVE,
                     null,
                     LocalDateTime.now(),
                     null,

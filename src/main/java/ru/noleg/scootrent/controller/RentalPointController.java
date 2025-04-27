@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.noleg.scootrent.dto.rentalPoint.RentalPointDto;
+import ru.noleg.scootrent.dto.rentalPoint.CreateRentalPointDto;
+import ru.noleg.scootrent.dto.rentalPoint.DetailRentalPointDto;
 import ru.noleg.scootrent.dto.rentalPoint.UpdateRentalPointDto;
 import ru.noleg.scootrent.entity.rental.RentalPoint;
 import ru.noleg.scootrent.mapper.RentalPointMapper;
@@ -34,16 +35,16 @@ public class RentalPointController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> addRentalPoint(@Valid @RequestBody RentalPointDto rentalPointDto) {
-        RentalPoint rentalPoint = this.rentalPointMapper.mapToEntity(rentalPointDto);
+    public ResponseEntity<Long> addRentalPoint(@Valid @RequestBody CreateRentalPointDto createRentalPointDto) {
+        RentalPoint rentalPoint = this.rentalPointMapper.mapToEntity(createRentalPointDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(this.rentalPointService.add(rentalPoint));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RentalPointDto> updateRentalPoint(@PathVariable("id") Long id,
-                                                            @Valid @RequestBody UpdateRentalPointDto rentalPointDto) {
+    public ResponseEntity<DetailRentalPointDto> updateRentalPoint(@PathVariable("id") Long id,
+                                                                  @Valid @RequestBody UpdateRentalPointDto rentalPointDto) {
 
         RentalPoint rentalPoint = this.rentalPointService.getRentalPoint(id);
 
@@ -59,20 +60,21 @@ public class RentalPointController {
     public ResponseEntity<Void> deleteRentalPoint(@PathVariable("id") Long id) {
         this.rentalPointService.delete(id);
         return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
+                .status(HttpStatus.OK)
                 .build();
     }
 
     @GetMapping
-    public ResponseEntity<List<RentalPointDto>> getAllRentalPoints() {
-        List<RentalPointDto> rentalPointDtos = this.rentalPointMapper.mapToDtos(this.rentalPointService.getAllRentalPoints());
+    // TODO доработать чтобы не дублировалось
+    public ResponseEntity<List<DetailRentalPointDto>> getAllRentalPoints() {
+        List<DetailRentalPointDto> detailRentalPointDtos = this.rentalPointMapper.mapToDtos(this.rentalPointService.getAllRentalPoints());
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(rentalPointDtos);
+                .body(detailRentalPointDtos);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RentalPointDto> getRentalPointById(@PathVariable("id") Long id) {
+    public ResponseEntity<DetailRentalPointDto> getRentalPointById(@PathVariable("id") Long id) {
         RentalPoint rentalPoint = this.rentalPointService.getRentalPoint(id);
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -80,8 +82,8 @@ public class RentalPointController {
     }
 
     @GetMapping("/coordinates")
-    public ResponseEntity<RentalPointDto> getRentalPointByCoordinates(@RequestParam("latitude") BigDecimal latitude,
-                                                                      @RequestParam("longitude") BigDecimal longitude) {
+    public ResponseEntity<DetailRentalPointDto> getRentalPointByCoordinates(@RequestParam("latitude") BigDecimal latitude,
+                                                                            @RequestParam("longitude") BigDecimal longitude) {
         RentalPoint rentalPoint = this.rentalPointService.getRentalPointByCoordinates(latitude, longitude);
         return ResponseEntity
                 .status(HttpStatus.OK)

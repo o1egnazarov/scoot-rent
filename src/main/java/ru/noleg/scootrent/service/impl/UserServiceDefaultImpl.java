@@ -32,8 +32,9 @@ public class UserServiceDefaultImpl implements UserService {
             return this.userRepository.findById(id).orElseThrow(
                     () -> new UserNotFoundException("User with id: " + id + " not found.")
             );
+        } catch (UserNotFoundException e) {
+            throw e;
         } catch (Exception e) {
-
             throw new ServiceException("Error on get user", e);
         }
     }
@@ -44,7 +45,6 @@ public class UserServiceDefaultImpl implements UserService {
 
             return this.userRepository.findAll();
         } catch (Exception e) {
-
             throw new ServiceException("Error on get users", e);
         }
     }

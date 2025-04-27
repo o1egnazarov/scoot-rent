@@ -1,5 +1,7 @@
 package ru.noleg.scootrent.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,8 +26,10 @@ public class AdminScooterController {
     }
 
     @GetMapping("/{scooterId}/history")
-    public List<ShortRentalDto> getRentalHistory(@PathVariable Long scooterId) {
+    public ResponseEntity<List<ShortRentalDto>> getRentalHistory(@PathVariable Long scooterId) {
         List<Rental> rentalHistory = rentalService.getRentalHistoryForScooter(scooterId);
-        return this.rentalMapper.mapToShortDtos(rentalHistory);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(this.rentalMapper.mapToShortDtos(rentalHistory));
     }
 }

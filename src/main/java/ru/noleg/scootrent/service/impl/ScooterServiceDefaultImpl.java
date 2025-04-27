@@ -34,10 +34,8 @@ public class ScooterServiceDefaultImpl implements ScooterService {
 
             return this.scooterRepository.save(scooter).getId();
         } catch (NotFoundException e) {
-
             throw e;
         } catch (Exception e) {
-
             throw new ServiceException("Error on add scooter.", e);
         }
     }
@@ -47,14 +45,14 @@ public class ScooterServiceDefaultImpl implements ScooterService {
     public void delete(Long id) {
         try {
 
-            // TODO ничего не делаем, правильно ли так
             if (!this.scooterRepository.existsById(id)) {
-                return;
+                throw new NotFoundException("Scooter with id " + id + " not found.");
             }
 
             this.scooterRepository.delete(id);
+        } catch (NotFoundException e) {
+            throw e;
         } catch (Exception e) {
-
             throw new ServiceException("Error on delete scooter.", e);
         }
     }
@@ -67,10 +65,8 @@ public class ScooterServiceDefaultImpl implements ScooterService {
                     () -> new NotFoundException("Scooter with id " + id + " not found")
             );
         } catch (NotFoundException e) {
-
             throw e;
         } catch (Exception e) {
-
             throw new ServiceException("Error on get scooter.", e);
         }
     }
@@ -81,7 +77,6 @@ public class ScooterServiceDefaultImpl implements ScooterService {
 
             return this.scooterRepository.findAll();
         } catch (Exception e) {
-
             throw new ServiceException("Error on get all scooters.", e);
         }
     }

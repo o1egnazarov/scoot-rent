@@ -56,7 +56,7 @@ public class ScooterController {
     public ResponseEntity<Void> deleteScooter(@PathVariable("id") Long id) {
         this.scooterService.delete(id);
         return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
+                .status(HttpStatus.OK)
                 .build();
     }
 

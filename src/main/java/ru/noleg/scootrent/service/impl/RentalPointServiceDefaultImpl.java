@@ -25,10 +25,6 @@ public class RentalPointServiceDefaultImpl implements RentalPointService {
     public Long add(RentalPoint rentalPoint) {
         try {
 
-            if (rentalPoint.getId().equals(rentalPoint.getParent().getId())) {
-                throw new ServiceException("Rental point id equals parent id.");
-            }
-
             return this.rentalPointRepository.save(rentalPoint).getId();
         } catch (Exception e) {
 
@@ -41,14 +37,14 @@ public class RentalPointServiceDefaultImpl implements RentalPointService {
     public void delete(Long id) {
         try {
 
-            // TODO ничего не делаем, правильно ли так
             if (!this.rentalPointRepository.existsById(id)) {
-                return;
+                throw new NotFoundException("Rental point with id: " + id + " not found.");
             }
 
             this.rentalPointRepository.delete(id);
+        } catch (NotFoundException e) {
+            throw e;
         } catch (Exception e) {
-
             throw new ServiceException("Error on delete rental point.", e);
         }
     }
@@ -61,10 +57,8 @@ public class RentalPointServiceDefaultImpl implements RentalPointService {
                     () -> new NotFoundException("Rental point with id " + id + " not found")
             );
         } catch (NotFoundException e) {
-
             throw e;
         } catch (Exception e) {
-
             throw new ServiceException("Error on get rentalPoint.", e);
         }
     }
@@ -75,11 +69,11 @@ public class RentalPointServiceDefaultImpl implements RentalPointService {
 
             return this.rentalPointRepository.findAll();
         } catch (Exception e) {
-
             throw new ServiceException("Error on getAllRentalPoints.", e);
         }
     }
 
+    // TODO пока в планах
     @Override
     public List<RentalPoint> getRentalPointsByDistrict(Long countryId, Long cityId, Long districtId) {
         // TODO мб в сервисе сделать
@@ -88,16 +82,19 @@ public class RentalPointServiceDefaultImpl implements RentalPointService {
 
     @Override
     public RentalPoint getRentalPointByCoordinates(BigDecimal latitude, BigDecimal longitude) {
-        // TODO кидать ли тут исключение
-        // TODO сравнивать через compareTo
-        return this.rentalPointRepository.findAll()
-                .stream()
-                .filter(rp -> rp.getLatitude().compareTo(latitude) == 0 && rp.getLongitude().compareTo(longitude) == 0)
-                .findFirst()
-                .orElseThrow(
-                        () -> new NotFoundException("No rental point at the coordinates: " + latitude + ", " + longitude)
-                );
+        try {
+            return this.rentalPointRepository.findAll()
+                    .stream()
+                    .filter(rp -> rp.getLatitude().compareTo(latitude) == 0 &&
+                            rp.getLongitude().compareTo(longitude) == 0)
+                    .findFirst()
+                    .orElseThrow(
+                            () -> new NotFoundException("No rental point at the coordinates: " + latitude + ", " + longitude)
+                    );
+        } catch (NotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ServiceException("Error on get rentalPoint by coordinates.", e);
+        }
     }
-
-
 }
