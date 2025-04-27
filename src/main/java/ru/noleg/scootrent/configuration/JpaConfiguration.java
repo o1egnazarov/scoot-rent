@@ -54,7 +54,7 @@ public class JpaConfiguration {
         factory.setDataSource(dataSource());
 
         Map<String, Object> props = new HashMap<>();
-        props.put("hibernate.hbm2ddl.auto", "update");
+        props.put("hibernate.hbm2ddl.auto", "validate");
         props.put("hibernate.show_sql", "true");
         props.put("hibernate.format_sql", "true");
 

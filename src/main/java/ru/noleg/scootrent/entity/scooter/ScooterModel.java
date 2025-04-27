@@ -11,7 +11,7 @@ import jakarta.persistence.Table;
 @Table(name = "t_scooter_model")
 public class ScooterModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "c_id")
     private Long id;
 

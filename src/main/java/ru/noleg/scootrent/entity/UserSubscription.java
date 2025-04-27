@@ -19,7 +19,8 @@ import java.time.LocalDateTime;
 public class UserSubscription {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "c_id")
     private Long id;
 
     @ManyToOne(optional = false)
@@ -27,7 +28,7 @@ public class UserSubscription {
     private User user;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "c_tarif_id")
+    @JoinColumn(name = "c_tariff_id")
     private Tariff tariff;
 
     @Column(name = "c_minute_usage_limit")

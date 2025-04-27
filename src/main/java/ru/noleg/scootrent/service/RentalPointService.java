@@ -1,5 +1,6 @@
 package ru.noleg.scootrent.service;
 
+import ru.noleg.scootrent.entity.rental.Rental;
 import ru.noleg.scootrent.entity.rental.RentalPoint;
 
 import java.math.BigDecimal;
@@ -13,6 +14,8 @@ public interface RentalPointService {
     RentalPoint getRentalPoint(Long id);
 
     List<RentalPoint> getAllRentalPoints();
+
+    List<RentalPoint> getRentalPointsByDistrict(Long countryId, Long cityId ,Long districtId);
 
     RentalPoint getRentalPointByCoordinates(BigDecimal latitude, BigDecimal longitude);
 }

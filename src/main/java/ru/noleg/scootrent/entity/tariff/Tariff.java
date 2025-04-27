@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Table(name = "t_tariff")
 public class Tariff {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "c_id")
     private Long id;
 
@@ -45,13 +45,13 @@ public class Tariff {
     @Column(name = "c_sub_duration_days")
     private Integer subDurationDays;
 
-    @Column(name = "с_is_active")
+    @Column(name = "c_is_active")
     private Boolean isActive = true;
 
     @Column(name = "c_valid_from")
     private LocalDateTime validFrom;
 
-    @Column(name = "c_valid_untill")
+    @Column(name = "c_valid_until")
     private LocalDateTime validUntil;
 
     public Tariff() {

@@ -24,7 +24,7 @@ import java.util.Set;
 public class RentalPoint {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "c_id")
     private Long id;
 

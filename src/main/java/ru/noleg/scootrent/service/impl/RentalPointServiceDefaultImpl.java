@@ -81,6 +81,12 @@ public class RentalPointServiceDefaultImpl implements RentalPointService {
     }
 
     @Override
+    public List<RentalPoint> getRentalPointsByDistrict(Long countryId, Long cityId, Long districtId) {
+        // TODO мб в сервисе сделать
+        return this.rentalPointRepository.findAllRentalPointByDistrict(countryId, cityId, districtId);
+    }
+
+    @Override
     public RentalPoint getRentalPointByCoordinates(BigDecimal latitude, BigDecimal longitude) {
         // TODO кидать ли тут исключение
         // TODO сравнивать через compareTo
@@ -92,4 +98,6 @@ public class RentalPointServiceDefaultImpl implements RentalPointService {
                         () -> new NotFoundException("No rental point at the coordinates: " + latitude + ", " + longitude)
                 );
     }
+
+
 }

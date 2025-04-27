@@ -1,13 +1,34 @@
+version: "3.8"
+
+# TODO в будущем добавить .env
 services:
+
+  app:
+    image: scootrent-app:latest
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/scoot_rent_db_docker_test
+      SPRING_DATASOURCE_USERNAME: noleg
+      SPRING_DATASOURCE_PASSWORD: root
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   postgres:
     image: postgres:16
-    container_name: scoot-rent
+    restart: always
     environment:
       POSTGRES_USER: noleg
       POSTGRES_PASSWORD: root
-      POSTGRES_DB: scoot_rent_db
+      POSTGRES_DB: scoot_rent_db_docker_test
     ports:
       - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "psql -U noleg -d scoot_rent_db_docker_test -c 'SELECT 1'"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

@@ -21,6 +21,7 @@ public class UserTariff {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "c_id")
     private Long id;
 
     // TODO подумать над двойной или одинарной связью
@@ -42,7 +43,7 @@ public class UserTariff {
     @Column(name = "c_valid_from")
     private LocalDateTime validFrom;
 
-    @Column(name = "c_valid_untill")
+    @Column(name = "c_valid_until")
     private LocalDateTime validUntil;
 
     public UserTariff() {
