@@ -1,7 +1,5 @@
 package ru.noleg.scootrent.service;
 
-import ru.noleg.scootrent.dto.ScooterRentalHistoryDto;
-import ru.noleg.scootrent.dto.rental.ShortRentalDto;
 import ru.noleg.scootrent.entity.rental.Rental;
 
 import java.util.List;
