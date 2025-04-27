@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.noleg.scootrent.dto.tariff.TariffDto;
 import ru.noleg.scootrent.entity.tariff.Tariff;
 import ru.noleg.scootrent.mapper.TariffMapper;
-import ru.noleg.scootrent.service.TariffService;
+import ru.noleg.scootrent.service.tariff.TariffService;
 
 import java.util.List;
 

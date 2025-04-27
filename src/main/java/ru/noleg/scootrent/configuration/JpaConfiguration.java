@@ -19,11 +19,10 @@ import java.util.Map;
 @Configuration
 @EnableTransactionManagement
 @EnableConfigurationProperties(DataSourceProperties.class)
-// TODO @ConfigurationProperties - посмотреть про это
 public class JpaConfiguration {
 
     public static final String PACKAGE_TO_SCAN_ENTITY = "ru.noleg.scootrent.entity";
-    // TODO разобраться с этим этим
+
     private final DataSourceProperties dataSourceProperties;
 
     public JpaConfiguration(DataSourceProperties dataSourceProperties) {

@@ -10,10 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.noleg.scootrent.dto.tariff.AssignTariffDto;
 import ru.noleg.scootrent.dto.tariff.SubscribeUserDto;
-import ru.noleg.scootrent.service.SubscriptionService;
-import ru.noleg.scootrent.service.TariffAssignmentService;
+import ru.noleg.scootrent.service.tariff.SubscriptionService;
+import ru.noleg.scootrent.service.tariff.TariffAssignmentService;
 
-// TODO есть ли смысл отдельный контроллер делать
 @RestController
 @RequestMapping("/api/tariffs/assign")
 public class TariffAssignController {

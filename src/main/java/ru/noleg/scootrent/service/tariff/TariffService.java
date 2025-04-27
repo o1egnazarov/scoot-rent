@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.service;
+package ru.noleg.scootrent.service.tariff;
 
 import ru.noleg.scootrent.entity.tariff.Tariff;
 
@@ -12,8 +12,6 @@ public interface TariffService {
     List<Tariff> getAllTariffs();
 
     List<Tariff> getActiveTariffs();
-
-    Tariff updateTariff(Long id, Tariff tariff);
 
     void deactivateTariff(Long id);
 }

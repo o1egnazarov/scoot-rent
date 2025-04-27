@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.service.impl;
+package ru.noleg.scootrent.service.tariff;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +13,6 @@ import ru.noleg.scootrent.exception.UserNotFoundException;
 import ru.noleg.scootrent.repository.TariffRepository;
 import ru.noleg.scootrent.repository.UserRepository;
 import ru.noleg.scootrent.repository.UserSubscriptionRepository;
-import ru.noleg.scootrent.service.SubscriptionService;
 
 import java.time.LocalDateTime;
 
@@ -69,10 +68,8 @@ public class SubscriptionServiceDefaultImpl implements SubscriptionService {
 
             this.userSubscriptionRepository.save(userSubscription);
         } catch (UserNotFoundException | NotFoundException | BusinessLogicException e) {
-
             throw e;
         } catch (Exception e) {
-
             throw new ServiceException("Error on subscribe user.");
         }
     }

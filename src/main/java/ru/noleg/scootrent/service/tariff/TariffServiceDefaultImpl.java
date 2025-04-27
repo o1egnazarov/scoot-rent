@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.service.impl;
+package ru.noleg.scootrent.service.tariff;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -6,7 +6,6 @@ import ru.noleg.scootrent.entity.tariff.Tariff;
 import ru.noleg.scootrent.exception.NotFoundException;
 import ru.noleg.scootrent.exception.ServiceException;
 import ru.noleg.scootrent.repository.TariffRepository;
-import ru.noleg.scootrent.service.TariffService;
 
 import java.util.List;
 
@@ -26,7 +25,6 @@ public class TariffServiceDefaultImpl implements TariffService {
 
             return this.tariffRepository.save(tariff).getId();
         } catch (Exception e) {
-
             throw new ServiceException("Error on create tariff", e);
         }
     }
@@ -39,10 +37,8 @@ public class TariffServiceDefaultImpl implements TariffService {
                     () -> new NotFoundException("Tariff with id " + id + " not found")
             );
         } catch (NotFoundException e) {
-
             throw e;
         } catch (Exception e) {
-
             throw new ServiceException("Error on get tariff", e);
         }
     }
@@ -71,11 +67,6 @@ public class TariffServiceDefaultImpl implements TariffService {
     }
 
     @Override
-    public Tariff updateTariff(Long id, Tariff tariff) {
-        return null;
-    }
-
-    @Override
     @Transactional
     public void deactivateTariff(Long id) {
         try {
@@ -84,7 +75,6 @@ public class TariffServiceDefaultImpl implements TariffService {
             tariff.deactivateTariff();
             this.tariffRepository.save(tariff);
         } catch (Exception e) {
-
             throw new ServiceException("Error on deactivate tariff", e);
         }
     }

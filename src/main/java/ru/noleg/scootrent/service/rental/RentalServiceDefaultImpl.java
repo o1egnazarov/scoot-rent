@@ -44,7 +44,6 @@ public class RentalServiceDefaultImpl implements RentalService {
 
     @Override
     @Transactional
-    // TODO нужно ли в двух местах @Transactional
     public Long startRental(Long userId, Long scooterId, Long rentalPointId) {
         return this.rentalStarter.startRental(userId, scooterId, rentalPointId);
     }

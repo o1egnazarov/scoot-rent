@@ -99,7 +99,7 @@ public class Rental {
         this.endPoint = endPoint;
     }
 
-    public void addPause(Duration pause){
+    public void addPause(Duration pause) {
         this.durationInPause = this.durationInPause.plus(pause);
     }
 

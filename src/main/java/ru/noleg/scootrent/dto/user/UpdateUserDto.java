@@ -8,11 +8,8 @@ import ru.noleg.scootrent.validator.annotation.NullablePhone;
 
 import java.time.LocalDate;
 
-// TODO разобраться с валидацией
-public record UpdateUserDto(
-        @CorrectUsername @Size(max = 50) String username,
-        @Email @Size(max = 50) String email,
-        @NullablePhone @Size(max = 16) String phone,
-        @Adult LocalDate dateOfBirth
-) {
+public record UpdateUserDto(@CorrectUsername @Size(max = 50) String username,
+                            @Email @Size(max = 50) String email,
+                            @NullablePhone @Size(max = 16) String phone,
+                            @Adult LocalDate dateOfBirth) {
 }
