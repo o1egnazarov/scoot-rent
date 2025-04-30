@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -11,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.BatchSize;
 import ru.noleg.scootrent.entity.scooter.Scooter;
 
 import java.math.BigDecimal;
@@ -40,15 +42,17 @@ public class RentalPoint {
     @Column(name = "c_address", length = 100)
     private String address;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name = "c_parent")
     private RentalPoint parent;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    @BatchSize(size = 20)
     private List<RentalPoint> children = new ArrayList<>();
 
     @OneToMany(mappedBy = "rentalPoint")
+    @BatchSize(size = 20)
     private Set<Scooter> scooters = new HashSet<>();
 
     public RentalPoint() {

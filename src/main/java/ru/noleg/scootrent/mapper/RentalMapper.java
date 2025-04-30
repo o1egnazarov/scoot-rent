@@ -15,7 +15,7 @@ public interface RentalMapper extends BaseMapper<Rental, RentalDto> {
     Rental mapToEntity(RentalDto rentalDto);
 
     @Override
-    RentalDto mapToDto(Rental rental);
+    RentalDto mapToDetailDto(Rental rental);
 
     ShortRentalDto mapToShortDto(Rental rental);
 
@@ -25,5 +25,5 @@ public interface RentalMapper extends BaseMapper<Rental, RentalDto> {
     List<Rental> mapToEntities(List<RentalDto> dtos);
 
     @Override
-    List<RentalDto> mapToDtos(List<Rental> entities);
+    List<RentalDto> mapToDetailDtos(List<Rental> entities);
 }

@@ -30,11 +30,11 @@ public interface ScooterMapper extends BaseMapper<Scooter, ScooterDto> {
 
     @Override
     @Mapping(target = "modelId", source = "model.id")
-    ScooterDto mapToDto(Scooter scooter);
+    ScooterDto mapToDetailDto(Scooter scooter);
 
     @Override
     List<Scooter> mapToEntities(List<ScooterDto> dtos);
 
     @Override
-    List<ScooterDto> mapToDtos(List<Scooter> scooters);
+    List<ScooterDto> mapToDetailDtos(List<Scooter> scooters);
 }

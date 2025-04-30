@@ -9,4 +9,6 @@ public interface RentalRepository extends BaseRepository<Rental, Long> {
     boolean isActiveRentalByUserId(Long userId);
 
     List<Rental> findRentalsForUser(Long userId);
+
+    List<Rental> findRentalForScooter(Long scooterId);
 }

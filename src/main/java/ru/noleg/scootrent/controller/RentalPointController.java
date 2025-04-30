@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.noleg.scootrent.dto.rentalPoint.CreateRentalPointDto;
 import ru.noleg.scootrent.dto.rentalPoint.DetailRentalPointDto;
+import ru.noleg.scootrent.dto.rentalPoint.RentalPointDto;
 import ru.noleg.scootrent.dto.rentalPoint.UpdateRentalPointDto;
 import ru.noleg.scootrent.entity.rental.RentalPoint;
 import ru.noleg.scootrent.mapper.RentalPointMapper;
@@ -53,7 +54,7 @@ public class RentalPointController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(this.rentalPointMapper.mapToDto(rentalPoint));
+                .body(this.rentalPointMapper.mapToDetailDto(rentalPoint));
     }
 
     @DeleteMapping("/{id}")
@@ -66,8 +67,8 @@ public class RentalPointController {
 
     @GetMapping
     // TODO доработать чтобы не дублировалось
-    public ResponseEntity<List<DetailRentalPointDto>> getAllRentalPoints() {
-        List<DetailRentalPointDto> detailRentalPointDtos = this.rentalPointMapper.mapToDtos(this.rentalPointService.getAllRentalPoints());
+    public ResponseEntity<List<RentalPointDto>> getAllRentalPoints() {
+        List<RentalPointDto> detailRentalPointDtos = this.rentalPointMapper.mapToDtos(this.rentalPointService.getAllRentalPoints());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(detailRentalPointDtos);
@@ -78,7 +79,7 @@ public class RentalPointController {
         RentalPoint rentalPoint = this.rentalPointService.getRentalPoint(id);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(this.rentalPointMapper.mapToDto(rentalPoint));
+                .body(this.rentalPointMapper.mapToDetailDto(rentalPoint));
     }
 
     @GetMapping("/coordinates")
@@ -87,6 +88,6 @@ public class RentalPointController {
         RentalPoint rentalPoint = this.rentalPointService.getRentalPointByCoordinates(latitude, longitude);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(this.rentalPointMapper.mapToDto(rentalPoint));
+                .body(this.rentalPointMapper.mapToDetailDto(rentalPoint));
     }
 }

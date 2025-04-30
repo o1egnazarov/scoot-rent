@@ -20,11 +20,11 @@ public interface UserMapper extends BaseMapper<User, UserDto> {
     void updateUserFromDto(UpdateUserDto dto, @MappingTarget User entity);
 
     @Override
-    UserDto mapToDto(User user);
+    UserDto mapToDetailDto(User user);
 
     @Override
     List<User> mapToEntities(List<UserDto> dtos);
 
     @Override
-    List<UserDto> mapToDtos(List<User> entities);
+    List<UserDto> mapToDetailDtos(List<User> entities);
 }

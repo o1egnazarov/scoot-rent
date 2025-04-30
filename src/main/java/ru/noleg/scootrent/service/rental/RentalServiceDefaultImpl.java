@@ -3,11 +3,8 @@ package ru.noleg.scootrent.service.rental;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.noleg.scootrent.entity.rental.Rental;
-import ru.noleg.scootrent.entity.scooter.Scooter;
-import ru.noleg.scootrent.exception.NotFoundException;
 import ru.noleg.scootrent.exception.ServiceException;
 import ru.noleg.scootrent.repository.RentalRepository;
-import ru.noleg.scootrent.repository.ScooterRepository;
 import ru.noleg.scootrent.service.RentalService;
 import ru.noleg.scootrent.service.rental.pause.RentalPauser;
 import ru.noleg.scootrent.service.rental.resume.RentalResumer;
@@ -20,7 +17,6 @@ import java.util.List;
 public class RentalServiceDefaultImpl implements RentalService {
 
     private final RentalRepository rentalRepository;
-    private final ScooterRepository scooterRepository;
     private final RentalStarter rentalStarter;
     private final RentalPauser rentalPauser;
     private final RentalResumer rentalResumer;
@@ -28,13 +24,11 @@ public class RentalServiceDefaultImpl implements RentalService {
 
 
     public RentalServiceDefaultImpl(RentalRepository rentalRepository,
-                                    ScooterRepository scooterRepository,
                                     RentalStarter rentalStarter,
                                     RentalPauser rentalPauser,
                                     RentalResumer rentalResumer,
                                     RentalStopper rentalStopper) {
         this.rentalRepository = rentalRepository;
-        this.scooterRepository = scooterRepository;
         this.rentalStarter = rentalStarter;
         this.rentalPauser = rentalPauser;
         this.rentalResumer = rentalResumer;
@@ -75,11 +69,7 @@ public class RentalServiceDefaultImpl implements RentalService {
     public List<Rental> getRentalHistoryForScooter(Long scooterId) {
         try {
 
-            Scooter scooter = this.scooterRepository.findById(scooterId).orElseThrow(
-                    () -> new NotFoundException("Scooter with id: " + scooterId + " not found.")
-            );
-
-            return scooter.getRentals();
+            return this.rentalRepository.findRentalForScooter(scooterId);
         } catch (Exception e) {
             throw new ServiceException("Error on get rental history for scooter", e);
         }

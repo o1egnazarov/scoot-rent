@@ -1,4 +1,6 @@
 package ru.noleg.scootrent.dto.tariff;
 
-public record SubscribeUserDto(Long userId) {
+import jakarta.validation.constraints.NotNull;
+
+public record SubscribeUserDto(@NotNull Long userId) {
 }

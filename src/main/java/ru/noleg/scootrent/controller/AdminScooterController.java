@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.noleg.scootrent.dto.rental.ShortRentalDto;
+import ru.noleg.scootrent.dto.rental.ScooterRentalHistoryDto;
 import ru.noleg.scootrent.entity.rental.Rental;
-import ru.noleg.scootrent.mapper.RentalMapper;
+import ru.noleg.scootrent.mapper.RentalHistoryMapper;
 import ru.noleg.scootrent.service.RentalService;
 
 import java.util.List;
@@ -18,18 +18,18 @@ import java.util.List;
 public class AdminScooterController {
 
     private final RentalService rentalService;
-    private final RentalMapper rentalMapper;
+    private final RentalHistoryMapper rentalHistoryMapper;
 
-    public AdminScooterController(RentalService rentalService, RentalMapper rentalMapper) {
+    public AdminScooterController(RentalService rentalService, RentalHistoryMapper rentalHistoryMapper) {
         this.rentalService = rentalService;
-        this.rentalMapper = rentalMapper;
+        this.rentalHistoryMapper = rentalHistoryMapper;
     }
 
     @GetMapping("/{scooterId}/history")
-    public ResponseEntity<List<ShortRentalDto>> getRentalHistory(@PathVariable Long scooterId) {
-        List<Rental> rentalHistory = rentalService.getRentalHistoryForScooter(scooterId);
+    public ResponseEntity<List<ScooterRentalHistoryDto>> getRentalHistory(@PathVariable("scooterId") Long scooterId) {
+        List<Rental> rentalHistory = this.rentalService.getRentalHistoryForScooter(scooterId);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(this.rentalMapper.mapToShortDtos(rentalHistory));
+                .body(this.rentalHistoryMapper.mapToScooterRentalDtos(rentalHistory));
     }
 }

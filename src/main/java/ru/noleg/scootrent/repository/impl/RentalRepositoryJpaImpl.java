@@ -41,7 +41,15 @@ public class RentalRepositoryJpaImpl extends BaseRepositoryImpl<Rental, Long> im
     public List<Rental> findRentalsForUser(Long userId) {
         try {
 
-            final String ql = "SELECT r FROM Rental r WHERE r.user.id = :userId";
+            final String ql = """
+                    SELECT DISTINCT r FROM Rental r
+                    LEFT JOIN FETCH r.startPoint
+                    LEFT JOIN FETCH r.endPoint
+                    LEFT JOIN FETCH r.tariff
+                    LEFT JOIN FETCH r.scooter
+                    LEFT JOIN FETCH r.user
+                    WHERE r.user.id = :userId
+                    """;
 
             TypedQuery<Rental> query = entityManager.createQuery(ql, Rental.class);
             query.setParameter("userId", userId);
@@ -49,7 +57,31 @@ public class RentalRepositoryJpaImpl extends BaseRepositoryImpl<Rental, Long> im
             List<Rental> resultList = query.getResultList();
             return resultList == null ? List.of() : resultList;
         } catch (Exception e) {
-            throw new RepositoryException("Repository error on fetch user by username", e);
+            throw new RepositoryException("Repository error on get rental history for user.", e);
+        }
+    }
+
+    @Override
+    public List<Rental> findRentalForScooter(Long scooterId) {
+        try {
+
+            final String ql = """
+                    SELECT DISTINCT r FROM Rental r
+                    LEFT JOIN FETCH r.startPoint
+                    LEFT JOIN FETCH r.endPoint
+                    LEFT JOIN FETCH r.tariff
+                    LEFT JOIN FETCH r.scooter
+                    LEFT JOIN FETCH r.user
+                    WHERE r.scooter.id = :scooterId
+                    """;
+
+            TypedQuery<Rental> query = entityManager.createQuery(ql, Rental.class);
+            query.setParameter("scooterId", scooterId);
+
+            List<Rental> resultList = query.getResultList();
+            return resultList == null ? List.of() : resultList;
+        } catch (Exception e) {
+            throw new RepositoryException("Repository error on get rental history for scooter.", e);
         }
     }
 }

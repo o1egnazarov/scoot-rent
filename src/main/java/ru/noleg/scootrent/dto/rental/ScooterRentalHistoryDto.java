@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.dto.scooter;
+package ru.noleg.scootrent.dto.rental;
 
 import ru.noleg.scootrent.entity.rental.RentalStatus;
 

@@ -53,7 +53,7 @@ public class RentalPointServiceDefaultImpl implements RentalPointService {
     public RentalPoint getRentalPoint(Long id) {
         try {
 
-            return this.rentalPointRepository.findById(id).orElseThrow(
+            return this.rentalPointRepository.findRentalPointById(id).orElseThrow(
                     () -> new NotFoundException("Rental point with id " + id + " not found")
             );
         } catch (NotFoundException e) {
@@ -66,8 +66,7 @@ public class RentalPointServiceDefaultImpl implements RentalPointService {
     @Override
     public List<RentalPoint> getAllRentalPoints() {
         try {
-
-            return this.rentalPointRepository.findAll();
+            return this.rentalPointRepository.findAllRentalPoints();
         } catch (Exception e) {
             throw new ServiceException("Error on getAllRentalPoints.", e);
         }
@@ -81,20 +80,10 @@ public class RentalPointServiceDefaultImpl implements RentalPointService {
     }
 
     @Override
+    // TODO возможно добавить кеширование
     public RentalPoint getRentalPointByCoordinates(BigDecimal latitude, BigDecimal longitude) {
-        try {
-            return this.rentalPointRepository.findAll()
-                    .stream()
-                    .filter(rp -> rp.getLatitude().compareTo(latitude) == 0 &&
-                            rp.getLongitude().compareTo(longitude) == 0)
-                    .findFirst()
-                    .orElseThrow(
-                            () -> new NotFoundException("No rental point at the coordinates: " + latitude + ", " + longitude)
-                    );
-        } catch (NotFoundException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new ServiceException("Error on get rentalPoint by coordinates.", e);
-        }
+        return this.rentalPointRepository.findRentalPointByCoordinates(latitude, longitude).orElseThrow(
+                () -> new NotFoundException("Rental point with latitude: " + latitude + " and longitude: " + longitude + " not found.")
+        );
     }
 }

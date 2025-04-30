@@ -48,6 +48,6 @@ public class TariffController {
         List<Tariff> tariffs = this.tariffService.getActiveTariffs();
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(this.tariffMapper.mapToDtos(tariffs));
+                .body(this.tariffMapper.mapToDetailDtos(tariffs));
     }
 }

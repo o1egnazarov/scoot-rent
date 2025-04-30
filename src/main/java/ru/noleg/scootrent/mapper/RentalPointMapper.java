@@ -8,6 +8,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import ru.noleg.scootrent.dto.rentalPoint.CreateRentalPointDto;
 import ru.noleg.scootrent.dto.rentalPoint.DetailRentalPointDto;
+import ru.noleg.scootrent.dto.rentalPoint.RentalPointDto;
 import ru.noleg.scootrent.dto.rentalPoint.ShortRentalPointDto;
 import ru.noleg.scootrent.dto.rentalPoint.UpdateRentalPointDto;
 import ru.noleg.scootrent.entity.rental.RentalPoint;
@@ -27,13 +28,19 @@ public interface RentalPointMapper extends BaseMapper<RentalPoint, DetailRentalP
 
     @Override
     @Mapping(target = "totalCount", expression = "java(scooters.size())")
-    DetailRentalPointDto mapToDto(RentalPoint rentalPoint);
+    DetailRentalPointDto mapToDetailDto(RentalPoint rentalPoint);
+
+    RentalPointDto mapToDto(RentalPoint rentalPoint);
+
+    List<RentalPointDto> mapToDtos(List<RentalPoint> rentalPoints);
 
     ShortRentalPointDto mapToShortDto(RentalPoint rentalPoint);
+
+
 
     @Override
     List<RentalPoint> mapToEntities(List<DetailRentalPointDto> dtos);
 
     @Override
-    List<DetailRentalPointDto> mapToDtos(List<RentalPoint> entities);
+    List<DetailRentalPointDto> mapToDetailDtos(List<RentalPoint> entities);
 }

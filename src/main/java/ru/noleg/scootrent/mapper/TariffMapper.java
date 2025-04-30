@@ -14,7 +14,7 @@ public interface TariffMapper extends BaseMapper<Tariff, TariffDto> {
     Tariff mapToEntity(TariffDto tariffDto);
 
     @Override
-    TariffDto mapToDto(Tariff tariff);
+    TariffDto mapToDetailDto(Tariff tariff);
 
     ShortTariffDto mapToShortDto(Tariff tariff);
 
@@ -22,5 +22,5 @@ public interface TariffMapper extends BaseMapper<Tariff, TariffDto> {
     List<Tariff> mapToEntities(List<TariffDto> dtos);
 
     @Override
-    List<TariffDto> mapToDtos(List<Tariff> entities);
+    List<TariffDto> mapToDetailDtos(List<Tariff> entities);
 }

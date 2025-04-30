@@ -49,7 +49,7 @@ public class ScooterController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(this.scooterMapper.mapToDto(scooter));
+                .body(this.scooterMapper.mapToDetailDto(scooter));
     }
 
     @DeleteMapping("/{id}")
@@ -62,7 +62,7 @@ public class ScooterController {
 
     @GetMapping
     public ResponseEntity<List<ScooterDto>> getAllScooters() {
-        List<ScooterDto> scooterDtos = this.scooterMapper.mapToDtos(this.scooterService.getAllScooters());
+        List<ScooterDto> scooterDtos = this.scooterMapper.mapToDetailDtos(this.scooterService.getAllScooters());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(scooterDtos);
