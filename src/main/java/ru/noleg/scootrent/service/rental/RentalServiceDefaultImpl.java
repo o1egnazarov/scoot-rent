@@ -62,7 +62,7 @@ public class RentalServiceDefaultImpl implements RentalService {
 
     @Override
     public List<Rental> getRentals() {
-        return this.rentalRepository.findAll();
+        return this.rentalRepository.findAllRentals();
     }
 
     @Override

@@ -10,11 +10,8 @@ import ru.noleg.scootrent.entity.tariff.TariffType;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Schema(description = "Тариф")
-public record TariffDto(
-        @Schema(description = "Id тарифа", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
-        Long id,
-
+@Schema(description = "Обновление тарифа")
+public record UpdateTariffDto(
         @Schema(description = "Название тарифа", example = "Бесплатные выходные") @NotBlank @Size(min = 5, max = 50)
         String title,
 

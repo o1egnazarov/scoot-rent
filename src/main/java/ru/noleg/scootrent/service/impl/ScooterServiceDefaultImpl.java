@@ -29,7 +29,7 @@ public class ScooterServiceDefaultImpl implements ScooterService {
 
             if (!this.scooterModelRepository.existsById(scooter.getModel().getId())) {
 
-                throw new NotFoundException("Scooter model with id " + scooter.getModel().getId() + " not found");
+                throw new NotFoundException("Scooter model with id " + scooter.getModel().getId() + " not found.");
             }
 
             return this.scooterRepository.save(scooter).getId();
@@ -62,7 +62,7 @@ public class ScooterServiceDefaultImpl implements ScooterService {
         try {
 
             return this.scooterRepository.findById(id).orElseThrow(
-                    () -> new NotFoundException("Scooter with id " + id + " not found")
+                    () -> new NotFoundException("Scooter with id " + id + " not found.")
             );
         } catch (NotFoundException e) {
             throw e;

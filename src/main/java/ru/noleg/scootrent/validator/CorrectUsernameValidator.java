@@ -2,6 +2,7 @@ package ru.noleg.scootrent.validator;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import org.springframework.stereotype.Component;
 import ru.noleg.scootrent.validator.annotation.CorrectUsername;
 
 public class CorrectUsernameValidator implements ConstraintValidator<CorrectUsername, String> {

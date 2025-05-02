@@ -7,7 +7,6 @@ import ru.noleg.scootrent.validator.annotation.Adult;
 
 import java.time.LocalDate;
 
-@Component
 public class AdultValidator implements ConstraintValidator<Adult, LocalDate> {
 
     public static final int AGE_OF_MAJORITY = 18;

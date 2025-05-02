@@ -1,8 +1,10 @@
 package ru.noleg.scootrent.exception.handler;
 
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.noleg.scootrent.exception.BusinessLogicException;
@@ -37,6 +39,16 @@ public class GlobalExceptionHandler {
         return this.buildResponse(HttpStatus.I_AM_A_TEAPOT, List.of(ex.getMessage()), ex.getCause());
     }
 
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ExceptionResponse> handleMissingRequestParamException(MissingServletRequestParameterException ex) {
+        return this.buildResponse(HttpStatus.BAD_REQUEST, List.of(ex.getMessage()), ex.getCause());
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ExceptionResponse> handleConstraintViolationException(ConstraintViolationException ex) {
+        return this.buildResponse(HttpStatus.BAD_REQUEST, List.of(ex.getMessage()), ex.getCause());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         List<String> errors = ex.getBindingResult()
@@ -45,12 +57,12 @@ public class GlobalExceptionHandler {
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .toList();
 
-        return this.buildResponse(HttpStatus.BAD_REQUEST, errors, ex);
+        return this.buildResponse(HttpStatus.BAD_REQUEST, errors, ex.getCause());
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ExceptionResponse> handleAccessDeniedException(AccessDeniedException ex) {
-        return this.buildResponse(HttpStatus.FORBIDDEN, List.of(ex.getMessage()), ex);
+        return this.buildResponse(HttpStatus.FORBIDDEN, List.of(ex.getMessage()), ex.getCause());
     }
 
     @ExceptionHandler(Exception.class)

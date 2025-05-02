@@ -1,8 +1,13 @@
 package ru.noleg.scootrent.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +28,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
+@Validated
+@Tag(
+        name = "Контроллер для пользователя.",
+        description = "Позволяет изменять профиль/получать историю аренды."
+)
 public class UserController {
 
     private final UserService userService;
@@ -41,8 +51,13 @@ public class UserController {
     }
 
     @PatchMapping("/{id}") // будет браться из security context потом
-    public ResponseEntity<UserDto> editUserProfile(@PathVariable("id") Long id,
-                                                   @Valid @RequestBody UpdateUserDto updateUserDto) {
+    @Operation(
+            summary = "Обновление профиля.",
+            description = "Позволяет изменить профиль пользователя."
+    )
+    public ResponseEntity<UserDto> editUserProfile(
+            @Parameter(description = "Идентификатор пользователя", required = true) @Min(1) @PathVariable("id") Long id,
+            @Valid @RequestBody UpdateUserDto updateUserDto) {
 
         User user = this.userService.getUser(id);
         this.userMapper.updateUserFromDto(updateUserDto, user);
@@ -50,11 +65,17 @@ public class UserController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(this.userMapper.mapToDetailDto(updateUser));
+                .body(this.userMapper.mapToDto(updateUser));
     }
 
     @GetMapping("/{id}/rentalHistory") // будет браться из security context
-    public ResponseEntity<List<UserRentalHistoryDto>> getRentalHistory(@PathVariable("id") Long id) {
+    @Operation(
+            summary = "История аренды пользователя.",
+            description = "Позволяет получить историю аренды пользователя."
+    )
+    public ResponseEntity<List<UserRentalHistoryDto>> getRentalHistory(
+            @Parameter(description = "Идентификатор пользователя", required = true) @Min(1) @PathVariable("id") Long id
+    ) {
         List<Rental> rentals = this.rentalService.getRentalHistoryForUser(id);
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -63,8 +84,12 @@ public class UserController {
 
     // TODO убрать в admin панель
     @GetMapping
+    @Operation(
+            summary = "Получение всех пользователей.",
+            description = "Уберется в админ-панель."
+    )
     public ResponseEntity<List<UserDto>> getAllUsers() {
-        List<UserDto> userDtos = this.userMapper.mapToDetailDtos(this.userService.getAllUsers());
+        List<UserDto> userDtos = this.userMapper.mapToDtos(this.userService.getAllUsers());
         return ResponseEntity.status(HttpStatus.OK).body(userDtos);
     }
 }

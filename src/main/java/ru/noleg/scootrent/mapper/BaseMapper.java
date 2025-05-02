@@ -5,9 +5,9 @@ import java.util.List;
 public interface BaseMapper<E, D> {
     E mapToEntity(D d);
 
-    D mapToDetailDto(E e);
+    D mapToDto(E e);
 
     List<E> mapToEntities(List<D> dtos);
 
-    List<D> mapToDetailDtos(List<E> entities);
+    List<D> mapToDtos(List<E> entities);
 }

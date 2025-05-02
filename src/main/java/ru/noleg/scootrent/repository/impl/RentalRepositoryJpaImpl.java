@@ -38,6 +38,30 @@ public class RentalRepositoryJpaImpl extends BaseRepositoryImpl<Rental, Long> im
     }
 
     @Override
+    // TODO нужен ли мне вообще этот метод
+    public List<Rental> findAllRentals() {
+        try {
+
+            final String ql = """
+                    SELECT DISTINCT r FROM Rental r
+                    LEFT JOIN FETCH r.startPoint
+                    LEFT JOIN FETCH r.endPoint
+                    LEFT JOIN FETCH r.tariff
+                    LEFT JOIN FETCH r.scooter
+                    LEFT JOIN FETCH r.scooter.model
+                    LEFT JOIN FETCH r.user
+                    """;
+
+            TypedQuery<Rental> query = entityManager.createQuery(ql, Rental.class);
+
+            List<Rental> resultList = query.getResultList();
+            return resultList.isEmpty() ? List.of() : resultList;
+        } catch (Exception e) {
+            throw new RepositoryException("Repository error on fetch all rentals.", e);
+        }
+    }
+
+    @Override
     public List<Rental> findRentalsForUser(Long userId) {
         try {
 
@@ -55,7 +79,7 @@ public class RentalRepositoryJpaImpl extends BaseRepositoryImpl<Rental, Long> im
             query.setParameter("userId", userId);
 
             List<Rental> resultList = query.getResultList();
-            return resultList == null ? List.of() : resultList;
+            return resultList.isEmpty() ? List.of() : resultList;
         } catch (Exception e) {
             throw new RepositoryException("Repository error on get rental history for user.", e);
         }
@@ -79,7 +103,7 @@ public class RentalRepositoryJpaImpl extends BaseRepositoryImpl<Rental, Long> im
             query.setParameter("scooterId", scooterId);
 
             List<Rental> resultList = query.getResultList();
-            return resultList == null ? List.of() : resultList;
+            return resultList.isEmpty() ? List.of() : resultList;
         } catch (Exception e) {
             throw new RepositoryException("Repository error on get rental history for scooter.", e);
         }

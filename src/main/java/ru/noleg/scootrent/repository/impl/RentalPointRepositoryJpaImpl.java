@@ -41,7 +41,7 @@ public class RentalPointRepositoryJpaImpl extends BaseRepositoryImpl<RentalPoint
             query.setParameter("countryId", countryId);
 
             List<RentalPoint> resultList = query.getResultList();
-            return resultList == null ? List.of() : resultList;
+            return resultList.isEmpty() ? List.of() : resultList;
         } catch (Exception e) {
             throw new RepositoryException("Repository error on fetch rental points by district.", e);
         }
@@ -60,12 +60,12 @@ public class RentalPointRepositoryJpaImpl extends BaseRepositoryImpl<RentalPoint
                     """;
 
 
-            TypedQuery<RentalPoint> query = entityManager.createQuery(jpql, RentalPoint.class);
+            TypedQuery<RentalPoint> query = this.entityManager.createQuery(jpql, RentalPoint.class);
             query.setParameter("latitude", latitude);
             query.setParameter("longitude", longitude);
 
             List<RentalPoint> resultList = query.getResultList();
-            return resultList == null ? Optional.empty() : Optional.of(resultList.get(0));
+            return resultList.isEmpty() ? Optional.empty() : Optional.of(resultList.get(0));
         } catch (Exception e) {
             throw new RepositoryException("Repository error on fetch rental points by district.", e);
         }
@@ -80,10 +80,10 @@ public class RentalPointRepositoryJpaImpl extends BaseRepositoryImpl<RentalPoint
                         WHERE rp.parent IS NULL
                     """;
 
-            TypedQuery<RentalPoint> query = entityManager.createQuery(jpql, RentalPoint.class);
+            TypedQuery<RentalPoint> query = this.entityManager.createQuery(jpql, RentalPoint.class);
 
             List<RentalPoint> resultList = query.getResultList();
-            return resultList == null ? List.of() : resultList;
+            return resultList.isEmpty() ? List.of() : resultList;
         } catch (Exception e) {
             throw new RepositoryException("Repository error on fetch rental points by district.", e);
         }
@@ -99,13 +99,13 @@ public class RentalPointRepositoryJpaImpl extends BaseRepositoryImpl<RentalPoint
                         WHERE rp.id = :id
                     """;
 
-            TypedQuery<RentalPoint> query = entityManager.createQuery(jpql, RentalPoint.class);
+            TypedQuery<RentalPoint> query = this.entityManager.createQuery(jpql, RentalPoint.class);
             query.setParameter("id", id);
 
             List<RentalPoint> resultList = query.getResultList();
-            return resultList == null ? Optional.empty() : Optional.of(resultList.get(0));
+            return resultList.isEmpty() ? Optional.empty() : Optional.of(resultList.get(0));
         } catch (Exception e) {
-            throw new RepositoryException("Repository error on fetch rental points by district.", e);
+            throw new RepositoryException("Repository error on fetch rental points by id.", e);
         }
     }
 }

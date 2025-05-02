@@ -16,8 +16,7 @@ import ru.noleg.scootrent.entity.rental.RentalPoint;
 import java.util.List;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = {ScooterMapper.class})
-public interface RentalPointMapper extends BaseMapper<RentalPoint, DetailRentalPointDto> {
-    @Override
+public interface RentalPointMapper extends BaseMapper<RentalPoint, RentalPointDto> {
     RentalPoint mapToEntity(DetailRentalPointDto detailRentalPointDto);
 
     @Mapping(target = "parent.id", source = "parentId")
@@ -26,7 +25,6 @@ public interface RentalPointMapper extends BaseMapper<RentalPoint, DetailRentalP
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateRentalPointFromDto(UpdateRentalPointDto dto, @MappingTarget RentalPoint entity);
 
-    @Override
     @Mapping(target = "totalCount", expression = "java(scooters.size())")
     DetailRentalPointDto mapToDetailDto(RentalPoint rentalPoint);
 
@@ -36,11 +34,5 @@ public interface RentalPointMapper extends BaseMapper<RentalPoint, DetailRentalP
 
     ShortRentalPointDto mapToShortDto(RentalPoint rentalPoint);
 
-
-
-    @Override
-    List<RentalPoint> mapToEntities(List<DetailRentalPointDto> dtos);
-
-    @Override
     List<DetailRentalPointDto> mapToDetailDtos(List<RentalPoint> entities);
 }
