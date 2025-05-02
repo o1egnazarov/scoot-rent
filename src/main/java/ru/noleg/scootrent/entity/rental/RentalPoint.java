@@ -47,7 +47,7 @@ public class RentalPoint {
     @JoinColumn(name = "c_parent")
     private RentalPoint parent;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "parent", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @BatchSize(size = 20)
     private List<RentalPoint> children = new ArrayList<>();
 

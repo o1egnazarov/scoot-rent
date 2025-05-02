@@ -76,7 +76,7 @@ public class RentalPointController {
                 .body(this.rentalPointMapper.mapToDetailDto(rentalPoint));
     }
 
-    // TODO если удалить родительскую что будет
+    // TODO сейчас ошибка при удалении сущности, с детьми, можно через ON DELETE SET NULL сделать открепление детей
     @DeleteMapping("/{id}")
     @Operation(
             summary = "Удаление точки проката.",

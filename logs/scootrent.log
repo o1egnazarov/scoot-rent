@@ -958,3 +958,268 @@ jakarta.persistence.TransactionRequiredException: No EntityManager with actual t
 2025-05-02 20:20:24 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
 2025-05-02 20:20:24 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
 2025-05-02 20:20:24 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-05-02 20:21:58 [main] INFO  r.n.scootrent.ScootRentApplication - Starting ScootRentApplication using Java 21.0.4 with PID 22576 (C:\Users\nazar\java-project\scoot-rent\target\classes started by nazar in C:\Users\nazar\java-project\scoot-rent)
+2025-05-02 20:21:58 [main] DEBUG r.n.scootrent.ScootRentApplication - Running with Spring Boot v3.4.4, Spring v6.2.5
+2025-05-02 20:21:58 [main] INFO  r.n.scootrent.ScootRentApplication - No active profile set, falling back to 1 default profile: "default"
+2025-05-02 20:22:01 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-05-02 20:22:01 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-05-02 20:22:01 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.39]
+2025-05-02 20:22:01 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-05-02 20:22:01 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2540 ms
+2025-05-02 20:22:01 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-05-02 20:22:02 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@5be4be74
+2025-05-02 20:22:02 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-05-02 20:22:02 [main] INFO  org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:5432/scoot_rent_db_docker_test (PostgreSQL 16.8)
+2025-05-02 20:22:02 [main] INFO  o.f.core.internal.command.DbValidate - Successfully validated 8 migrations (execution time 00:00.092s)
+2025-05-02 20:22:02 [main] INFO  o.f.core.internal.command.DbMigrate - Current version of schema "public": 2.7
+2025-05-02 20:22:02 [main] INFO  o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
+2025-05-02 20:22:02 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-02 20:22:02 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.11.Final
+2025-05-02 20:22:02 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-05-02 20:22:03 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-02 20:22:03 [main] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 16.8
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-02 20:22:05 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-02 20:22:06 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-02 20:22:06 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-02 20:22:07 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-05-02 20:22:07 [main] INFO  r.n.scootrent.ScootRentApplication - Started ScootRentApplication in 9.846 seconds (process running for 11.27)
+2025-05-02 20:22:07 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-05-02 20:22:07 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-05-02 20:22:07 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2025-05-02 20:22:09 [http-nio-8080-exec-10] INFO  o.s.api.AbstractOpenApiResource - Init duration for springdoc-openapi is: 1495 ms
+2025-05-02 20:22:52 [http-nio-8080-exec-5] DEBUG r.n.s.r.util.BaseRepositoryImpl - RentalPoint entity existence check for id: 1. Exists: true.
+2025-05-02 20:22:52 [http-nio-8080-exec-5] DEBUG r.n.s.r.util.BaseRepositoryImpl - Attempting to delete RentalPoint entity with id: 1...
+2025-05-02 20:22:52 [http-nio-8080-exec-5] INFO  r.n.s.r.util.BaseRepositoryImpl - Entity RentalPoint delete successfully with id: 1.
+2025-05-02 20:36:04 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-02 20:36:04 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-05-02 20:36:04 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-02 20:36:04 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-05-02 20:36:04 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-05-02 20:42:38 [main] INFO  r.n.scootrent.ScootRentApplication - Starting ScootRentApplication using Java 21.0.4 with PID 16992 (C:\Users\nazar\java-project\scoot-rent\target\classes started by nazar in C:\Users\nazar\java-project\scoot-rent)
+2025-05-02 20:42:38 [main] DEBUG r.n.scootrent.ScootRentApplication - Running with Spring Boot v3.4.4, Spring v6.2.5
+2025-05-02 20:42:38 [main] INFO  r.n.scootrent.ScootRentApplication - No active profile set, falling back to 1 default profile: "default"
+2025-05-02 20:42:41 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-05-02 20:42:41 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-05-02 20:42:41 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.39]
+2025-05-02 20:42:41 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-05-02 20:42:41 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3354 ms
+2025-05-02 20:42:42 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-05-02 20:42:42 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@504497fa
+2025-05-02 20:42:42 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-05-02 20:42:42 [main] INFO  org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:5432/scoot_rent_db_docker_test (PostgreSQL 16.8)
+2025-05-02 20:42:43 [main] INFO  o.f.core.internal.command.DbValidate - Successfully validated 8 migrations (execution time 00:00.095s)
+2025-05-02 20:42:43 [main] INFO  o.f.core.internal.command.DbMigrate - Current version of schema "public": 2.7
+2025-05-02 20:42:43 [main] INFO  o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
+2025-05-02 20:42:43 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-02 20:42:43 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.11.Final
+2025-05-02 20:42:43 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-05-02 20:42:44 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-02 20:42:45 [main] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 16.8
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-02 20:42:48 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-02 20:42:48 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-02 20:42:49 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-02 20:42:50 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-05-02 20:42:50 [main] INFO  r.n.scootrent.ScootRentApplication - Started ScootRentApplication in 12.977 seconds (process running for 15.132)
+2025-05-02 20:44:17 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-05-02 20:44:17 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-05-02 20:44:17 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 3 ms
+2025-05-02 20:44:26 [http-nio-8080-exec-2] DEBUG r.n.s.r.util.BaseRepositoryImpl - RentalPoint entity existence check for id: 1. Exists: true.
+2025-05-02 20:44:26 [http-nio-8080-exec-2] DEBUG r.n.s.r.util.BaseRepositoryImpl - Attempting to delete RentalPoint entity with id: 1...
+2025-05-02 20:44:26 [http-nio-8080-exec-2] INFO  r.n.s.r.util.BaseRepositoryImpl - Entity RentalPoint delete successfully with id: 1.
+2025-05-02 20:45:43 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-02 20:45:43 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-05-02 20:45:43 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-02 20:45:43 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-05-02 20:45:43 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-05-02 20:50:49 [main] INFO  r.n.scootrent.ScootRentApplication - Starting ScootRentApplication using Java 21.0.4 with PID 17104 (C:\Users\nazar\java-project\scoot-rent\target\classes started by nazar in C:\Users\nazar\java-project\scoot-rent)
+2025-05-02 20:50:49 [main] DEBUG r.n.scootrent.ScootRentApplication - Running with Spring Boot v3.4.4, Spring v6.2.5
+2025-05-02 20:50:49 [main] INFO  r.n.scootrent.ScootRentApplication - No active profile set, falling back to 1 default profile: "default"
+2025-05-02 20:50:52 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-05-02 20:50:52 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-05-02 20:50:52 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.39]
+2025-05-02 20:50:52 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-05-02 20:50:52 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2650 ms
+2025-05-02 20:50:53 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-05-02 20:50:53 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@4e67cfe1
+2025-05-02 20:50:53 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-05-02 20:50:53 [main] INFO  org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:5432/scoot_rent_db_docker_test (PostgreSQL 16.8)
+2025-05-02 20:50:53 [main] INFO  o.f.core.internal.command.DbValidate - Successfully validated 8 migrations (execution time 00:00.068s)
+2025-05-02 20:50:53 [main] INFO  o.f.core.internal.command.DbMigrate - Current version of schema "public": 2.7
+2025-05-02 20:50:53 [main] INFO  o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
+2025-05-02 20:50:53 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-02 20:50:53 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.11.Final
+2025-05-02 20:50:53 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-05-02 20:50:54 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-02 20:50:54 [main] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 16.8
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-02 20:50:57 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-02 20:50:57 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-02 20:50:57 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-02 20:50:58 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-05-02 20:50:58 [main] INFO  r.n.scootrent.ScootRentApplication - Started ScootRentApplication in 9.91 seconds (process running for 11.305)
+2025-05-02 20:51:01 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-05-02 20:51:01 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-05-02 20:51:01 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 3 ms
+2025-05-02 20:51:01 [http-nio-8080-exec-2] DEBUG r.n.s.r.util.BaseRepositoryImpl - RentalPoint entity existence check for id: 1. Exists: true.
+2025-05-02 20:51:01 [http-nio-8080-exec-2] DEBUG r.n.s.r.util.BaseRepositoryImpl - Attempting to delete RentalPoint entity with id: 1...
+2025-05-02 20:51:01 [http-nio-8080-exec-2] INFO  r.n.s.r.util.BaseRepositoryImpl - Entity RentalPoint delete successfully with id: 1.
+2025-05-02 20:53:25 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-02 20:53:25 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-05-02 20:53:25 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-02 20:53:25 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-05-02 20:53:25 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-05-02 20:53:33 [main] INFO  r.n.scootrent.ScootRentApplication - Starting ScootRentApplication using Java 21.0.4 with PID 26728 (C:\Users\nazar\java-project\scoot-rent\target\classes started by nazar in C:\Users\nazar\java-project\scoot-rent)
+2025-05-02 20:53:33 [main] DEBUG r.n.scootrent.ScootRentApplication - Running with Spring Boot v3.4.4, Spring v6.2.5
+2025-05-02 20:53:33 [main] INFO  r.n.scootrent.ScootRentApplication - No active profile set, falling back to 1 default profile: "default"
+2025-05-02 20:53:35 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-05-02 20:53:35 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-05-02 20:53:35 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.39]
+2025-05-02 20:53:35 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-05-02 20:53:35 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2290 ms
+2025-05-02 20:53:35 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-05-02 20:53:36 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7f51f588
+2025-05-02 20:53:36 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-05-02 20:53:36 [main] INFO  org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:5432/scoot_rent_db_docker_test (PostgreSQL 16.8)
+2025-05-02 20:53:36 [main] INFO  o.f.core.internal.command.DbValidate - Successfully validated 8 migrations (execution time 00:00.070s)
+2025-05-02 20:53:36 [main] INFO  o.f.core.internal.command.DbMigrate - Current version of schema "public": 2.7
+2025-05-02 20:53:36 [main] INFO  o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
+2025-05-02 20:53:36 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-02 20:53:36 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.11.Final
+2025-05-02 20:53:36 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-05-02 20:53:37 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-02 20:53:37 [main] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 16.8
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-02 20:53:39 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-02 20:53:39 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-02 20:53:40 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-02 20:53:41 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-05-02 20:53:41 [main] INFO  r.n.scootrent.ScootRentApplication - Started ScootRentApplication in 8.965 seconds (process running for 10.437)
+2025-05-02 20:53:49 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-05-02 20:53:49 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-05-02 20:53:49 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2025-05-02 20:53:49 [http-nio-8080-exec-1] DEBUG r.n.s.r.util.BaseRepositoryImpl - RentalPoint entity existence check for id: 2. Exists: true.
+2025-05-02 20:53:49 [http-nio-8080-exec-1] DEBUG r.n.s.r.util.BaseRepositoryImpl - Attempting to delete RentalPoint entity with id: 2...
+2025-05-02 20:53:49 [http-nio-8080-exec-1] INFO  r.n.s.r.util.BaseRepositoryImpl - Entity RentalPoint delete successfully with id: 2.
+2025-05-02 20:56:35 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-02 20:56:35 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-05-02 20:56:35 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-02 20:56:35 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-05-02 20:56:35 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-05-02 21:00:43 [main] INFO  r.n.scootrent.ScootRentApplication - Starting ScootRentApplication using Java 21.0.4 with PID 10496 (C:\Users\nazar\java-project\scoot-rent\target\classes started by nazar in C:\Users\nazar\java-project\scoot-rent)
+2025-05-02 21:00:43 [main] DEBUG r.n.scootrent.ScootRentApplication - Running with Spring Boot v3.4.4, Spring v6.2.5
+2025-05-02 21:00:43 [main] INFO  r.n.scootrent.ScootRentApplication - No active profile set, falling back to 1 default profile: "default"
+2025-05-02 21:00:45 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-05-02 21:00:45 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-05-02 21:00:45 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.39]
+2025-05-02 21:00:45 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-05-02 21:00:45 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2466 ms
+2025-05-02 21:00:46 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-05-02 21:00:46 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@26874f2c
+2025-05-02 21:00:46 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-05-02 21:00:46 [main] INFO  org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:5432/scoot_rent_db_docker_test (PostgreSQL 16.8)
+2025-05-02 21:00:47 [main] INFO  o.f.core.internal.command.DbValidate - Successfully validated 8 migrations (execution time 00:00.086s)
+2025-05-02 21:00:47 [main] INFO  o.f.core.internal.command.DbMigrate - Current version of schema "public": 2.7
+2025-05-02 21:00:47 [main] INFO  o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
+2025-05-02 21:00:47 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-02 21:00:47 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.11.Final
+2025-05-02 21:00:47 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-05-02 21:00:48 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-02 21:00:48 [main] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 16.8
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-02 21:00:50 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-02 21:00:50 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-02 21:00:51 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-02 21:00:52 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-05-02 21:00:52 [main] INFO  r.n.scootrent.ScootRentApplication - Started ScootRentApplication in 9.702 seconds (process running for 11.284)
+2025-05-02 21:01:00 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-05-02 21:01:00 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-05-02 21:01:00 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2025-05-02 21:01:00 [http-nio-8080-exec-1] DEBUG r.n.s.r.util.BaseRepositoryImpl - RentalPoint entity existence check for id: 2. Exists: true.
+2025-05-02 21:01:00 [http-nio-8080-exec-1] DEBUG r.n.s.r.util.BaseRepositoryImpl - Attempting to delete RentalPoint entity with id: 2...
+2025-05-02 21:01:00 [http-nio-8080-exec-1] INFO  r.n.s.r.util.BaseRepositoryImpl - Entity RentalPoint delete successfully with id: 2.
+2025-05-02 21:01:00 [http-nio-8080-exec-1] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 23503
+2025-05-02 21:01:00 [http-nio-8080-exec-1] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - ERROR: update or delete on table "t_rental_point" violates foreign key constraint "fk_rental_point_parent" on table "t_rental_point"
+  Подробности: Key (c_id)=(2) is still referenced from table "t_rental_point".
+2025-05-02 21:02:53 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-02 21:02:53 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-05-02 21:02:53 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-02 21:02:53 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-05-02 21:02:54 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-05-02 21:03:00 [main] INFO  r.n.scootrent.ScootRentApplication - Starting ScootRentApplication using Java 21.0.4 with PID 18448 (C:\Users\nazar\java-project\scoot-rent\target\classes started by nazar in C:\Users\nazar\java-project\scoot-rent)
+2025-05-02 21:03:00 [main] DEBUG r.n.scootrent.ScootRentApplication - Running with Spring Boot v3.4.4, Spring v6.2.5
+2025-05-02 21:03:00 [main] INFO  r.n.scootrent.ScootRentApplication - No active profile set, falling back to 1 default profile: "default"
+2025-05-02 21:03:03 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-05-02 21:03:03 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-05-02 21:03:03 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.39]
+2025-05-02 21:03:03 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-05-02 21:03:03 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2357 ms
+2025-05-02 21:03:03 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-05-02 21:03:04 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7f51f588
+2025-05-02 21:03:04 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-05-02 21:03:04 [main] INFO  org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:5432/scoot_rent_db_docker_test (PostgreSQL 16.8)
+2025-05-02 21:03:04 [main] INFO  o.f.core.internal.command.DbValidate - Successfully validated 8 migrations (execution time 00:00.077s)
+2025-05-02 21:03:04 [main] INFO  o.f.core.internal.command.DbMigrate - Current version of schema "public": 2.7
+2025-05-02 21:03:04 [main] INFO  o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
+2025-05-02 21:03:04 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-02 21:03:04 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.11.Final
+2025-05-02 21:03:04 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-05-02 21:03:05 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-02 21:03:05 [main] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 16.8
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-02 21:03:07 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-02 21:03:07 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-02 21:03:08 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-02 21:03:09 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-05-02 21:03:09 [main] INFO  r.n.scootrent.ScootRentApplication - Started ScootRentApplication in 9.287 seconds (process running for 10.679)
+2025-05-02 21:03:13 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-05-02 21:03:13 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-05-02 21:03:13 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2025-05-02 21:03:13 [http-nio-8080-exec-1] DEBUG r.n.s.r.util.BaseRepositoryImpl - RentalPoint entity existence check for id: 2. Exists: true.
+2025-05-02 21:03:13 [http-nio-8080-exec-1] DEBUG r.n.s.r.util.BaseRepositoryImpl - Attempting to delete RentalPoint entity with id: 2...
+2025-05-02 21:03:13 [http-nio-8080-exec-1] INFO  r.n.s.r.util.BaseRepositoryImpl - Entity RentalPoint delete successfully with id: 2.
+2025-05-02 21:03:13 [http-nio-8080-exec-1] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 23503
+2025-05-02 21:03:13 [http-nio-8080-exec-1] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - ERROR: update or delete on table "t_rental_point" violates foreign key constraint "fk_rental_point_parent" on table "t_rental_point"
+  Подробности: Key (c_id)=(2) is still referenced from table "t_rental_point".
+2025-05-02 21:05:48 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-02 21:05:48 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-05-02 21:05:48 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-02 21:05:48 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-05-02 21:05:48 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

@@ -15,7 +15,7 @@ CREATE TABLE t_rental_point
     c_title     VARCHAR(50) NOT NULL,
     c_parent    BIGINT,
 
-    CONSTRAINT fk_rental_point_parent FOREIGN KEY (c_parent) REFERENCES t_rental_point (c_id) ON DELETE CASCADE
+    CONSTRAINT fk_rental_point_parent FOREIGN KEY (c_parent) REFERENCES t_rental_point (c_id)
 );
 
 CREATE TABLE t_scooter

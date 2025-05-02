@@ -1,6 +1,7 @@
 package ru.noleg.scootrent.exception.handler;
 
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -37,6 +38,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BusinessLogicException.class)
     public ResponseEntity<ExceptionResponse> handleBusinessLogicException(BusinessLogicException ex) {
         return this.buildResponse(HttpStatus.I_AM_A_TEAPOT, List.of(ex.getMessage()), ex.getCause());
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ExceptionResponse> handleSqlException(DataIntegrityViolationException ex) {
+        return this.buildResponse(
+                HttpStatus.BAD_REQUEST,
+                List.of("Database integrity violation.", "Probably an attempt to delete an entity associated with another entity."),
+                null
+        );
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
