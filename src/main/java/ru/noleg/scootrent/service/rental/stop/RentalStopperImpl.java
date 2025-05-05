@@ -2,12 +2,14 @@ package ru.noleg.scootrent.service.rental.stop;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.noleg.scootrent.entity.location.LocationNode;
+import ru.noleg.scootrent.entity.location.LocationType;
 import ru.noleg.scootrent.entity.rental.Rental;
-import ru.noleg.scootrent.entity.rental.RentalPoint;
 import ru.noleg.scootrent.entity.scooter.ScooterStatus;
+import ru.noleg.scootrent.exception.BusinessLogicException;
 import ru.noleg.scootrent.exception.NotFoundException;
 import ru.noleg.scootrent.exception.ServiceException;
-import ru.noleg.scootrent.repository.RentalPointRepository;
+import ru.noleg.scootrent.repository.LocationRepository;
 import ru.noleg.scootrent.repository.RentalRepository;
 import ru.noleg.scootrent.service.rental.billing.BillingService;
 
@@ -20,14 +22,14 @@ public class RentalStopperImpl implements RentalStopper {
 
     private final RentalRepository rentalRepository;
     private final BillingService billingService;
-    private final RentalPointRepository rentalPointRepository;
+    private final LocationRepository locationRepository;
 
     public RentalStopperImpl(RentalRepository rentalRepository,
                              BillingService billingService,
-                             RentalPointRepository rentalPointRepository) {
+                             LocationRepository locationRepository) {
         this.rentalRepository = rentalRepository;
         this.billingService = billingService;
-        this.rentalPointRepository = rentalPointRepository;
+        this.locationRepository = locationRepository;
     }
 
     @Override
@@ -39,9 +41,13 @@ public class RentalStopperImpl implements RentalStopper {
                     () -> new NotFoundException("Rental with id: " + rentalId + " not found.")
             );
 
-            RentalPoint endPoint = this.rentalPointRepository.findById(endPointId).orElseThrow(
+            LocationNode endPoint = this.locationRepository.findById(endPointId).orElseThrow(
                     () -> new NotFoundException("Rental point with id: " + endPointId + " not found.")
             );
+
+            if (endPoint.getLocationType() != LocationType.RENTAL_POINT) {
+                throw new BusinessLogicException("Location is not a rental point.");
+            }
 
             Duration pause = rental.getDurationInPause();
             Duration totalDuration = Duration.between(rental.getStartTime(), LocalDateTime.now());

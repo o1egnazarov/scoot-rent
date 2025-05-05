@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import ru.noleg.scootrent.entity.UserSubscription;
+import ru.noleg.scootrent.entity.location.LocationNode;
 import ru.noleg.scootrent.entity.scooter.Scooter;
 import ru.noleg.scootrent.entity.tariff.Tariff;
 import ru.noleg.scootrent.entity.user.User;
@@ -47,11 +48,11 @@ public class Rental {
 
     @ManyToOne
     @JoinColumn(name = "c_start_point_id")
-    private RentalPoint startPoint;
+    private LocationNode startPoint;
 
     @ManyToOne
     @JoinColumn(name = "c_end_point_id")
-    private RentalPoint endPoint;
+    private LocationNode endPoint;
 
     @Column(name = "c_rental_status")
     @Enumerated(value = EnumType.STRING)
@@ -84,8 +85,8 @@ public class Rental {
                   BigDecimal cost,
                   LocalDateTime startTime,
                   LocalDateTime endTime,
-                  RentalPoint startPoint,
-                  RentalPoint endPoint) {
+                  LocationNode startPoint,
+                  LocationNode endPoint) {
         this.id = id;
         this.user = user;
         this.scooter = scooter;
@@ -103,7 +104,7 @@ public class Rental {
         this.durationInPause = this.durationInPause.plus(pause);
     }
 
-    public void stopRental(RentalPoint endPoint, BigDecimal cost) {
+    public void stopRental(LocationNode endPoint, BigDecimal cost) {
         if (this.rentalStatus == RentalStatus.COMPLETED) {
             throw new BusinessLogicException("Rental already completed.");
         }
@@ -178,19 +179,19 @@ public class Rental {
         this.endTime = endTime;
     }
 
-    public RentalPoint getStartPoint() {
+    public LocationNode getStartPoint() {
         return startPoint;
     }
 
-    public void setStartPoint(RentalPoint startPoint) {
+    public void setStartPoint(LocationNode startPoint) {
         this.startPoint = startPoint;
     }
 
-    public RentalPoint getEndPoint() {
+    public LocationNode getEndPoint() {
         return endPoint;
     }
 
-    public void setEndPoint(RentalPoint endPoint) {
+    public void setEndPoint(LocationNode endPoint) {
         this.endPoint = endPoint;
     }
 

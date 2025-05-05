@@ -119,6 +119,6 @@ public class RentalController {
         List<Rental> rentals = this.rentalService.getRentals();
 
         logger.debug("Получение всех аренд в количестве: {}.", rentals.size());
-        return this.rentalMapper.mapToShortDtos(rentals);
+        return this.rentalMapper.mapToDtos(rentals);
     }
 }

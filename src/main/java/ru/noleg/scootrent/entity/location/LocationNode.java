@@ -1,9 +1,11 @@
-package ru.noleg.scootrent.entity.rental;
+package ru.noleg.scootrent.entity.location;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,7 +14,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import org.hibernate.annotations.BatchSize;
 import ru.noleg.scootrent.entity.scooter.Scooter;
 
 import java.math.BigDecimal;
@@ -22,8 +23,8 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "t_rental_point")
-public class RentalPoint {
+@Table(name = "t_location_node")
+public class LocationNode {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +33,10 @@ public class RentalPoint {
 
     @Column(name = "c_title", nullable = false, length = 50)
     private String title;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "c_location_type", nullable = false)
+    private LocationType locationType;
 
     @Column(name = "c_latitude", precision = 10, scale = 8)
     private BigDecimal latitude;
@@ -45,30 +50,29 @@ public class RentalPoint {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "c_parent_id")
-    private RentalPoint parent;
+    private LocationNode parent;
 
     @OneToMany(mappedBy = "parent", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @BatchSize(size = 20)
-    private List<RentalPoint> children = new ArrayList<>();
+    private List<LocationNode> children = new ArrayList<>();
 
-    // TODO думаю оставить, так как много где надо
     @OneToMany(mappedBy = "rentalPoint")
-    @BatchSize(size = 20)
     private Set<Scooter> scooters = new HashSet<>();
 
-    public RentalPoint() {
+    public LocationNode() {
     }
 
-    public RentalPoint(Long id,
-                       String title,
-                       BigDecimal latitude,
-                       BigDecimal longitude,
-                       String address,
-                       RentalPoint parent,
-                       List<RentalPoint> children,
-                       Set<Scooter> scooters) {
+    public LocationNode(Long id,
+                        String title,
+                        LocationType locationType,
+                        BigDecimal latitude,
+                        BigDecimal longitude,
+                        String address,
+                        LocationNode parent,
+                        List<LocationNode> children,
+                        Set<Scooter> scooters) {
         this.id = id;
         this.title = title;
+        this.locationType = locationType;
         this.latitude = latitude;
         this.longitude = longitude;
         this.address = address;
@@ -117,19 +121,19 @@ public class RentalPoint {
         this.address = address;
     }
 
-    public RentalPoint getParent() {
+    public LocationNode getParent() {
         return parent;
     }
 
-    public void setParent(RentalPoint parent) {
+    public void setParent(LocationNode parent) {
         this.parent = parent;
     }
 
-    public List<RentalPoint> getChildren() {
+    public List<LocationNode> getChildren() {
         return children;
     }
 
-    public void setChildren(List<RentalPoint> children) {
+    public void setChildren(List<LocationNode> children) {
         this.children = children;
     }
 
@@ -139,6 +143,14 @@ public class RentalPoint {
 
     public void setScooters(Set<Scooter> scooters) {
         this.scooters = scooters;
+    }
+
+    public LocationType getLocationType() {
+        return locationType;
+    }
+
+    public void setLocationType(LocationType locationType) {
+        this.locationType = locationType;
     }
 }
 

@@ -7,6 +7,7 @@ public record ShortTariffDto(Long id,
                              String title,
                              BigDecimal pricePerUnit,
                              int unlockFee,
+                             Integer subDurationDays,
                              LocalDateTime validFrom,
                              LocalDateTime validUntil) {
 }

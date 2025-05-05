@@ -11,7 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import ru.noleg.scootrent.entity.rental.RentalPoint;
+import ru.noleg.scootrent.entity.location.LocationNode;
 
 import java.time.Duration;
 
@@ -34,13 +34,13 @@ public class Scooter {
     @Column(name = "c_duration_in_used")
     private Duration durationInUsed = Duration.ZERO;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "c_model_id", nullable = false)
     private ScooterModel model;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "c_rental_point_id")
-    private RentalPoint rentalPoint;
+    private LocationNode rentalPoint;
 
     public Scooter() {
     }
@@ -50,7 +50,7 @@ public class Scooter {
                    ScooterStatus status,
                    Duration durationInUsed,
                    ScooterModel model,
-                   RentalPoint rentalPoint
+                   LocationNode rentalPoint
     ) {
         this.id = id;
         this.numberPlate = numberPlate;
@@ -104,11 +104,11 @@ public class Scooter {
         this.model = model;
     }
 
-    public RentalPoint getRentalPoint() {
+    public LocationNode getRentalPoint() {
         return rentalPoint;
     }
 
-    public void setRentalPoint(RentalPoint rentalPoint) {
-        this.rentalPoint = rentalPoint;
+    public void setRentalPoint(LocationNode locationNode) {
+        this.rentalPoint = locationNode;
     }
 }

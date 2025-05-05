@@ -1,6 +1,6 @@
 package ru.noleg.scootrent.dto.rental;
 
-import ru.noleg.scootrent.dto.rentalPoint.ShortRentalPointDto;
+import ru.noleg.scootrent.dto.location.ShortLocationDto;
 import ru.noleg.scootrent.dto.scooter.ShortScooterDtoWithModel;
 import ru.noleg.scootrent.dto.tariff.ShortTariffDto;
 import ru.noleg.scootrent.dto.user.ShortUserDto;
@@ -15,13 +15,11 @@ public record ShortRentalDto(Long id,
                              ShortUserDto user,
                              ShortScooterDtoWithModel scooter,
                              ShortTariffDto tariff,
-                             UserSubscription subscription,
-                             ShortRentalPointDto startPoint,
-                             ShortRentalPointDto endPoint,
+                             ShortLocationDto startPoint,
+                             ShortLocationDto endPoint,
                              RentalStatus rentalStatus,
                              BigDecimal cost,
                              LocalDateTime startTime,
                              LocalDateTime endTime,
-                             LocalDateTime lastPauseTime,
                              Duration durationInPause) {
 }

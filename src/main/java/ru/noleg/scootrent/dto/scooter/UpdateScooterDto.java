@@ -15,6 +15,9 @@ public record UpdateScooterDto(
         ScooterStatus status,
 
         @Schema(description = "Id модели самоката", example = "1") @NotNull
-        Long modelId
+        Long modelId,
+
+        @Schema(description = "Id точки проката", example = "1") @NotNull
+        Long rentalPointId
 ) {
 }

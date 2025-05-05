@@ -2,9 +2,13 @@ package ru.noleg.scootrent.service.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.noleg.scootrent.entity.location.LocationNode;
+import ru.noleg.scootrent.entity.location.LocationType;
 import ru.noleg.scootrent.entity.scooter.Scooter;
+import ru.noleg.scootrent.exception.BusinessLogicException;
 import ru.noleg.scootrent.exception.NotFoundException;
 import ru.noleg.scootrent.exception.ServiceException;
+import ru.noleg.scootrent.repository.LocationRepository;
 import ru.noleg.scootrent.repository.ScooterModelRepository;
 import ru.noleg.scootrent.repository.ScooterRepository;
 import ru.noleg.scootrent.service.ScooterService;
@@ -16,10 +20,14 @@ public class ScooterServiceDefaultImpl implements ScooterService {
 
     private final ScooterRepository scooterRepository;
     private final ScooterModelRepository scooterModelRepository;
+    private final LocationRepository locationRepository;
 
-    public ScooterServiceDefaultImpl(ScooterRepository scooterRepository, ScooterModelRepository scooterModelRepository) {
+    public ScooterServiceDefaultImpl(ScooterRepository scooterRepository,
+                                     ScooterModelRepository scooterModelRepository,
+                                     LocationRepository locationRepository) {
         this.scooterRepository = scooterRepository;
         this.scooterModelRepository = scooterModelRepository;
+        this.locationRepository = locationRepository;
     }
 
     @Override
@@ -30,6 +38,14 @@ public class ScooterServiceDefaultImpl implements ScooterService {
             if (!this.scooterModelRepository.existsById(scooter.getModel().getId())) {
 
                 throw new NotFoundException("Scooter model with id " + scooter.getModel().getId() + " not found.");
+            }
+
+            LocationNode rentalPoint = this.locationRepository.findLocationById(scooter.getRentalPoint().getId()).orElseThrow(
+                    () -> new NotFoundException("Rental point with id " + scooter.getRentalPoint().getId() + " not found.")
+            );
+
+            if (rentalPoint.getLocationType() != LocationType.RENTAL_POINT) {
+                throw new BusinessLogicException("Location is not a rental point.");
             }
 
             return this.scooterRepository.save(scooter).getId();

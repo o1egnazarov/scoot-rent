@@ -22,9 +22,8 @@ public record TariffDto(
         TariffType type,
 
         @Schema(description = "Цена за минуту (если подписка, то null)", example = "5.25")
-        BigDecimal pricePerUnit,
+        BigDecimal pricePerMinute,
 
-        // TODO сделать bigDecimal
         @Schema(description = "Цена старта", example = "5")
         int unlockFee,
 
