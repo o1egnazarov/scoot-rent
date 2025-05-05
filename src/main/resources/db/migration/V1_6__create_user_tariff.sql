@@ -1,0 +1,15 @@
+CREATE TABLE t_user_tariffs
+(
+    c_id           BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    c_discount_pct INTEGER,
+    c_valid_from   TIMESTAMP(6),
+    c_valid_until  TIMESTAMP(6),
+    c_tariff_id    BIGINT NOT NULL,
+    c_user_id      BIGINT NOT NULL,
+
+    CONSTRAINT fk_user_tariff_tariff FOREIGN KEY (c_tariff_id) REFERENCES t_tariff (c_id) ON DELETE CASCADE,
+    CONSTRAINT fk_user_tariff_user FOREIGN KEY (c_user_id) REFERENCES t_user (c_id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_user_tariff_user_id ON t_user_tariffs(c_user_id);
+CREATE INDEX idx_user_tariff_tariff_id ON t_user_tariffs(c_tariff_id);

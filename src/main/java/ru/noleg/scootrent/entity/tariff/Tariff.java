@@ -27,12 +27,10 @@ public class Tariff {
     @Enumerated(value = EnumType.STRING)
     private TariffType type;
 
-    // TODO я бы сделал строго поминутно ну пока так
-    @Column(name = "c_price_per_unit")
-    private BigDecimal pricePerUnit;
+    @Column(name = "c_price_per_minute")
+    private BigDecimal pricePerMinute;
 
     @Column(name = "c_unlock_fee")
-    // TODO тут бы тоже сделал BigDecimal (но тут по идее всегда целое число)
     private int unlockFee;
 
     @Column(name = "c_duration_unit")
@@ -60,7 +58,7 @@ public class Tariff {
     public Tariff(Long id,
                   String title,
                   TariffType type,
-                  BigDecimal pricePerUnit,
+                  BigDecimal pricePerMinute,
                   int unlockFee,
                   DurationType durationUnit,
                   Integer durationValue,
@@ -71,7 +69,7 @@ public class Tariff {
         this.id = id;
         this.title = title;
         this.type = type;
-        this.pricePerUnit = pricePerUnit;
+        this.pricePerMinute = pricePerMinute;
         this.unlockFee = unlockFee;
         this.durationUnit = durationUnit;
         this.durationValue = durationValue;
@@ -110,12 +108,12 @@ public class Tariff {
         this.type = type;
     }
 
-    public BigDecimal getPricePerUnit() {
-        return pricePerUnit;
+    public BigDecimal getPricePerMinute() {
+        return pricePerMinute;
     }
 
-    public void setPricePerUnit(BigDecimal pricePerUnit) {
-        this.pricePerUnit = pricePerUnit;
+    public void setPricePerMinute(BigDecimal pricePerUnit) {
+        this.pricePerMinute = pricePerUnit;
     }
 
     public int getUnlockFee() {

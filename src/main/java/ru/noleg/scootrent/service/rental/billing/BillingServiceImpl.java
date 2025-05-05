@@ -111,9 +111,9 @@ public class BillingServiceImpl implements BillingService {
         logger.info("Calculate cost for tariff: {} with rental duration: {}.", userTariff.getId(), rentalDuration);
 
         // выбор кастомной цены для пользователя или базовая цена
-        BigDecimal price = userTariff.getCustomPricePerUnit() != null ?
-                userTariff.getCustomPricePerUnit() :
-                userTariff.getTariff().getPricePerUnit();
+        BigDecimal price = userTariff.getCustomPricePerMinute() != null ?
+                userTariff.getCustomPricePerMinute() :
+                userTariff.getTariff().getPricePerMinute();
 
         logger.debug("Price per minute: {}.", price);
 
@@ -136,5 +136,4 @@ public class BillingServiceImpl implements BillingService {
         logger.info("Result price with unlock fee (optional): {}.", result);
         return result;
     }
-    // TODO убрал расчет по конкретным unit так как все будет по минутам
 }

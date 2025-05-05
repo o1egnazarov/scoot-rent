@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -27,6 +29,8 @@ import java.util.List;
 )
 public class AdminScooterController {
 
+    private static final Logger logger = LoggerFactory.getLogger(AdminScooterController.class);
+
     private final RentalService rentalService;
     private final RentalHistoryMapper rentalHistoryMapper;
 
@@ -42,8 +46,12 @@ public class AdminScooterController {
     )
     public ResponseEntity<List<ScooterRentalHistoryDto>> getRentalHistory(
             @Parameter(description = "Идентификатор пользователя", required = true)
-            @PathVariable("scooterId") @Min(1) Long scooterId) {
+            @PathVariable("scooterId") @Min(1) Long scooterId
+    ) {
+        logger.info("Полученный запрос: GET /{}/history", scooterId);
         List<Rental> rentalHistory = this.rentalService.getRentalHistoryForScooter(scooterId);
+
+        logger.debug("Получено {} записей истории аренды для самоката с id {}.", rentalHistory.size(), scooterId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.rentalHistoryMapper.mapToScooterRentalDtos(rentalHistory));

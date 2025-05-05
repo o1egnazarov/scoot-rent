@@ -46,11 +46,11 @@ public class Rental {
     private UserSubscription subscription;
 
     @ManyToOne
-    @JoinColumn(name = "c_start_point")
+    @JoinColumn(name = "c_start_point_id")
     private RentalPoint startPoint;
 
     @ManyToOne
-    @JoinColumn(name = "c_end_point")
+    @JoinColumn(name = "c_end_point_id")
     private RentalPoint endPoint;
 
     @Column(name = "c_rental_status")

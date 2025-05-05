@@ -66,6 +66,10 @@ public class RentalStarterImpl implements RentalStarter {
                     () -> new NotFoundException("Rental point with id: " + rentalPointId + " not found.")
             );
 
+            if (!startPoint.getScooters().contains(scooter)) {
+                throw new BusinessLogicException("Scooter with id: " + scooterId + " is not at the rental point with id: " + rentalPointId);
+            }
+
             var tariff = this.tariffSelectionService.selectTariffForUser(userId);
 
             // TODO додумать выбор tariff | sub
@@ -84,10 +88,6 @@ public class RentalStarterImpl implements RentalStarter {
             );
 
             scooter.setStatus(ScooterStatus.TAKEN);
-            this.scooterRepository.save(scooter);
-            user.addRental(rental);
-            this.userRepository.save(user);
-
             return this.rentalRepository.save(rental).getId();
         } catch (BusinessLogicException | NotFoundException e) {
 

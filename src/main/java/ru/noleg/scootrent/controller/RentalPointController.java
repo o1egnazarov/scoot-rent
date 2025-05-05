@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -37,6 +39,8 @@ import java.util.List;
 )
 public class RentalPointController {
 
+    private static final Logger logger = LoggerFactory.getLogger(RentalPointController.class);
+
     private final RentalPointMapper rentalPointMapper;
     private final RentalPointService rentalPointService;
 
@@ -51,10 +55,15 @@ public class RentalPointController {
             description = "Позволяет сохранить новую точку проката."
     )
     public ResponseEntity<Long> addRentalPoint(@Valid @RequestBody CreateRentalPointDto createRentalPointDto) {
+        logger.info("Полученный запрос: POST добавления точки проката с адресом: {}.", createRentalPointDto.address());
+
         RentalPoint rentalPoint = this.rentalPointMapper.mapToEntity(createRentalPointDto);
+        Long rentalPointId = this.rentalPointService.add(rentalPoint);
+
+        logger.debug("Точка проката добавлена с ID: {}.", rentalPointId);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(this.rentalPointService.add(rentalPoint));
+                .body(rentalPointId);
     }
 
     @PutMapping("/{id}")
@@ -66,17 +75,18 @@ public class RentalPointController {
             @Parameter(description = "Идентификатор точки проката", required = true) @Min(1) @PathVariable("id") Long id,
             @Valid @RequestBody UpdateRentalPointDto rentalPointDto
     ) {
+        logger.info("Полученный запрос: PUT обновления точки проката с id: {}.", id);
         RentalPoint rentalPoint = this.rentalPointService.getRentalPoint(id);
 
         this.rentalPointMapper.updateRentalPointFromDto(rentalPointDto, rentalPoint);
         this.rentalPointService.add(rentalPoint);
 
+        logger.debug("Точка проката с ID: {} успешно обновлена.", id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.rentalPointMapper.mapToDetailDto(rentalPoint));
     }
 
-    // TODO сейчас ошибка при удалении сущности, с детьми, можно через ON DELETE SET NULL сделать открепление детей
     @DeleteMapping("/{id}")
     @Operation(
             summary = "Удаление точки проката.",
@@ -85,7 +95,11 @@ public class RentalPointController {
     public ResponseEntity<Void> deleteRentalPoint(
             @Parameter(description = "Идентификатор точки проката", required = true) @Min(1) @PathVariable("id") Long id
     ) {
+        logger.info("Полученный запрос: DELETE удаления точки проката с id: {}.", id);
+
         this.rentalPointService.delete(id);
+
+        logger.debug("Точка проката с id: {}, успешно удалена.", id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();
@@ -97,8 +111,12 @@ public class RentalPointController {
             description = "Позволяет получить всевозможные точки проката системы."
     )
     public ResponseEntity<List<RentalPointDto>> getAllRentalPoints() {
+        logger.info("Полученный запрос: GET получения всех точек проката.");
+
         List<RentalPointDto> detailRentalPointDtos =
                 this.rentalPointMapper.mapToDtos(this.rentalPointService.getAllRentalPoints());
+
+        logger.debug("Получено точек проката: {}.", detailRentalPointDtos.size());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(detailRentalPointDtos);
@@ -112,7 +130,11 @@ public class RentalPointController {
     public ResponseEntity<DetailRentalPointDto> getRentalPointById(
             @Parameter(description = "Идентификатор точки проката", required = true) @Min(1) @PathVariable("id") Long id
     ) {
+        logger.info("Полученный запрос: GET получения точки проката с id: {}.", id);
+
         RentalPoint rentalPoint = this.rentalPointService.getRentalPoint(id);
+
+        logger.debug("Получена точка проката с id: {}.", id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.rentalPointMapper.mapToDetailDto(rentalPoint));
@@ -127,7 +149,11 @@ public class RentalPointController {
             @Parameter(description = "Широта", required = true) @RequestParam("latitude") BigDecimal latitude,
             @Parameter(description = "Долгота", required = true) @RequestParam("longitude") BigDecimal longitude
     ) {
+        logger.info("Полученный запрос: GET с параметрами: latitude={}, longitude={}.", latitude, longitude);
+
         RentalPoint rentalPoint = this.rentalPointService.getRentalPointByCoordinates(latitude, longitude);
+
+        logger.debug("Получена точка проката по координатам с id: {}.", rentalPoint.getId());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.rentalPointMapper.mapToDetailDto(rentalPoint));

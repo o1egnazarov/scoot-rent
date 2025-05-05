@@ -1,6 +1,8 @@
 package ru.noleg.scootrent.exception.handler;
 
 import jakarta.validation.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,24 +22,26 @@ import java.util.List;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     @ExceptionHandler(ServiceException.class)
     public ResponseEntity<ExceptionResponse> handleServiceException(ServiceException ex) {
-        return this.buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, List.of(ex.getMessage()), ex.getCause());
+        return this.buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, List.of(ex.getMessage()), ex);
     }
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ExceptionResponse> handleNotFoundException(NotFoundException ex) {
-        return this.buildResponse(HttpStatus.NOT_FOUND, List.of(ex.getMessage()), ex.getCause());
+        return this.buildResponse(HttpStatus.NOT_FOUND, List.of(ex.getMessage()), ex);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ExceptionResponse> handleUserNotFoundException(UserNotFoundException ex) {
-        return this.buildResponse(HttpStatus.NOT_FOUND, List.of(ex.getMessage()), ex.getCause());
+        return this.buildResponse(HttpStatus.NOT_FOUND, List.of(ex.getMessage()), ex);
     }
 
     @ExceptionHandler(BusinessLogicException.class)
     public ResponseEntity<ExceptionResponse> handleBusinessLogicException(BusinessLogicException ex) {
-        return this.buildResponse(HttpStatus.I_AM_A_TEAPOT, List.of(ex.getMessage()), ex.getCause());
+        return this.buildResponse(HttpStatus.I_AM_A_TEAPOT, List.of(ex.getMessage()), ex);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
@@ -45,18 +49,18 @@ public class GlobalExceptionHandler {
         return this.buildResponse(
                 HttpStatus.BAD_REQUEST,
                 List.of("Database integrity violation.", "Probably an attempt to delete an entity associated with another entity."),
-                null
+                ex
         );
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ExceptionResponse> handleMissingRequestParamException(MissingServletRequestParameterException ex) {
-        return this.buildResponse(HttpStatus.BAD_REQUEST, List.of(ex.getMessage()), ex.getCause());
+        return this.buildResponse(HttpStatus.BAD_REQUEST, List.of(ex.getMessage()), ex);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ExceptionResponse> handleConstraintViolationException(ConstraintViolationException ex) {
-        return this.buildResponse(HttpStatus.BAD_REQUEST, List.of(ex.getMessage()), ex.getCause());
+        return this.buildResponse(HttpStatus.BAD_REQUEST, List.of(ex.getMessage()), ex);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -67,25 +71,28 @@ public class GlobalExceptionHandler {
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .toList();
 
-        return this.buildResponse(HttpStatus.BAD_REQUEST, errors, ex.getCause());
+        return this.buildResponse(HttpStatus.BAD_REQUEST, errors, ex);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ExceptionResponse> handleAccessDeniedException(AccessDeniedException ex) {
-        return this.buildResponse(HttpStatus.FORBIDDEN, List.of(ex.getMessage()), ex.getCause());
+        return this.buildResponse(HttpStatus.FORBIDDEN, List.of(ex.getMessage()), ex);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleCommonException(Exception ex) {
-        return this.buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, List.of(ex.getMessage()), ex.getCause());
+        return this.buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, List.of(ex.getMessage()), ex);
     }
 
-    private ResponseEntity<ExceptionResponse> buildResponse(HttpStatus status, List<String> messages, Throwable cause) {
+    private ResponseEntity<ExceptionResponse> buildResponse(HttpStatus status, List<String> messages, Throwable ex) {
+        if (ex != null) {
+            logger.error("Exception occurred: {}.", ex.getMessage(), ex);
+        }
         return ResponseEntity.status(status)
                 .body(new ExceptionResponse(
                         LocalDateTime.now(),
                         messages,
-                        cause != null ? cause.getMessage() : null)
+                        ex != null ? ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage() : null)
                 );
     }
 }

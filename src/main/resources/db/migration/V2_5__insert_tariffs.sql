@@ -1,4 +1,4 @@
-INSERT INTO t_tariff(c_duration_unit, c_duration_value, c_is_active, c_price_per_unit, c_sub_duration_days,
+INSERT INTO t_tariff(c_duration_unit, c_duration_value, c_is_active, c_price_per_minute, c_sub_duration_days,
                      c_title, c_type, c_unlock_fee, c_valid_from, c_valid_until)
 VALUES (null, null, true, 15, null, 'Default tariff', 'DEFAULT_TARIFF', 45, '2024-01-01 00:00:00',
         '2025-12-31 23:59:59'),

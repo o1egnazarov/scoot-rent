@@ -4,7 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.noleg.scootrent.dto.rental.ShortRentalDto;
+import ru.noleg.scootrent.entity.rental.Rental;
 import ru.noleg.scootrent.mapper.RentalMapper;
 import ru.noleg.scootrent.service.RentalService;
 
@@ -27,6 +29,8 @@ import java.util.List;
         description = "Позволяет начать/приостановить/закончить аренду."
 )
 public class RentalController {
+
+    private static final Logger logger = LoggerFactory.getLogger(RentalController.class);
 
     private final RentalService rentalService;
     private final RentalMapper rentalMapper;
@@ -42,13 +46,17 @@ public class RentalController {
             description = "Позволяет начать аренду для конкретного пользователя, самоката и точки проката."
     )
     public ResponseEntity<Long> startRental(
-            @Parameter(description = "Идентификатор аренды", required = true) @Min(1) @RequestParam("userId") Long userId,
+            @Parameter(description = "Идентификатор пользователя", required = true) @Min(1) @RequestParam("userId") Long userId,
             @Parameter(description = "Идентификатор самоката", required = true) @Min(1) @RequestParam("scooterId") Long scooterId,
             @Parameter(description = "Идентификатор точки доступа", required = true) @Min(1) @RequestParam("rentalPointId") Long rentalPointId
     ) {
+        logger.info("Полученный запрос: POST /start с параметрами: userId={}, scooterId={}, rentalPointId={}.", userId, scooterId, rentalPointId);
+        Long rentalId = this.rentalService.startRental(userId, scooterId, rentalPointId);
+
+        logger.debug("Аренда начата успешно. rentalId={}.", rentalId);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(this.rentalService.startRental(userId, scooterId, rentalPointId));
+                .body(rentalId);
     }
 
     @PostMapping("/pause")
@@ -59,7 +67,10 @@ public class RentalController {
     public ResponseEntity<Void> pauseRental(
             @Parameter(description = "Идентификатор аренды", required = true) @Min(1) @RequestParam("rentalId") Long rentalId
     ) {
+        logger.info("Полученный запрос: POST /pause с параметрами: rentalId={}.", rentalId);
         this.rentalService.pauseRental(rentalId);
+
+        logger.debug("Аренда приостановлена: rentalId={}.", rentalId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();
@@ -73,7 +84,10 @@ public class RentalController {
     public ResponseEntity<Void> resumeRental(
             @Parameter(description = "Идентификатор аренды", required = true) @Min(1) @RequestParam("rentalId") Long rentalId
     ) {
+        logger.info("Полученный запрос: POST /resume с параметрами: rentalId={}.", rentalId);
         this.rentalService.resumeRental(rentalId);
+
+        logger.debug("Аренда возобновлена: rentalId={}.", rentalId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();
@@ -88,8 +102,10 @@ public class RentalController {
             @Parameter(description = "Идентификатор аренды", required = true) @Min(1) @RequestParam("rentalId") Long rentalId,
             @Parameter(description = "Идентификатор точки проката", required = true) @Min(1) @RequestParam("rentalPointId") Long rentalPointId
     ) {
-
+        logger.info("Полученный запрос: POST /end с параметрами: rentalId={}, rentalPointId={}.", rentalId, rentalPointId);
         this.rentalService.stopRental(rentalId, rentalPointId);
+
+        logger.debug("Аренда окончена: rentalId={} на точке: rentalPointId={}.", rentalId, rentalPointId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -99,6 +115,10 @@ public class RentalController {
             description = "Скорее всего будет убрано в админ-панель."
     )
     public List<ShortRentalDto> getRentals() {
-        return this.rentalMapper.mapToShortDtos(this.rentalService.getRentals());
+        logger.info("Полученный запрос: GET.");
+        List<Rental> rentals = this.rentalService.getRentals();
+
+        logger.debug("Получение всех аренд в количестве: {}.", rentals.size());
+        return this.rentalMapper.mapToShortDtos(rentals);
     }
 }

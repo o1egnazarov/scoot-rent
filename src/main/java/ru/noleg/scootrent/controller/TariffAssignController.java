@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -27,6 +29,8 @@ import ru.noleg.scootrent.service.tariff.TariffAssignmentService;
 )
 public class TariffAssignController {
 
+    private static final Logger logger = LoggerFactory.getLogger(TariffAssignController.class);
+
     private final TariffAssignmentService tariffAssignmentService;
     private final SubscriptionService subscriptionService;
 
@@ -47,6 +51,8 @@ public class TariffAssignController {
             @Parameter(description = "Идентификатор тарифа", required = true) @Min(1) @PathVariable("tariffId") Long tariffId,
             @Valid @RequestBody AssignTariffDto tariffDto
     ) {
+        logger.info("Полученный запрос: POST назначения тарифа с id: {}, пользователя с id: {}.", tariffId, tariffDto.userId());
+
         this.tariffAssignmentService.assignTariffToUser(
                 tariffDto.userId(),
                 tariffId,
@@ -54,11 +60,13 @@ public class TariffAssignController {
                 tariffDto.discountPct()
         );
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        logger.debug("Тариф успешно назначен с ID: {}.", tariffId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .build();
     }
 
     @PostMapping("/subscribe/{tariffId}")
-    // TODO как тут лучше передавать userId
     @Operation(
             summary = "Назначение подписки.",
             description = "Позволяет назначить подписку пользователю."
@@ -67,7 +75,13 @@ public class TariffAssignController {
             @Parameter(description = "Идентификатор тарифа", required = true) @Min(1) @PathVariable("tariffId") Long tariffId,
             @Valid @RequestBody SubscribeUserDto subscribeDto
     ) {
+        logger.info("Полученный запрос: POST назначения подписки с id: {}, пользователя с id: {}.", tariffId, subscribeDto.userId());
+
         this.subscriptionService.subscribeUser(subscribeDto.userId(), tariffId);
-        return ResponseEntity.status(HttpStatus.OK).build();
+
+        logger.debug("Подписка успешно назначена с ID: {}.", tariffId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .build();
     }
 }

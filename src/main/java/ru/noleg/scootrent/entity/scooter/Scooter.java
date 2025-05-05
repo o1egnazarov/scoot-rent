@@ -10,14 +10,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import ru.noleg.scootrent.entity.rental.Rental;
 import ru.noleg.scootrent.entity.rental.RentalPoint;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "t_scooter")
@@ -28,7 +24,7 @@ public class Scooter {
     @Column(name = "c_id")
     private Long id;
 
-    @Column(name = "c_number_plate", nullable = false, length = 10)
+    @Column(name = "c_number_plate", nullable = false, unique = true, length = 10)
     private String numberPlate;
 
     @Column(name = "c_status", nullable = false)
@@ -39,15 +35,12 @@ public class Scooter {
     private Duration durationInUsed = Duration.ZERO;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "c_model", nullable = false)
+    @JoinColumn(name = "c_model_id", nullable = false)
     private ScooterModel model;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "c_rental_point")
+    @JoinColumn(name = "c_rental_point_id")
     private RentalPoint rentalPoint;
-
-    @OneToMany(mappedBy = "scooter")
-    private List<Rental> rentals = new ArrayList<>();
 
     public Scooter() {
     }
@@ -57,14 +50,13 @@ public class Scooter {
                    ScooterStatus status,
                    Duration durationInUsed,
                    ScooterModel model,
-                   RentalPoint rentalPoint,
-                   List<Rental> rentals) {
+                   RentalPoint rentalPoint
+    ) {
         this.id = id;
         this.numberPlate = numberPlate;
         this.status = status;
         this.durationInUsed = durationInUsed;
         this.model = model;
-        this.rentals = rentals;
         this.rentalPoint = rentalPoint;
     }
 
@@ -110,15 +102,6 @@ public class Scooter {
 
     public void setModel(ScooterModel model) {
         this.model = model;
-    }
-
-
-    public List<Rental> getRentals() {
-        return rentals;
-    }
-
-    public void setRentals(List<Rental> rentals) {
-        this.rentals = rentals;
     }
 
     public RentalPoint getRentalPoint() {

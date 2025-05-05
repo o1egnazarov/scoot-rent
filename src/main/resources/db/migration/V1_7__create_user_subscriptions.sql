@@ -1,0 +1,16 @@
+CREATE TABLE t_user_subscriptions
+(
+    c_id                 BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    c_minute_usage_limit INTEGER,
+    c_minutes_used       INTEGER,
+    c_start_date         TIMESTAMP(6),
+    c_end_date           TIMESTAMP(6),
+    c_tariff_id          BIGINT NOT NULL,
+    c_user_id            BIGINT NOT NULL,
+
+    CONSTRAINT fk_user_subscription_tariff FOREIGN KEY (c_tariff_id) REFERENCES t_tariff (c_id) ON DELETE CASCADE,
+    CONSTRAINT fk_user_subscription_user FOREIGN KEY (c_user_id) REFERENCES t_user (c_id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_subscription_user_id ON t_user_subscriptions(c_user_id);
+CREATE INDEX idx_subscription_tariff_id ON t_user_subscriptions(c_tariff_id);

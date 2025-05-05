@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -33,6 +35,8 @@ import java.util.List;
 )
 public class ScooterModelController {
 
+    private static final Logger logger = LoggerFactory.getLogger(ScooterModelController.class);
+
     private final ScooterModelMapper scooterModelMapper;
     private final ScooterModelService scooterModelService;
 
@@ -47,10 +51,15 @@ public class ScooterModelController {
             description = "Позволяет сохранить новую модель самоката."
     )
     public ResponseEntity<Long> addScooterModel(@Valid @RequestBody ScooterModelDto scooterModelDto) {
+        logger.info("Полученный запрос: POST добавления модели самоката: {}.", scooterModelDto.title());
+
         ScooterModel scooterModel = this.scooterModelMapper.mapToEntity(scooterModelDto);
+        Long scooterModelId = this.scooterModelService.add(scooterModel);
+
+        logger.debug("Модель самоката добавлена с ID: {}.", scooterModelId);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(this.scooterModelService.add(scooterModel));
+                .body(scooterModelId);
     }
 
     @PutMapping("/{id}")
@@ -62,11 +71,14 @@ public class ScooterModelController {
             @Parameter(description = "Идентификатор модели самоката", required = true) @Min(1) @PathVariable("id") Long id,
             @Valid @RequestBody UpdateScooterModelDto scooterModelDto
     ) {
+        logger.info("Полученный запрос: PUT обновление модели самоката с id: {}.", id);
+
         ScooterModel scooterModel = this.scooterModelService.getScooterModel(id);
 
         this.scooterModelMapper.updateScooterModelFromDto(scooterModelDto, scooterModel);
         this.scooterModelService.add(scooterModel);
 
+        logger.debug("Модель самоката с ID: {} успешно обновлена.", id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.scooterModelMapper.mapToDto(scooterModel));
@@ -80,7 +92,11 @@ public class ScooterModelController {
     public ResponseEntity<Void> deleteScooter(
             @Parameter(description = "Идентификатор модели самоката", required = true) @Min(1) @PathVariable("id") Long id
     ) {
+        logger.info("Полученный запрос: DELETE удаления модели самоката с id: {}.", id);
+
         this.scooterModelService.delete(id);
+
+        logger.debug("Модель самоката с id: {}, успешно удалена.", id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();
@@ -92,7 +108,12 @@ public class ScooterModelController {
             description = "Позволяет получить всевозможные модели самокатов в системе."
     )
     public ResponseEntity<List<ScooterModelDto>> getAllScooterModels() {
-        List<ScooterModelDto> scooterModelDtos = this.scooterModelMapper.mapToDtos(this.scooterModelService.getAllScooterModels());
+        logger.info("Полученный запрос: GET получения всех моделей самоката.");
+
+        List<ScooterModelDto> scooterModelDtos =
+                this.scooterModelMapper.mapToDtos(this.scooterModelService.getAllScooterModels());
+
+        logger.debug("Получено моделей самокатов: {}.", scooterModelDtos.size());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(scooterModelDtos);

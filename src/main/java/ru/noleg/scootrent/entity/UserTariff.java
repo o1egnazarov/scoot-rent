@@ -24,7 +24,6 @@ public class UserTariff {
     @Column(name = "c_id")
     private Long id;
 
-    // TODO подумать над двойной или одинарной связью
     @ManyToOne(optional = false)
     @JoinColumn(name = "c_user_id")
     private User user;
@@ -36,9 +35,8 @@ public class UserTariff {
     @Column(name = "c_discount_pct")
     private Integer discountPct;
 
-    // TODO я бы сделал строго поминутно ну пока так
     @Transient
-    private BigDecimal customPricePerUnit;
+    private BigDecimal customPricePerMinute;
 
     @Column(name = "c_valid_from")
     private LocalDateTime validFrom;
@@ -53,14 +51,14 @@ public class UserTariff {
                       User user,
                       Tariff tariff,
                       Integer discountPct,
-                      BigDecimal customPricePerUnit,
+                      BigDecimal customPricePerMinute,
                       LocalDateTime validFrom,
                       LocalDateTime validUntil) {
         this.id = id;
         this.user = user;
         this.tariff = tariff;
         this.discountPct = discountPct;
-        this.customPricePerUnit = customPricePerUnit;
+        this.customPricePerMinute = customPricePerMinute;
         this.validFrom = validFrom;
         this.validUntil = validUntil;
     }
@@ -97,12 +95,12 @@ public class UserTariff {
         this.discountPct = discountPct;
     }
 
-    public BigDecimal getCustomPricePerUnit() {
-        return customPricePerUnit;
+    public BigDecimal getCustomPricePerMinute() {
+        return customPricePerMinute;
     }
 
-    public void setCustomPricePerUnit(BigDecimal customPricePerUnit) {
-        this.customPricePerUnit = customPricePerUnit;
+    public void setCustomPricePerMinute(BigDecimal customPricePerMinute) {
+        this.customPricePerMinute = customPricePerMinute;
     }
 
     public LocalDateTime getValidFrom() {

@@ -7,15 +7,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import ru.noleg.scootrent.entity.UserSubscription;
-import ru.noleg.scootrent.entity.UserTariff;
-import ru.noleg.scootrent.entity.rental.Rental;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "t_user")
@@ -44,15 +38,6 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "user")
-    private List<Rental> rentals = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private List<UserTariff> userTariffs = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private List<UserSubscription> userSubscriptions = new ArrayList<>();
-
     public User() {
     }
 
@@ -62,11 +47,7 @@ public class User {
                 String password,
                 String phone,
                 LocalDate dateOfBirth,
-                Role role,
-                List<Rental> rentals,
-                List<UserTariff> userTariffs,
-                List<UserSubscription> userSubscriptions) {
-
+                Role role) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -74,13 +55,6 @@ public class User {
         this.password = password;
         this.dateOfBirth = dateOfBirth;
         this.role = role;
-        this.rentals = rentals;
-        this.userTariffs = userTariffs;
-        this.userSubscriptions = userSubscriptions;
-    }
-
-    public void addRental(Rental rental) {
-        this.rentals.add(rental);
     }
 
     public Long getId() {
@@ -137,29 +111,5 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
-    }
-
-    public List<Rental> getRentals() {
-        return rentals;
-    }
-
-    public void setRentals(List<Rental> rentals) {
-        this.rentals = rentals;
-    }
-
-    public List<UserTariff> getUserTariffs() {
-        return userTariffs;
-    }
-
-    public void setUserTariffs(List<UserTariff> tariffs) {
-        this.userTariffs = tariffs;
-    }
-
-    public List<UserSubscription> getUserSubscriptions() {
-        return userSubscriptions;
-    }
-
-    public void setUserSubscriptions(List<UserSubscription> userSubscriptions) {
-        this.userSubscriptions = userSubscriptions;
     }
 }

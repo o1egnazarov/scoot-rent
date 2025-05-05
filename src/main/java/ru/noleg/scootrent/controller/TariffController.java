@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -33,6 +35,8 @@ import java.util.List;
 )
 public class TariffController {
 
+    private static final Logger logger = LoggerFactory.getLogger(TariffController.class);
+
     private final TariffService tariffService;
     private final TariffMapper tariffMapper;
 
@@ -47,10 +51,15 @@ public class TariffController {
             description = "Позволяет добавить новый тариф."
     )
     public ResponseEntity<Long> addTariff(@Valid @RequestBody TariffDto tariffDto) {
+        logger.info("Полученный запрос: POST добавления тарифа: {}.", tariffDto.title());
+
         Tariff tariff = this.tariffMapper.mapToEntity(tariffDto);
+        Long tariffId = this.tariffService.createTariff(tariff);
+
+        logger.debug("Тариф добавлен с ID: {}.", tariffId);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(this.tariffService.createTariff(tariff));
+                .body(tariffId);
     }
 
     @PutMapping("/{id}")
@@ -62,11 +71,13 @@ public class TariffController {
             @Parameter(description = "Идентификатор тарифа", required = true) @Min(1) @PathVariable("id") Long id,
             @Valid @RequestBody UpdateTariffDto updateTariffDto
     ) {
+        logger.info("Полученный запрос: PUT обновления тарифа с id: {}.", id);
         Tariff tariff = this.tariffService.getTariff(id);
 
         this.tariffMapper.updateTariffFromDto(updateTariffDto, tariff);
         this.tariffService.createTariff(tariff);
 
+        logger.debug("Тариф с ID: {} успешно обновлен.", id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.tariffMapper.mapToDto(tariff));
@@ -81,8 +92,14 @@ public class TariffController {
     public ResponseEntity<Void> disableTariff(
             @Parameter(description = "Идентификатор тарифа", required = true) @Min(1) @PathVariable("id") Long id
     ) {
+        logger.info("Полученный запрос: DELETE деактивации тарифа с id: {}.", id);
+
         this.tariffService.deactivateTariff(id);
-        return ResponseEntity.noContent().build();
+
+        logger.debug("Тариф с id: {}, успешно деактивирован.", id);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .build();
     }
 
     @GetMapping
@@ -91,7 +108,11 @@ public class TariffController {
             description = "Позволяет получить всевозможные активные тарифы."
     )
     public ResponseEntity<List<TariffDto>> getActiveTariffs() {
+        logger.info("Полученный запрос: GET получения всех активных тарифов.");
+
         List<Tariff> tariffs = this.tariffService.getActiveTariffs();
+
+        logger.debug("Получено тарифов: {}.", tariffs.size());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.tariffMapper.mapToDtos(tariffs));

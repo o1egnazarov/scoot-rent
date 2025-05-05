@@ -68,7 +68,6 @@ public class RentalServiceDefaultImpl implements RentalService {
     @Override
     public List<Rental> getRentalHistoryForScooter(Long scooterId) {
         try {
-
             return this.rentalRepository.findRentalForScooter(scooterId);
         } catch (Exception e) {
             throw new ServiceException("Error on get rental history for scooter", e);

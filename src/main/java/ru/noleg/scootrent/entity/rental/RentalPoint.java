@@ -42,15 +42,16 @@ public class RentalPoint {
     @Column(name = "c_address", length = 100)
     private String address;
 
-    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
-    @JoinColumn(name = "c_parent")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "c_parent_id")
     private RentalPoint parent;
 
     @OneToMany(mappedBy = "parent", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @BatchSize(size = 20)
     private List<RentalPoint> children = new ArrayList<>();
 
+    // TODO думаю оставить, так как много где надо
     @OneToMany(mappedBy = "rentalPoint")
     @BatchSize(size = 20)
     private Set<Scooter> scooters = new HashSet<>();

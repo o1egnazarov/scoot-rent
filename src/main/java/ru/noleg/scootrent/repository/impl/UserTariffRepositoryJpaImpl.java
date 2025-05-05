@@ -27,9 +27,11 @@ public class UserTariffRepositoryJpaImpl extends BaseRepositoryImpl<UserTariff, 
     public Optional<UserTariff> findActiveTariffByUserAndTime(Long userId, LocalDateTime time) {
         try {
 
-            final String ql = "SELECT ut FROM UserTariff ut " +
-                    "WHERE ut.user.id = :userId AND " +
-                    ":time BETWEEN ut.validFrom AND ut.validUntil";
+            final String ql = """
+                    SELECT ut FROM UserTariff ut
+                    WHERE ut.user.id = :userId AND
+                    :time BETWEEN ut.validFrom AND ut.validUntil
+                    """;
 
             TypedQuery<UserTariff> query = entityManager.createQuery(ql, UserTariff.class);
             query.setParameter("userId", userId);

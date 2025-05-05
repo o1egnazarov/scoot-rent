@@ -28,9 +28,11 @@ public class UserSubscriptionRepositoryJpaImpl extends BaseRepositoryImpl<UserSu
     public Optional<UserSubscription> findActiveSubscriptionByUserAndTime(Long userId, LocalDateTime time) {
         try {
 
-            final String ql = "SELECT us FROM UserSubscription us " +
-                    "WHERE us.user.id = :userId AND " +
-                    ":time BETWEEN us.startDate AND us.endDate";
+            final String ql = """
+                    SELECT us FROM UserSubscription us
+                    WHERE us.user.id = :userId AND
+                    :time BETWEEN us.startDate AND us.endDate
+                    """;
 
             TypedQuery<UserSubscription> query = entityManager.createQuery(ql, UserSubscription.class);
             query.setParameter("userId", userId);
