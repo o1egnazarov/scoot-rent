@@ -44,7 +44,7 @@ public class RentalStarterImpl implements RentalStarter {
 
     @Override
     @Transactional
-    public Long startRental(Long userId, Long scooterId, Long rentalPointId) {
+    public Long startRental(Long userId, Long scooterId, Long startPointId) {
         try {
 
             Scooter scooter = this.scooterRepository.findById(scooterId).orElseThrow(
@@ -63,8 +63,8 @@ public class RentalStarterImpl implements RentalStarter {
                 throw new BusinessLogicException("Rental for user with id: " + userId + " is already active.");
             }
 
-            LocationNode startPoint = this.locationRepository.findById(rentalPointId).orElseThrow(
-                    () -> new NotFoundException("Rental point with id: " + rentalPointId + " not found.")
+            LocationNode startPoint = this.locationRepository.findById(startPointId).orElseThrow(
+                    () -> new NotFoundException("Rental point with id: " + startPointId + " not found.")
             );
 
             if (startPoint.getLocationType() != LocationType.RENTAL_POINT) {
@@ -73,7 +73,7 @@ public class RentalStarterImpl implements RentalStarter {
 
             // на null как будто нужна проверка
             if (startPoint.getScooters() != null && !startPoint.getScooters().contains(scooter)) {
-                throw new BusinessLogicException("Scooter with id: " + scooterId + " is not at the rental point with id: " + rentalPointId);
+                throw new BusinessLogicException("Scooter with id: " + scooterId + " is not at the rental point with id: " + startPointId);
             }
 
             var tariff = this.tariffSelectionService.selectTariffForUser(userId);

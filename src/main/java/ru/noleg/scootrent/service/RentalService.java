@@ -5,13 +5,13 @@ import ru.noleg.scootrent.entity.rental.Rental;
 import java.util.List;
 
 public interface RentalService {
-    Long startRental(Long userId, Long scooterId, Long rentalPointId);
+    Long startRental(Long userId, Long scooterId, Long startPointId);
 
     void pauseRental(Long rentalId);
 
     void resumeRental(Long rentalId);
 
-    void stopRental(Long rentalId, Long rentalPointId);
+    void stopRental(Long rentalId, Long endPointId);
 
     List<Rental> getRentals();
 

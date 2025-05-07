@@ -18,6 +18,7 @@ import java.util.List;
 public interface ScooterMapper extends BaseMapper<Scooter, ScooterDto> {
     @Override
     @Mapping(target = "model.id", source = "modelId")
+    @Mapping(target = "rentalPoint.id", source = "rentalPointId")
     Scooter mapToEntity(ScooterDto scooterDto);
 
     ScooterDtoWithModel mapToDtoWithModel(Scooter scooter);
@@ -30,6 +31,7 @@ public interface ScooterMapper extends BaseMapper<Scooter, ScooterDto> {
 
     @Override
     @Mapping(target = "modelId", source = "model.id")
+    @Mapping(target = "rentalPointId", source = "rentalPoint.id")
     ScooterDto mapToDto(Scooter scooter);
 
     @Override

@@ -21,7 +21,6 @@ public class UserServiceDefaultImpl implements UserService {
 
     @Transactional
     public User save(User user) {
-
         return this.userRepository.save(user);
     }
 

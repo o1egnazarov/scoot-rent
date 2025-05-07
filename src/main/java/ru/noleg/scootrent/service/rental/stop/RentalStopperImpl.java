@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.noleg.scootrent.entity.location.LocationNode;
 import ru.noleg.scootrent.entity.location.LocationType;
 import ru.noleg.scootrent.entity.rental.Rental;
+import ru.noleg.scootrent.entity.rental.RentalStatus;
 import ru.noleg.scootrent.entity.scooter.ScooterStatus;
 import ru.noleg.scootrent.exception.BusinessLogicException;
 import ru.noleg.scootrent.exception.NotFoundException;
@@ -40,6 +41,11 @@ public class RentalStopperImpl implements RentalStopper {
             Rental rental = this.rentalRepository.findById(rentalId).orElseThrow(
                     () -> new NotFoundException("Rental with id: " + rentalId + " not found.")
             );
+
+            // TODO как будто логично чем почти в конце
+            if (rental.getRentalStatus() == RentalStatus.COMPLETED) {
+                throw new BusinessLogicException("Rental is already completed.");
+            }
 
             LocationNode endPoint = this.locationRepository.findById(endPointId).orElseThrow(
                     () -> new NotFoundException("Rental point with id: " + endPointId + " not found.")

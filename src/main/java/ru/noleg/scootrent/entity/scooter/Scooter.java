@@ -34,7 +34,7 @@ public class Scooter {
     @Column(name = "c_duration_in_used")
     private Duration durationInUsed = Duration.ZERO;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY) // TODO или просто запрос который подгружает все
     @JoinColumn(name = "c_model_id", nullable = false)
     private ScooterModel model;
 

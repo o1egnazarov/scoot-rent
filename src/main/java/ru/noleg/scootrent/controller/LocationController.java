@@ -144,6 +144,7 @@ public class LocationController {
                 .body(this.locationMapper.mapToDetailDtos(locationNode));
     }
 
+    // TODO допустим выбрали город а там totalCount = 0 и scooters = [] - адекватно?
     // TODO как лучше? возвращать любую локацию по id или проверять что переданный id это id локации с типом RENTAL_POINT,
     // TODO иначе кидать BAD REQUEST
     @GetMapping("/{id}")

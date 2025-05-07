@@ -1,0 +1,13 @@
+package ru.noleg.scootrent.exception.handler;
+
+public enum ErrorCode {
+    RECOURSE_NOT_FOUND,
+    USER_NOT_FOUND,
+    SERVICE_ERROR,
+    VALIDATION_ERROR,
+    UNKNOWN_ERROR,
+    BUSINESS_LOGIC_ERROR,
+    NO_ACCESS_TO_RECOURSE,
+    MISSING_REQUIRED_PARAM,
+    DATABASE_ERROR
+}

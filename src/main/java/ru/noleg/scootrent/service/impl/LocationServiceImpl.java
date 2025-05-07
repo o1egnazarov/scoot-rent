@@ -24,55 +24,45 @@ public class LocationServiceImpl implements LocationService {
         this.locationRepository = locationRepository;
     }
 
+    // TODO обработка ошибок, как будто где вызов методов репозитория смысла нет оборачивать еще и в service exception
+
     @Override
     @Transactional
     public Long add(LocationNode locationNode) {
-        try {
 
-            return this.locationRepository.save(locationNode).getId();
-        } catch (Exception e) {
-
-            throw new ServiceException("Error on add location.", e);
+        if (locationNode.getParent() != null && !this.locationRepository.existsById(locationNode.getParent().getId())) {
+            throw new NotFoundException("Parent location with id " + locationNode.getParent().getId() + " does not exist.");
         }
+
+        return this.locationRepository.save(locationNode).getId();
     }
 
     @Override
     @Transactional
     public void delete(Long id) {
-        try {
-
-            if (!this.locationRepository.existsById(id)) {
-                throw new NotFoundException("Location with id: " + id + " not found.");
-            }
-
-            this.locationRepository.delete(id);
-        } catch (NotFoundException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new ServiceException("Error on delete location.", e);
+        if (!this.locationRepository.existsById(id)) {
+            throw new NotFoundException("Location with id: " + id + " not found.");
         }
+        this.locationRepository.delete(id);
     }
 
     @Override
     public LocationNode getLocationById(Long id) {
-        try {
-
-            return this.locationRepository.findLocationById(id).orElseThrow(
-                    () -> new NotFoundException("Location with id " + id + " not found")
-            );
-        } catch (NotFoundException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new ServiceException("Error on get location.", e);
-        }
+        return this.locationRepository.findLocationById(id).orElseThrow(
+                () -> new NotFoundException("Location with id " + id + " not found")
+        );
     }
 
     @Override
-    // TODO возможно добавить кеширование
     public LocationNode getLocationByCoordinates(BigDecimal latitude, BigDecimal longitude) {
         return this.locationRepository.findLocationByCoordinates(latitude, longitude).orElseThrow(
                 () -> new NotFoundException("Rental point with latitude: " + latitude + " and longitude: " + longitude + " not found.")
         );
+    }
+
+    @Override
+    public List<LocationNode> getChildrenLocation(Long parentId) {
+        return this.locationRepository.findChildrenLocationByParentId(parentId);
     }
 
     @Override
@@ -86,10 +76,13 @@ public class LocationServiceImpl implements LocationService {
 
             List<LocationNode> roots = new ArrayList<>();
             for (LocationNode node : allNodes) {
+
                 LocationNode parent = node.getParent();
                 if (parent != null && parent.getId() != null) {
+
                     idMap.get(parent.getId()).getChildren().add(node);
                 } else {
+
                     roots.add(node);
                 }
             }
@@ -97,10 +90,5 @@ public class LocationServiceImpl implements LocationService {
         } catch (Exception e) {
             throw new ServiceException("Error on get all locations.", e);
         }
-    }
-
-    @Override
-    public List<LocationNode> getChildrenLocation(Long parentId) {
-        return this.locationRepository.findChildrenLocationByParentId(parentId);
     }
 }

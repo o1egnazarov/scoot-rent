@@ -40,13 +40,13 @@ public class BillingServiceImpl implements BillingService {
     @Transactional
     public BigDecimal calculateRentalCost(User user, Duration rentalDuration) {
         try {
-            logger.info("Calculate rental cost for user: {}.", user.getId());
+            logger.info("Расчет цены за аренду для пользователя c id {}.", user.getId());
 
             UserSubscription userSubscription =
                     this.userSubscriptionRepository.findActiveSubscriptionByUserAndTime(user.getId(), LocalDateTime.now()).orElse(null);
 
             if (userSubscription != null && !isExpired(userSubscription)) {
-                logger.info("Subscription cost calculation with id: {}.", userSubscription.getId());
+                logger.info("Расчет стоимости поездки с учетом подписки с id: {}.", userSubscription.getId());
                 return this.calculateSubCost(userSubscription, rentalDuration);
             }
 
@@ -54,19 +54,19 @@ public class BillingServiceImpl implements BillingService {
                     this.userTariffRepository.findActiveTariffByUserAndTime(user.getId(), LocalDateTime.now()).orElse(null);
 
             if (userTariff != null) {
-                logger.info("Tariff cost calculation with id: {}.", userTariff.getId());
+                logger.info("Расчет стоимости поездки с учетом тарифа с id: {}.", userTariff.getId());
                 return this.calculateTariffCost(userTariff, rentalDuration);
             }
 
-            logger.error("No tariff and subscription found for user: {}.", user.getId());
+            logger.error("Тариф или подписка для пользователя с id {} не найдены.", user.getId());
             throw new BusinessLogicException("No tariff and subscription found for user " + user.getId());
         } catch (BusinessLogicException e) {
 
-            logger.error("Business logic exception in calculate rental cost.");
+            logger.error("Исключение бизнес-логики при расчете стоимости аренды.", e);
             throw e;
         } catch (Exception e) {
 
-            logger.error("Service exception in calculate rental cost.");
+            logger.error("Исключение в сервисе при расчете стоимости аренды.", e);
             throw new ServiceException("Error on calculate rental cost", e);
         }
     }

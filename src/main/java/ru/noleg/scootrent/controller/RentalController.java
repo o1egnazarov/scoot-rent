@@ -48,10 +48,10 @@ public class RentalController {
     public ResponseEntity<Long> startRental(
             @Parameter(description = "Идентификатор пользователя", required = true) @Min(1) @RequestParam("userId") Long userId,
             @Parameter(description = "Идентификатор самоката", required = true) @Min(1) @RequestParam("scooterId") Long scooterId,
-            @Parameter(description = "Идентификатор точки доступа", required = true) @Min(1) @RequestParam("rentalPointId") Long rentalPointId
+            @Parameter(description = "Идентификатор стартовой точки аренды", required = true) @Min(1) @RequestParam("startPointId") Long startPointId
     ) {
-        logger.info("Полученный запрос: POST /start с параметрами: userId={}, scooterId={}, rentalPointId={}.", userId, scooterId, rentalPointId);
-        Long rentalId = this.rentalService.startRental(userId, scooterId, rentalPointId);
+        logger.info("Полученный запрос: POST /start с параметрами: userId={}, scooterId={}, rentalPointId={}.", userId, scooterId, startPointId);
+        Long rentalId = this.rentalService.startRental(userId, scooterId, startPointId);
 
         logger.debug("Аренда начата успешно. rentalId={}.", rentalId);
         return ResponseEntity
@@ -100,12 +100,12 @@ public class RentalController {
     )
     public ResponseEntity<Void> endRental(
             @Parameter(description = "Идентификатор аренды", required = true) @Min(1) @RequestParam("rentalId") Long rentalId,
-            @Parameter(description = "Идентификатор точки проката", required = true) @Min(1) @RequestParam("rentalPointId") Long rentalPointId
+            @Parameter(description = "Идентификатор конечной точки проката", required = true) @Min(1) @RequestParam("endPointId") Long endPointId
     ) {
-        logger.info("Полученный запрос: POST /end с параметрами: rentalId={}, rentalPointId={}.", rentalId, rentalPointId);
-        this.rentalService.stopRental(rentalId, rentalPointId);
+        logger.info("Полученный запрос: POST /end с параметрами: rentalId={}, endPointId={}.", rentalId, endPointId);
+        this.rentalService.stopRental(rentalId, endPointId);
 
-        logger.debug("Аренда окончена: rentalId={} на точке: rentalPointId={}.", rentalId, rentalPointId);
+        logger.debug("Аренда окончена: rentalId={} на точке: endPointId={}.", rentalId, endPointId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

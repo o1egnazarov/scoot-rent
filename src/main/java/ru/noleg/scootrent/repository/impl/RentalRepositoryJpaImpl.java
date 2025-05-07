@@ -70,6 +70,7 @@ public class RentalRepositoryJpaImpl extends BaseRepositoryImpl<Rental, Long> im
                     LEFT JOIN FETCH r.startPoint
                     LEFT JOIN FETCH r.endPoint
                     LEFT JOIN FETCH r.tariff
+                    LEFT JOIN FETCH r.subscription
                     LEFT JOIN FETCH r.scooter
                     LEFT JOIN FETCH r.user
                     WHERE r.user.id = :userId
@@ -94,6 +95,7 @@ public class RentalRepositoryJpaImpl extends BaseRepositoryImpl<Rental, Long> im
                     LEFT JOIN FETCH r.startPoint
                     LEFT JOIN FETCH r.endPoint
                     LEFT JOIN FETCH r.tariff
+                    LEFT JOIN FETCH r.subscription
                     LEFT JOIN FETCH r.scooter
                     LEFT JOIN FETCH r.user
                     WHERE r.scooter.id = :scooterId
