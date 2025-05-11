@@ -3,8 +3,9 @@ package ru.noleg.scootrent.service.rental.billing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.noleg.scootrent.entity.rental.Rental;
+import ru.noleg.scootrent.entity.tariff.Tariff;
 import ru.noleg.scootrent.entity.tariff.TariffType;
+import ru.noleg.scootrent.entity.user.User;
 import ru.noleg.scootrent.exception.BusinessLogicException;
 import ru.noleg.scootrent.service.rental.billing.strategy.RentalCostStrategy;
 
@@ -42,8 +43,8 @@ public class BillingServiceImpl implements BillingService {
     }
 
     @Override
-    public BigDecimal calculateRentalCost(Rental rental, Duration rentalDuration) {
-        TariffType type = rental.getTariff().getType();
+    public BigDecimal calculateRentalCost(User user, Tariff tariff, Duration rentalDuration) {
+        TariffType type = tariff.getType();
         logger.debug("Расчет стоимости для типа тарифа: {}.", type);
 
         RentalCostStrategy strategy = Optional.ofNullable(this.strategyMap.get(type)).orElseThrow(
@@ -53,6 +54,6 @@ public class BillingServiceImpl implements BillingService {
                 }
         );
 
-        return strategy.calculate(rental.getUser(), rentalDuration);
+        return strategy.calculate(user, tariff, rentalDuration);
     }
 }

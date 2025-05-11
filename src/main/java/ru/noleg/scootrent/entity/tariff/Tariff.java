@@ -27,8 +27,12 @@ public class Tariff {
     @Enumerated(value = EnumType.STRING)
     private TariffType type;
 
-    @Column(name = "c_price_per_minute")
-    private BigDecimal pricePerMinute;
+    @Column(name = "c_billing_mode", nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private BillingMode billingMode;
+
+    @Column(name = "c_price_per_unit")
+    private BigDecimal pricePerUnit;
 
     @Column(name = "c_unlock_fee")
     private int unlockFee;
@@ -58,7 +62,7 @@ public class Tariff {
     public Tariff(Long id,
                   String title,
                   TariffType type,
-                  BigDecimal pricePerMinute,
+                  BigDecimal pricePerUnit,
                   int unlockFee,
                   DurationType durationUnit,
                   Integer durationValue,
@@ -69,7 +73,7 @@ public class Tariff {
         this.id = id;
         this.title = title;
         this.type = type;
-        this.pricePerMinute = pricePerMinute;
+        this.pricePerUnit = pricePerUnit;
         this.unlockFee = unlockFee;
         this.durationUnit = durationUnit;
         this.durationValue = durationValue;
@@ -108,12 +112,12 @@ public class Tariff {
         this.type = type;
     }
 
-    public BigDecimal getPricePerMinute() {
-        return pricePerMinute;
+    public BigDecimal getPricePerUnit() {
+        return pricePerUnit;
     }
 
-    public void setPricePerMinute(BigDecimal pricePerUnit) {
-        this.pricePerMinute = pricePerUnit;
+    public void setPricePerUnit(BigDecimal pricePerUnit) {
+        this.pricePerUnit = pricePerUnit;
     }
 
     public int getUnlockFee() {
@@ -170,5 +174,13 @@ public class Tariff {
 
     public void setValidUntil(LocalDateTime validUntil) {
         this.validUntil = validUntil;
+    }
+
+    public BillingMode getBillingMode() {
+        return billingMode;
+    }
+
+    public void setBillingMode(BillingMode billingMode) {
+        this.billingMode = billingMode;
     }
 }

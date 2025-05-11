@@ -21,9 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.noleg.scootrent.dto.tariff.TariffDto;
 import ru.noleg.scootrent.dto.tariff.UpdateTariffDto;
 import ru.noleg.scootrent.entity.tariff.Tariff;
-import ru.noleg.scootrent.exception.NotFoundException;
 import ru.noleg.scootrent.mapper.TariffMapper;
-import ru.noleg.scootrent.repository.TariffRepository;
 import ru.noleg.scootrent.service.tariff.TariffService;
 
 import java.util.List;
@@ -41,12 +39,10 @@ public class TariffController {
 
     private final TariffService tariffService;
     private final TariffMapper tariffMapper;
-    private final TariffRepository tariffRepository;
 
-    public TariffController(TariffService tariffService, TariffMapper tariffMapper, TariffRepository tariffRepository) {
+    public TariffController(TariffService tariffService, TariffMapper tariffMapper) {
         this.tariffService = tariffService;
         this.tariffMapper = tariffMapper;
-        this.tariffRepository = tariffRepository;
     }
 
     @PostMapping
@@ -60,7 +56,7 @@ public class TariffController {
         Tariff tariff = this.tariffMapper.mapToEntity(tariffDto);
         Long tariffId = this.tariffService.createTariff(tariff);
 
-        logger.debug("Тариф добавлен с ID: {}.", tariffId);
+        logger.info("Тариф добавлен с id: {}.", tariffId);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(tariffId);
@@ -81,7 +77,7 @@ public class TariffController {
         this.tariffMapper.updateTariffFromDto(updateTariffDto, tariff);
         this.tariffService.createTariff(tariff);
 
-        logger.debug("Тариф с ID: {} успешно обновлен.", id);
+        logger.info("Тариф с id: {} успешно обновлен.", id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.tariffMapper.mapToDto(tariff));
@@ -100,7 +96,7 @@ public class TariffController {
 
         this.tariffService.deactivateTariff(id);
 
-        logger.debug("Тариф с id: {}, успешно деактивирован.", id);
+        logger.info("Тариф с id: {}, успешно деактивирован.", id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();
@@ -116,7 +112,7 @@ public class TariffController {
 
         List<Tariff> tariffs = this.tariffService.getActiveTariffs();
 
-        logger.debug("Получено тарифов: {}.", tariffs.size());
+        logger.info("Получено тарифов: {}.", tariffs.size());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.tariffMapper.mapToDtos(tariffs));

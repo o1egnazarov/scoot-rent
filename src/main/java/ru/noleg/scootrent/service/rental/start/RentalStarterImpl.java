@@ -10,6 +10,7 @@ import ru.noleg.scootrent.entity.rental.Rental;
 import ru.noleg.scootrent.entity.rental.RentalStatus;
 import ru.noleg.scootrent.entity.scooter.Scooter;
 import ru.noleg.scootrent.entity.scooter.ScooterStatus;
+import ru.noleg.scootrent.entity.tariff.BillingMode;
 import ru.noleg.scootrent.entity.tariff.Tariff;
 import ru.noleg.scootrent.entity.user.User;
 import ru.noleg.scootrent.exception.BusinessLogicException;
@@ -49,8 +50,7 @@ public class RentalStarterImpl implements RentalStarter {
 
     @Override
     @Transactional
-    public Long startRental(Long userId, Long scooterId, Long startPointId) {
-        logger.info("Начало аренды. Пользователь: {}, Самокат: {}, Точка: {}", userId, scooterId, startPointId);
+    public Long startRental(Long userId, Long scooterId, Long startPointId, BillingMode billingMode) {
 
         Scooter scooter = this.validateAndGetScooter(scooterId);
         User user = this.validateAndGetUser(userId);
@@ -58,19 +58,18 @@ public class RentalStarterImpl implements RentalStarter {
 
         this.validateStartRental(userId, startPoint, scooter);
 
-        Tariff tariff = this.selectTariff(userId);
+        Tariff tariff = this.selectTariff(userId, billingMode);
 
-        // TODO проследить за самокатом (за его сохранением с новым статусом)
         scooter.setStatus(ScooterStatus.TAKEN);
-
         Long rentalId = this.createRental(user, scooter, tariff, startPoint);
-        logger.info("Аренда успешно создана. id: {}.", rentalId);
+
+        logger.debug("Аренда успешно создана. id: {}.", rentalId);
         return rentalId;
     }
 
-    private Tariff selectTariff(Long userId) {
+    private Tariff selectTariff(Long userId, BillingMode billingMode) {
         try {
-            return this.tariffSelectionService.selectTariffForUser(userId);
+            return this.tariffSelectionService.selectTariffForUser(userId, billingMode);
         } catch (Exception e) {
             logger.error("Ошибка в выборе тарифа для пользователя с id: {}", userId, e);
             throw new ServiceException("Ошибка в сервисе выбора тарифа для пользователя с id: " + userId, e);

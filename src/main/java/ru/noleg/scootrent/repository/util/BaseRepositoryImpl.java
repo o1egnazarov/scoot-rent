@@ -30,11 +30,11 @@ public abstract class BaseRepositoryImpl<T, ID> implements BaseRepository<T, ID>
             if (id == null) {
 
                 this.entityManager.persist(entity);
-                logger.info("Создана новая сущность {}.", type);
+                logger.debug("Создана новая сущность {}.", type);
             } else {
 
                 this.entityManager.merge(entity);
-                logger.info("Обновлена сущность {} с id: {}.", type, id);
+                logger.debug("Обновлена сущность {} с id: {}.", type, id);
             }
 
             this.entityManager.flush();
@@ -62,7 +62,7 @@ public abstract class BaseRepositoryImpl<T, ID> implements BaseRepository<T, ID>
             }
 
             this.entityManager.remove(entity);
-            logger.info("Сущность {} c id: {} удалена успешно.", type, id);
+            logger.debug("Сущность {} c id: {} удалена успешно.", type, id);
         } catch (Exception e) {
 
             logger.error("Ошибка удаления сущности {} с id: {}.", type, id, e);
@@ -80,7 +80,7 @@ public abstract class BaseRepositoryImpl<T, ID> implements BaseRepository<T, ID>
             final String ql = "SELECT e FROM " + type + " e";
             List<T> entities = this.entityManager.createQuery(ql, getEntityClass()).getResultList();
 
-            logger.info("Найдено {} {} сущностей.", entities.size(), type);
+            logger.debug("Найдено {} {} сущностей.", entities.size(), type);
             return entities;
         } catch (Exception e) {
 
@@ -99,7 +99,7 @@ public abstract class BaseRepositoryImpl<T, ID> implements BaseRepository<T, ID>
             T entity = entityManager.find(getEntityClass(), id);
             if (entity != null) {
 
-                logger.info("Найдена сущность {} с id: {}.", type, id);
+                logger.debug("Найдена сущность {} с id: {}.", type, id);
             } else {
 
                 logger.warn("Сущность {} не найдена по id: {}.", type, id);

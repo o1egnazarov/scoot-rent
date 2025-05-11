@@ -27,7 +27,6 @@ public class RentalResumerImpl implements RentalResumer {
     @Override
     @Transactional
     public void resumeRental(Long rentalId) {
-        logger.info("Возобновление аренды с id: {}.", rentalId);
 
         Rental rental = this.rentalRepository.findById(rentalId).orElseThrow(
                 () -> {
@@ -39,7 +38,7 @@ public class RentalResumerImpl implements RentalResumer {
         this.validateRentalStatusForResume(rentalId, rental);
 
         this.updateRentalStatus(rental);
-        logger.info("Аренда с ID: {} успешно возобновлена. Общее время приостановки: {}",
+        logger.debug("Аренда с ID: {} успешно возобновлена. Общее время приостановки: {}",
                 rentalId, Duration.between(rental.getLastPauseTime(), LocalDateTime.now()));
     }
 
@@ -51,8 +50,6 @@ public class RentalResumerImpl implements RentalResumer {
     }
 
     private void updateRentalStatus(Rental rental) {
-        logger.debug("Возобновление аренды с ID: {}", rental.getId());
-
         rental.addPause(Duration.between(rental.getLastPauseTime(), LocalDateTime.now()));
         rental.setLastPauseTime(null);
         rental.setRentalStatus(RentalStatus.ACTIVE);

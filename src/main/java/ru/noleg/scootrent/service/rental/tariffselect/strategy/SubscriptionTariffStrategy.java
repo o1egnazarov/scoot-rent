@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import ru.noleg.scootrent.entity.UserSubscription;
 import ru.noleg.scootrent.entity.tariff.Tariff;
 import ru.noleg.scootrent.repository.UserSubscriptionRepository;
+import ru.noleg.scootrent.entity.tariff.BillingMode;
 
 import java.time.LocalDateTime;
 
@@ -28,7 +29,7 @@ public class SubscriptionTariffStrategy implements TariffSelectionStrategy {
     }
 
     @Override
-    public Tariff selectTariffForUser(Long userId) {
+    public Tariff selectTariff(Long userId, BillingMode billingMode) {
         logger.debug("Выбор тарифа по подписке для пользователя с id: {}.", userId);
         return subscriptionRepository.findActiveSubscriptionByUserAndTime(userId, LocalDateTime.now())
                 .map(UserSubscription::getTariff)

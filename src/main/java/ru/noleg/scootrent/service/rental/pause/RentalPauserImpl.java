@@ -26,7 +26,6 @@ public class RentalPauserImpl implements RentalPauser {
     @Override
     @Transactional
     public void pauseRental(Long rentalId) {
-        logger.info("Приостановление аренды с id: {}.", rentalId);
 
         Rental rental = this.rentalRepository.findById(rentalId).orElseThrow(
                 () -> {
@@ -39,7 +38,7 @@ public class RentalPauserImpl implements RentalPauser {
         logger.debug("Текущий статус аренды: {}.", rental.getRentalStatus());
 
         this.updateRentalStatus(rental);
-        logger.info("Аренда с id: {} успешно приостановлена. Время приостановки: {}.", rentalId, rental.getLastPauseTime());
+        logger.debug("Аренда с id: {} успешно приостановлена. Время приостановки: {}.", rentalId, rental.getLastPauseTime());
     }
 
     private void validateRentalStatusForPause(Long rentalId, Rental rental) {
@@ -55,8 +54,6 @@ public class RentalPauserImpl implements RentalPauser {
     }
 
     private void updateRentalStatus(Rental rental) {
-        logger.debug("Обновление статуса аренды с {} на PAUSE", rental.getRentalStatus());
-
         rental.setRentalStatus(RentalStatus.PAUSE);
         rental.setLastPauseTime(LocalDateTime.now());
         this.rentalRepository.save(rental);

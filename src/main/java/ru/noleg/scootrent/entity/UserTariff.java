@@ -7,6 +7,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import ru.noleg.scootrent.entity.tariff.Tariff;
@@ -38,11 +40,26 @@ public class UserTariff {
     @Transient
     private BigDecimal customPricePerMinute;
 
-    @Column(name = "c_valid_from")
-    private LocalDateTime validFrom;
+    @Column(name = "c_start_date")
+    private LocalDateTime startDate;
 
-    @Column(name = "c_valid_until")
-    private LocalDateTime validUntil;
+    @Column(name = "c_end_date")
+    private LocalDateTime endDate;
+
+    @Transient
+    public LocalDateTime getCalculatedEndDate() {
+        if (tariff.getDurationUnit() == null || tariff.getDurationValue() == null) {
+            return null;
+        }
+
+        return switch (tariff.getDurationUnit()) {
+            case HOUR -> startDate.plusHours(tariff.getDurationValue());
+            case DAY -> startDate.plusDays(tariff.getDurationValue());
+            case WEEK -> startDate.plusWeeks(tariff.getDurationValue());
+            case MONTH -> startDate.plusMonths(tariff.getDurationValue());
+            case YEAR -> startDate.plusYears(tariff.getDurationValue());
+        };
+    }
 
     public UserTariff() {
     }
@@ -52,15 +69,13 @@ public class UserTariff {
                       Tariff tariff,
                       Integer discountPct,
                       BigDecimal customPricePerMinute,
-                      LocalDateTime validFrom,
-                      LocalDateTime validUntil) {
+                      LocalDateTime startDate) {
         this.id = id;
         this.user = user;
         this.tariff = tariff;
         this.discountPct = discountPct;
         this.customPricePerMinute = customPricePerMinute;
-        this.validFrom = validFrom;
-        this.validUntil = validUntil;
+        this.startDate = startDate;
     }
 
     public Long getId() {
@@ -103,19 +118,19 @@ public class UserTariff {
         this.customPricePerMinute = customPricePerMinute;
     }
 
-    public LocalDateTime getValidFrom() {
-        return validFrom;
+    public LocalDateTime getStartDate() {
+        return startDate;
     }
 
-    public void setValidFrom(LocalDateTime validFrom) {
-        this.validFrom = validFrom;
+    public void setStartDate(LocalDateTime validFrom) {
+        this.startDate = validFrom;
     }
 
-    public LocalDateTime getValidUntil() {
-        return validUntil;
+    public LocalDateTime getEndDate() {
+        return endDate;
     }
 
-    public void setValidUntil(LocalDateTime validUntil) {
-        this.validUntil = validUntil;
+    public void setEndDate(LocalDateTime validUntil) {
+        this.endDate = validUntil;
     }
 }

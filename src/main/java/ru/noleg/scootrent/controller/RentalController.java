@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.noleg.scootrent.dto.rental.ShortRentalDto;
 import ru.noleg.scootrent.entity.rental.Rental;
+import ru.noleg.scootrent.entity.tariff.BillingMode;
 import ru.noleg.scootrent.mapper.RentalMapper;
 import ru.noleg.scootrent.service.rental.RentalService;
 
@@ -46,14 +48,20 @@ public class RentalController {
             description = "Позволяет начать аренду для конкретного пользователя, самоката и точки проката."
     )
     public ResponseEntity<Long> startRental(
-            @Parameter(description = "Идентификатор пользователя", required = true) @Min(1) @RequestParam("userId") Long userId,
-            @Parameter(description = "Идентификатор самоката", required = true) @Min(1) @RequestParam("scooterId") Long scooterId,
-            @Parameter(description = "Идентификатор стартовой точки аренды", required = true) @Min(1) @RequestParam("startPointId") Long startPointId
+            @Parameter(description = "Идентификатор пользователя", required = true) @Min(1) @RequestParam("userId")
+            Long userId,
+            @Parameter(description = "Идентификатор самоката", required = true) @Min(1) @RequestParam("scooterId")
+            Long scooterId,
+            @Parameter(description = "Идентификатор стартовой точки аренды", required = true) @Min(1) @RequestParam("startPointId")
+            Long startPointId,
+            @Parameter(description = "Выбор оплаты почасовая/поминутная", required = true) @NotNull @RequestParam("billingMode")
+            BillingMode billingMode
     ) {
-        logger.info("Полученный запрос: POST /start с параметрами: userId={}, scooterId={}, rentalPointId={}.", userId, scooterId, startPointId);
-        Long rentalId = this.rentalService.startRental(userId, scooterId, startPointId);
+        logger.info("Полученный запрос: POST /start с параметрами: userId={}, scooterId={}, rentalPointId={}, billingMode={} ",
+                userId, scooterId, startPointId, billingMode);
+        Long rentalId = this.rentalService.startRental(userId, scooterId, startPointId, billingMode);
 
-        logger.debug("Аренда начата успешно. rentalId={}.", rentalId);
+        logger.info("Аренда начата успешно. rentalId={}.", rentalId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(rentalId);
@@ -70,7 +78,7 @@ public class RentalController {
         logger.info("Полученный запрос: POST /pause с параметрами: rentalId={}.", rentalId);
         this.rentalService.pauseRental(rentalId);
 
-        logger.debug("Аренда приостановлена: rentalId={}.", rentalId);
+        logger.info("Аренда приостановлена: rentalId={}.", rentalId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();
@@ -87,7 +95,7 @@ public class RentalController {
         logger.info("Полученный запрос: POST /resume с параметрами: rentalId={}.", rentalId);
         this.rentalService.resumeRental(rentalId);
 
-        logger.debug("Аренда возобновлена: rentalId={}.", rentalId);
+        logger.info("Аренда возобновлена: rentalId={}.", rentalId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();
@@ -105,7 +113,7 @@ public class RentalController {
         logger.info("Полученный запрос: POST /end с параметрами: rentalId={}, endPointId={}.", rentalId, endPointId);
         this.rentalService.stopRental(rentalId, endPointId);
 
-        logger.debug("Аренда окончена: rentalId={} на точке: endPointId={}.", rentalId, endPointId);
+        logger.info("Аренда окончена: rentalId={} на точке: endPointId={}.", rentalId, endPointId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -118,7 +126,7 @@ public class RentalController {
         logger.info("Полученный запрос: GET.");
         List<Rental> rentals = this.rentalService.getRentals();
 
-        logger.debug("Получение всех аренд в количестве: {}.", rentals.size());
+        logger.info("Получение всех аренд в количестве: {}.", rentals.size());
         return this.rentalMapper.mapToDtos(rentals);
     }
 }

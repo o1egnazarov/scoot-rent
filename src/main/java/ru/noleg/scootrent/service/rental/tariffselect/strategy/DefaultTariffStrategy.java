@@ -2,11 +2,11 @@ package ru.noleg.scootrent.service.rental.tariffselect.strategy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import ru.noleg.scootrent.entity.tariff.Tariff;
 import ru.noleg.scootrent.exception.NotFoundException;
 import ru.noleg.scootrent.repository.TariffRepository;
+import ru.noleg.scootrent.entity.tariff.BillingMode;
 
 @Component
 public class DefaultTariffStrategy implements TariffSelectionStrategy {
@@ -25,9 +25,9 @@ public class DefaultTariffStrategy implements TariffSelectionStrategy {
     }
 
     @Override
-    public Tariff selectTariffForUser(Long userId) {
+    public Tariff selectTariff(Long userId, BillingMode billingMode) {
         logger.debug("Выбор тарифа по умолчанию для пользователя с id: {}.", userId);
-        return tariffRepository.findDefaultTariff().orElseThrow(
+        return tariffRepository.findDefaultTariffByBillingMode(billingMode).orElseThrow(
                 () -> {
                     logger.error("Для пользователя с id: {} не найден тариф по умолчанию.", userId);
                     return new NotFoundException("Default tariff not found.");

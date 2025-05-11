@@ -33,3 +33,4 @@ services:
 
 volumes:
   postgres_data:
+    name: scootrent_postgres_data

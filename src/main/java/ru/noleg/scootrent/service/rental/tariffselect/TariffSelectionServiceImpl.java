@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.noleg.scootrent.entity.tariff.Tariff;
 import ru.noleg.scootrent.exception.BusinessLogicException;
 import ru.noleg.scootrent.exception.TariffSelectionException;
+import ru.noleg.scootrent.entity.tariff.BillingMode;
 import ru.noleg.scootrent.service.rental.tariffselect.strategy.TariffSelectionStrategy;
 
 import java.util.Comparator;
@@ -27,12 +28,12 @@ public class TariffSelectionServiceImpl implements TariffSelectionService {
     }
 
     @Override
-    public Tariff selectTariffForUser(Long userId) {
+    public Tariff selectTariffForUser(Long userId, BillingMode billingMode) {
         logger.info("Поиск подходящего тарифа для пользователя с id: {}.", userId);
         return this.strategies.stream()
                 .map(strategy -> {
                     try {
-                        return strategy.selectTariffForUser(userId);
+                        return strategy.selectTariff(userId, billingMode);
                     } catch (Exception e) {
                         logger.warn("Ошибка в выборе тарифа {} для пользователя id: {}.",
                                 strategy.getClass().getSimpleName(), userId, e);

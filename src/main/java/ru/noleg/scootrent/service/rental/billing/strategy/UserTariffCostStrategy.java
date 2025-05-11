@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.noleg.scootrent.entity.UserTariff;
+import ru.noleg.scootrent.entity.tariff.Tariff;
 import ru.noleg.scootrent.entity.tariff.TariffType;
 import ru.noleg.scootrent.entity.user.User;
 import ru.noleg.scootrent.exception.CostCalculationException;
@@ -35,8 +36,8 @@ public class UserTariffCostStrategy implements RentalCostStrategy {
 
     @Override
     @Transactional
-    public BigDecimal calculate(User user, Duration rentalDuration) {
-        logger.info("Расчет стоимости аренды по специальному тарифу для пользователя с id: {}.", user.getId());
+    public BigDecimal calculate(User user, Tariff tariff, Duration rentalDuration) {
+        logger.debug("Расчет стоимости аренды по специальному тарифу для пользователя с id: {}.", user.getId());
 
         UserTariff userTariff = this.getUserTariff(user);
         logger.debug("Найден специальный тариф {}. Цена за минуту: {}, скидка: {}",
@@ -48,7 +49,7 @@ public class UserTariffCostStrategy implements RentalCostStrategy {
 
             BigDecimal totalCost = calculateFinalCost(rentalDuration, price, userTariff);
 
-            logger.info("Итоговая стоимость аренды для пользователя с id: {} = {}.", user.getId(), totalCost);
+            logger.debug("Итоговая стоимость аренды для пользователя с id: {} = {}.", user.getId(), totalCost);
             return totalCost;
         } catch (Exception e) {
             logger.error("Ошибка в расчете стоимости по тарифу {}", userTariff.getTariff().getTitle(), e);
@@ -60,7 +61,7 @@ public class UserTariffCostStrategy implements RentalCostStrategy {
     }
 
     private UserTariff getUserTariff(User user) {
-        return userTariffRepository.findActiveTariffByUserAndTime(user.getId(), LocalDateTime.now()).orElseThrow(
+        return this.userTariffRepository.findActiveTariffByUserAndTime(user.getId(), LocalDateTime.now()).orElseThrow(
                 () -> {
                     logger.error("Специальный тариф для пользователя с id: {} не найден.", user.getId());
                     return new NotFoundException("Special tariff for user " + user.getId() + " not found.");
@@ -70,7 +71,7 @@ public class UserTariffCostStrategy implements RentalCostStrategy {
 
     private BigDecimal calculatePricePerMinute(UserTariff userTariff) {
         BigDecimal price = Optional.ofNullable(userTariff.getCustomPricePerMinute())
-                .orElse(userTariff.getTariff().getPricePerMinute());
+                .orElse(userTariff.getTariff().getPricePerUnit());
 
         if (userTariff.getDiscountPct() != null) {
             price = this.calculateDiscount(userTariff, price);

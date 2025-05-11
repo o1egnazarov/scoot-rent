@@ -10,6 +10,8 @@ import ru.noleg.scootrent.entity.rental.Rental;
 import ru.noleg.scootrent.entity.rental.RentalStatus;
 import ru.noleg.scootrent.entity.scooter.Scooter;
 import ru.noleg.scootrent.entity.scooter.ScooterStatus;
+import ru.noleg.scootrent.entity.tariff.Tariff;
+import ru.noleg.scootrent.entity.user.User;
 import ru.noleg.scootrent.exception.BusinessLogicException;
 import ru.noleg.scootrent.exception.NotFoundException;
 import ru.noleg.scootrent.exception.ServiceException;
@@ -41,17 +43,16 @@ public class RentalStopperImpl implements RentalStopper {
     @Override
     @Transactional
     public void stopRental(Long rentalId, Long endPointId) {
-        logger.info("Завершение аренды ID: {}, точка завершения: {}.", rentalId, endPointId);
 
         Rental rental = this.validateAndGetRental(rentalId);
         LocationNode endPoint = this.validateAndGetLocation(endPointId);
 
         Duration rentalDuration = this.calculateRentalDuration(rental);
 
-        BigDecimal cost = this.calculateCost(rentalId, rental, rentalDuration);
+        BigDecimal cost = this.calculateCost(rentalId, rental.getUser(), rental.getTariff(), rentalDuration);
 
         this.completeRental(rental, endPoint, cost, rentalDuration);
-        logger.info("Аренда id: {} успешно завершена. Стоимость: {}, Длительность: {}.", rentalId, cost, rentalDuration);
+        logger.debug("Аренда id: {} успешно завершена. Стоимость: {}, Длительность: {}.", rentalId, cost, rentalDuration);
     }
 
     private Rental validateAndGetRental(Long rentalId) {
@@ -90,9 +91,10 @@ public class RentalStopperImpl implements RentalStopper {
         return totalDuration.minus(pause);
     }
 
-    private BigDecimal calculateCost(Long rentalId, Rental rental, Duration rentalDuration) {
+    // TODO доработать
+    private BigDecimal calculateCost(Long rentalId, User user, Tariff tariff, Duration rentalDuration) {
         try {
-            return this.billingService.calculateRentalCost(rental, rentalDuration);
+            return this.billingService.calculateRentalCost(user, tariff, rentalDuration);
         } catch (Exception e) {
             logger.error("Ошибка в расчете стоимости для аренды с id: {}", rentalId, e);
             throw new ServiceException("Ошибка в сервисе расчета стоимости за аренду с id " + rentalId, e);

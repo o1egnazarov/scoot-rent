@@ -24,18 +24,18 @@ public class ScooterModelServiceImpl implements ScooterModelService {
     @Override
     @Transactional
     public Long add(ScooterModel scooterModel) {
-        logger.info("Добавление новой модели самоката {}.", scooterModel.getTitle());
+        logger.debug("Добавление новой модели самоката {}.", scooterModel.getTitle());
 
         Long id = this.scooterModelRepository.save(scooterModel).getId();
 
-        logger.info("Модель с id: {} успешно добавлена.", id);
+        logger.debug("Модель с id: {} успешно добавлена.", id);
         return id;
     }
 
     @Override
     @Transactional
     public void delete(Long id) {
-        logger.info("Удаление модели самоката с id {}.", id);
+        logger.debug("Удаление модели самоката с id {}.", id);
 
         if (!this.scooterModelRepository.existsById(id)) {
             logger.warn("Модель самоката с id {} не найдена для удаления.", id);
@@ -43,28 +43,28 @@ public class ScooterModelServiceImpl implements ScooterModelService {
         }
 
         this.scooterModelRepository.delete(id);
-        logger.info("Модель самоката с id {} успешно удалена.", id);
+        logger.debug("Модель самоката с id {} успешно удалена.", id);
     }
 
     @Override
     public ScooterModel getScooterModel(Long id) {
-        logger.info("Получение модели самоката с id {}.", id);
+        logger.debug("Получение модели самоката с id {}.", id);
 
         ScooterModel model = this.scooterModelRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Модель самоката с id " + id + " не найдена.")
         );
 
-        logger.info("Модель самоката с id {} успешно получена.", id);
+        logger.debug("Модель самоката с id {} успешно получена.", id);
         return model;
     }
 
     @Override
     public List<ScooterModel> getAllScooterModels() {
-        logger.info("Получение всех моделей самокатов.");
+        logger.debug("Получение всех моделей самокатов.");
 
         List<ScooterModel> models = this.scooterModelRepository.findAll();
 
-        logger.info("Получено {} моделей самокатов.", models.size());
+        logger.debug("Получено {} моделей самокатов.", models.size());
         return models;
     }
 }

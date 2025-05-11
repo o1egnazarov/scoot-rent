@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.noleg.scootrent.entity.rental.Rental;
 import ru.noleg.scootrent.repository.RentalRepository;
+import ru.noleg.scootrent.entity.tariff.BillingMode;
 import ru.noleg.scootrent.service.rental.pause.RentalPauser;
 import ru.noleg.scootrent.service.rental.resume.RentalResumer;
 import ru.noleg.scootrent.service.rental.start.RentalStarter;
@@ -40,29 +41,29 @@ public class RentalServiceDefaultImpl implements RentalService {
 
     @Override
     @Transactional
-    public Long startRental(Long userId, Long scooterId, Long rentalPointId) {
-        logger.info("Запрос на начало аренды. Пользователь: {}, Самокат: {}, Точка: {}.", userId, scooterId, rentalPointId);
-        return this.rentalStarter.startRental(userId, scooterId, rentalPointId);
+    public Long startRental(Long userId, Long scooterId, Long rentalPointId, BillingMode billingMode) {
+        logger.debug("Запрос на начало аренды. Пользователь: {}, Самокат: {}, Точка: {}.", userId, scooterId, rentalPointId);
+        return this.rentalStarter.startRental(userId, scooterId, rentalPointId, billingMode);
     }
 
     @Override
     @Transactional
     public void pauseRental(Long rentalId) {
-        logger.info("Запрос на приостановку аренды id: {}.", rentalId);
+        logger.debug("Запрос на приостановку аренды id: {}.", rentalId);
         this.rentalPauser.pauseRental(rentalId);
     }
 
     @Override
     @Transactional
     public void resumeRental(Long rentalId) {
-        logger.info("Запрос на возобновление аренды id: {}.", rentalId);
+        logger.debug("Запрос на возобновление аренды id: {}.", rentalId);
         this.rentalResumer.resumeRental(rentalId);
     }
 
     @Override
     @Transactional
     public void stopRental(Long rentalId, Long endPointId) {
-        logger.info("Запрос на завершение аренды id: {}, точка: {}.", rentalId, endPointId);
+        logger.debug("Запрос на завершение аренды id: {}, точка: {}.", rentalId, endPointId);
         this.rentalStopper.stopRental(rentalId, endPointId);
     }
 

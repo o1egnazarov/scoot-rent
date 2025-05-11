@@ -35,18 +35,28 @@ public class ScooterServiceDefaultImpl implements ScooterService {
     @Override
     @Transactional
     public Long add(Scooter scooter) {
-        logger.info("Добавление самоката  {}.", scooter.getNumberPlate());
+        logger.debug("Добавление самоката  {}.", scooter.getNumberPlate());
 
+        this.validateScooterModel(scooter);
+        this.validateRentalPoint(scooter.getRentalPoint().getId());
+
+        Long id = this.scooterRepository.save(scooter).getId();
+
+        logger.debug("Самокат успешно добавлен с id {}.", id);
+        return id;
+    }
+
+    private void validateScooterModel(Scooter scooter) {
         if (!this.scooterModelRepository.existsById(scooter.getModel().getId())) {
 
-            logger.warn("Модель самоката с id {} не найдена.", scooter.getModel().getId());
+            logger.error("Модель самоката с id {} не найдена.", scooter.getModel().getId());
             throw new NotFoundException("Scooter model with id " + scooter.getModel().getId() + " not found.");
         }
+    }
 
-        Long rentalPointId = scooter.getRentalPoint().getId();
-
+    private void validateRentalPoint(Long rentalPointId) {
         LocationNode rentalPoint = this.locationRepository.findLocationById(rentalPointId).orElseThrow(() -> {
-            logger.warn("Пункт проката с id {} не найден", rentalPointId);
+            logger.error("Пункт проката с id {} не найден", rentalPointId);
             return new NotFoundException("Пункт проката с id " + rentalPointId + " не найден.");
         });
 
@@ -55,17 +65,12 @@ public class ScooterServiceDefaultImpl implements ScooterService {
             logger.warn("Локация с id {} не является пунктом проката.", rentalPointId);
             throw new BusinessLogicException("Location is not a rental point.");
         }
-
-        Long id = this.scooterRepository.save(scooter).getId();
-
-        logger.info("Самокат успешно добавлен с id {}.", id);
-        return id;
     }
 
     @Override
     @Transactional
     public void delete(Long id) {
-        logger.info("Удаление самоката с id {}.", id);
+        logger.debug("Удаление самоката с id {}.", id);
 
         if (!this.scooterRepository.existsById(id)) {
 
@@ -74,29 +79,29 @@ public class ScooterServiceDefaultImpl implements ScooterService {
         }
 
         this.scooterRepository.delete(id);
-        logger.info("Самокат с id {} успешно удалён.", id);
+        logger.debug("Самокат с id {} успешно удалён.", id);
     }
 
     @Override
     public Scooter getScooter(Long id) {
-        logger.info("Получение самоката с id {}.", id);
+        logger.debug("Получение самоката с id {}.", id);
 
         Scooter scooter = this.scooterRepository.findById(id).orElseThrow(() -> {
             logger.warn("Самокат с id {} не найден.", id);
             return new NotFoundException("Самокат с id " + id + " не найден.");
         });
 
-        logger.info("Самокат с id {} успешно получен.", id);
+        logger.debug("Самокат с id {} успешно получен.", id);
         return scooter;
     }
 
     @Override
     public List<Scooter> getAllScooters() {
-        logger.info("Получение всех самокатов");
+        logger.debug("Получение всех самокатов");
 
         List<Scooter> scooters = this.scooterRepository.findAll();
 
-        logger.info("Получено {} самокатов", scooters.size());
+        logger.debug("Получено {} самокатов", scooters.size());
         return scooters;
     }
 }

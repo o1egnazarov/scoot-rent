@@ -61,7 +61,7 @@ public class TariffAssignController {
                 tariffDto.discountPct()
         );
 
-        logger.debug("Тариф успешно назначен с ID: {}.", tariffId);
+        logger.info("Тариф успешно назначен с ID: {}.", tariffId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();
@@ -78,9 +78,9 @@ public class TariffAssignController {
     ) {
         logger.info("Полученный запрос: POST назначения подписки с id: {}, пользователя с id: {}.", tariffId, subscribeDto.userId());
 
-        this.subscriptionService.subscribeUser(subscribeDto.userId(), tariffId);
+        this.subscriptionService.subscribeUser(subscribeDto.userId(), tariffId, subscribeDto.minutesUsageLimit());
 
-        logger.debug("Подписка успешно назначена с ID: {}.", tariffId);
+        logger.info("Подписка успешно назначена с ID: {}.", tariffId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();
