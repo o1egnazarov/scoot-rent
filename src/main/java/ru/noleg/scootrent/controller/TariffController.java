@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.noleg.scootrent.dto.tariff.TariffDto;
 import ru.noleg.scootrent.dto.tariff.UpdateTariffDto;
 import ru.noleg.scootrent.entity.tariff.Tariff;
+import ru.noleg.scootrent.exception.NotFoundException;
 import ru.noleg.scootrent.mapper.TariffMapper;
+import ru.noleg.scootrent.repository.TariffRepository;
 import ru.noleg.scootrent.service.tariff.TariffService;
 
 import java.util.List;
@@ -39,10 +41,12 @@ public class TariffController {
 
     private final TariffService tariffService;
     private final TariffMapper tariffMapper;
+    private final TariffRepository tariffRepository;
 
-    public TariffController(TariffService tariffService, TariffMapper tariffMapper) {
+    public TariffController(TariffService tariffService, TariffMapper tariffMapper, TariffRepository tariffRepository) {
         this.tariffService = tariffService;
         this.tariffMapper = tariffMapper;
+        this.tariffRepository = tariffRepository;
     }
 
     @PostMapping

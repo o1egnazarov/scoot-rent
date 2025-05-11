@@ -1,12 +1,13 @@
 package ru.noleg.scootrent.service.rental.resume;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.noleg.scootrent.entity.rental.Rental;
 import ru.noleg.scootrent.entity.rental.RentalStatus;
 import ru.noleg.scootrent.exception.BusinessLogicException;
 import ru.noleg.scootrent.exception.NotFoundException;
-import ru.noleg.scootrent.exception.ServiceException;
 import ru.noleg.scootrent.repository.RentalRepository;
 
 import java.time.Duration;
@@ -14,6 +15,8 @@ import java.time.LocalDateTime;
 
 @Service
 public class RentalResumerImpl implements RentalResumer {
+
+    private static final Logger logger = LoggerFactory.getLogger(RentalResumerImpl.class);
 
     private final RentalRepository rentalRepository;
 
@@ -24,25 +27,36 @@ public class RentalResumerImpl implements RentalResumer {
     @Override
     @Transactional
     public void resumeRental(Long rentalId) {
-        try {
+        logger.info("Возобновление аренды с id: {}.", rentalId);
 
-            Rental rental = this.rentalRepository.findById(rentalId).orElseThrow(
-                    () -> new NotFoundException("Rental with id: " + rentalId + " not found.")
-            );
+        Rental rental = this.rentalRepository.findById(rentalId).orElseThrow(
+                () -> {
+                    logger.error("Аренда с id: {} не найдена.", rentalId);
+                    return new NotFoundException("Rental with id: " + rentalId + " not found.");
+                }
+        );
 
-            if (rental.getRentalStatus() != RentalStatus.PAUSE) {
-                throw new BusinessLogicException("Rental is already used.");
-            }
+        this.validateRentalStatusForResume(rentalId, rental);
 
-            rental.addPause(Duration.between(rental.getLastPauseTime(), LocalDateTime.now()));
-            rental.setLastPauseTime(null);
-            rental.setRentalStatus(RentalStatus.ACTIVE);
+        this.updateRentalStatus(rental);
+        logger.info("Аренда с ID: {} успешно возобновлена. Общее время приостановки: {}",
+                rentalId, Duration.between(rental.getLastPauseTime(), LocalDateTime.now()));
+    }
 
-            this.rentalRepository.save(rental);
-        } catch (NotFoundException | BusinessLogicException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new ServiceException("Error on resume rental.", e);
+    private void validateRentalStatusForResume(Long rentalId, Rental rental) {
+        if (rental.getRentalStatus() != RentalStatus.PAUSE) {
+            logger.warn("Попытка возобновить аренду с id: {}, в статусе: {}", rentalId, rental.getRentalStatus());
+            throw new BusinessLogicException("Rental is already used.");
         }
+    }
+
+    private void updateRentalStatus(Rental rental) {
+        logger.debug("Возобновление аренды с ID: {}", rental.getId());
+
+        rental.addPause(Duration.between(rental.getLastPauseTime(), LocalDateTime.now()));
+        rental.setLastPauseTime(null);
+        rental.setRentalStatus(RentalStatus.ACTIVE);
+
+        this.rentalRepository.save(rental);
     }
 }

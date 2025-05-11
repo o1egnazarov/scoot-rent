@@ -23,8 +23,8 @@ import ru.noleg.scootrent.entity.rental.Rental;
 import ru.noleg.scootrent.entity.user.User;
 import ru.noleg.scootrent.mapper.RentalHistoryMapper;
 import ru.noleg.scootrent.mapper.UserMapper;
-import ru.noleg.scootrent.service.RentalService;
-import ru.noleg.scootrent.service.UserService;
+import ru.noleg.scootrent.service.rental.RentalService;
+import ru.noleg.scootrent.service.user.UserService;
 
 import java.util.List;
 

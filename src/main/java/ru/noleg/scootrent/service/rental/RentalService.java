@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.service;
+package ru.noleg.scootrent.service.rental;
 
 import ru.noleg.scootrent.entity.rental.Rental;
 

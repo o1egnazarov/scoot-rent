@@ -1,12 +1,10 @@
-package ru.noleg.scootrent.service.impl;
+package ru.noleg.scootrent.service.user;
 
-import org.hibernate.service.spi.ServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.noleg.scootrent.entity.user.User;
 import ru.noleg.scootrent.exception.UserNotFoundException;
 import ru.noleg.scootrent.repository.UserRepository;
-import ru.noleg.scootrent.service.UserService;
 
 import java.util.List;
 
@@ -26,25 +24,12 @@ public class UserServiceDefaultImpl implements UserService {
 
     @Override
     public User getUser(Long id) {
-        try {
-
-            return this.userRepository.findById(id).orElseThrow(
-                    () -> new UserNotFoundException("User with id: " + id + " not found.")
-            );
-        } catch (UserNotFoundException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new ServiceException("Error on get user", e);
-        }
+        return this.userRepository.findById(id).orElseThrow(
+                () -> new UserNotFoundException("User with id: " + id + " not found.")
+        );
     }
 
-
     public List<User> getAllUsers() {
-        try {
-
-            return this.userRepository.findAll();
-        } catch (Exception e) {
-            throw new ServiceException("Error on get users", e);
-        }
+        return this.userRepository.findAll();
     }
 }

@@ -1,6 +1,5 @@
 version: "3.8"
 
-# TODO в будущем добавить .env
 services:
 
   app:

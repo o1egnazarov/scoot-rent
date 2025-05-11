@@ -1,5 +1,7 @@
 package ru.noleg.scootrent.service.rental.tariffselect;
 
+import ru.noleg.scootrent.entity.tariff.Tariff;
+
 public interface TariffSelectionService {
-    TariffSelectionServiceImpl.SelectedTariff selectTariffForUser(Long userId);
+    Tariff selectTariffForUser(Long userId);
 }

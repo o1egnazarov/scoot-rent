@@ -25,7 +25,7 @@ import ru.noleg.scootrent.dto.location.LocationDto;
 import ru.noleg.scootrent.dto.location.UpdateLocationDto;
 import ru.noleg.scootrent.entity.location.LocationNode;
 import ru.noleg.scootrent.mapper.LocationMapper;
-import ru.noleg.scootrent.service.LocationService;
+import ru.noleg.scootrent.service.location.LocationService;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -123,9 +123,6 @@ public class LocationController {
                 .body(locations);
     }
 
-    // TODO здесь возвращаются дочерние элементы локации, но допустим не возвращаются дочерние элементы дочерних элементов,
-    // TODO реализовать чтобы возвращались или оставить так? Мое мнение что оставить так будет правильнее. Потому что
-    // TODO под такие задачи есть getAllLocations
     @GetMapping("/{id}/children")
     @Operation(
             summary = "Получение дочерних узлов.",

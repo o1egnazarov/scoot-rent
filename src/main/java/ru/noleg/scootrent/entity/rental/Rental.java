@@ -10,7 +10,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import ru.noleg.scootrent.entity.UserSubscription;
 import ru.noleg.scootrent.entity.location.LocationNode;
 import ru.noleg.scootrent.entity.scooter.Scooter;
 import ru.noleg.scootrent.entity.tariff.Tariff;
@@ -43,10 +42,6 @@ public class Rental {
     private Tariff tariff;
 
     @ManyToOne
-    @JoinColumn(name = "c_subscription_id")
-    private UserSubscription subscription;
-
-    @ManyToOne
     @JoinColumn(name = "c_start_point_id")
     private LocationNode startPoint;
 
@@ -70,6 +65,9 @@ public class Rental {
     @Column(name = "c_duration_in_pause")
     private Duration durationInPause = Duration.ZERO;
 
+    @Column(name = "c_duration_of_rental")
+    private Duration durationOfRental = Duration.ZERO;
+
     @Column(name = "c_end_time")
     private LocalDateTime endTime;
 
@@ -80,7 +78,6 @@ public class Rental {
                   User user,
                   Scooter scooter,
                   Tariff tariff,
-                  UserSubscription subscription,
                   RentalStatus status,
                   BigDecimal cost,
                   LocalDateTime startTime,
@@ -91,7 +88,6 @@ public class Rental {
         this.user = user;
         this.scooter = scooter;
         this.tariff = tariff;
-        this.subscription = subscription;
         this.rentalStatus = status;
         this.cost = cost;
         this.startTime = startTime;
@@ -104,11 +100,12 @@ public class Rental {
         this.durationInPause = this.durationInPause.plus(pause);
     }
 
-    public void stopRental(LocationNode endPoint, BigDecimal cost) {
+    public void stopRental(LocationNode endPoint, BigDecimal cost, Duration durationOfRental) {
         if (this.rentalStatus == RentalStatus.COMPLETED) {
             throw new BusinessLogicException("Rental already completed.");
         }
 
+        this.durationOfRental = durationOfRental;
         this.rentalStatus = RentalStatus.COMPLETED;
         this.endTime = LocalDateTime.now();
         this.cost = cost;
@@ -145,14 +142,6 @@ public class Rental {
 
     public void setTariff(Tariff tariff) {
         this.tariff = tariff;
-    }
-
-    public UserSubscription getSubscription() {
-        return subscription;
-    }
-
-    public void setSubscription(UserSubscription subscription) {
-        this.subscription = subscription;
     }
 
     public BigDecimal getCost() {
@@ -217,5 +206,13 @@ public class Rental {
 
     public void setDurationInPause(Duration durationInPause) {
         this.durationInPause = durationInPause;
+    }
+
+    public Duration getDurationOfRental() {
+        return durationOfRental;
+    }
+
+    public void setDurationOfRental(Duration durationOfRental) {
+        this.durationOfRental = durationOfRental;
     }
 }

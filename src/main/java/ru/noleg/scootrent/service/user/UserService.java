@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.service;
+package ru.noleg.scootrent.service.user;
 
 import ru.noleg.scootrent.entity.user.User;
 

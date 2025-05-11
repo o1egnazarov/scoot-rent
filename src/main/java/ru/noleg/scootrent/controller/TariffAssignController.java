@@ -41,6 +41,7 @@ public class TariffAssignController {
         this.subscriptionService = subscriptionService;
     }
 
+    // TODO добавить с какого по какое действует тариф/подписка
 
     @PostMapping("/{tariffId}")
     @Operation(

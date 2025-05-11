@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.service;
+package ru.noleg.scootrent.service.scooter;
 
 import ru.noleg.scootrent.entity.scooter.Scooter;
 

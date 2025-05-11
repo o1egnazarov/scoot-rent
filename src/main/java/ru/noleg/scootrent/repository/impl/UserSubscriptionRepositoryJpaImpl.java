@@ -41,7 +41,7 @@ public class UserSubscriptionRepositoryJpaImpl extends BaseRepositoryImpl<UserSu
             List<UserSubscription> resultList = query.getResultList();
             return resultList.isEmpty() ? Optional.empty() : Optional.of(resultList.get(0));
         } catch (Exception e) {
-            throw new RepositoryException("Repository error on fetch userSub by user and date.", e);
+            throw new RepositoryException("Repository error on fetch subscription by user and date.", e);
         }
     }
 }

@@ -40,7 +40,7 @@ public class UserTariffRepositoryJpaImpl extends BaseRepositoryImpl<UserTariff, 
             List<UserTariff> resultList = query.getResultList();
             return resultList.isEmpty() ? Optional.empty() : Optional.of(resultList.get(0));
         } catch (Exception e) {
-            throw new RepositoryException("Repository error on fetch userTariff by user and date.", e);
+            throw new RepositoryException("Repository error on fetch special tariff by user and date.", e);
         }
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.noleg.scootrent.exception.BusinessLogicException;
 import ru.noleg.scootrent.exception.NotFoundException;
+import ru.noleg.scootrent.exception.RepositoryException;
 import ru.noleg.scootrent.exception.ServiceException;
 import ru.noleg.scootrent.exception.UserNotFoundException;
 
@@ -31,6 +32,17 @@ public class GlobalExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 ex.getMessage(),
                 ErrorCode.SERVICE_ERROR,
+                request.getRequestURI(),
+                ex
+        );
+    }
+
+    @ExceptionHandler(RepositoryException.class)
+    public ResponseEntity<ExceptionResponse> handleRepositoryException(RepositoryException ex, HttpServletRequest request) {
+        return this.buildResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                ex.getMessage(),
+                ErrorCode.REPOSITORY_ERROR,
                 request.getRequestURI(),
                 ex
         );
@@ -144,7 +156,6 @@ public class GlobalExceptionHandler {
         );
     }
 
-    // TODO доработать логирование исключений
     private ResponseEntity<ExceptionResponse> buildResponse(HttpStatus status,
                                                             String message,
                                                             ErrorCode errorCode,

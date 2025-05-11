@@ -1,66 +1,53 @@
 package ru.noleg.scootrent.service.rental.tariffselect;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.noleg.scootrent.entity.UserSubscription;
-import ru.noleg.scootrent.entity.UserTariff;
 import ru.noleg.scootrent.entity.tariff.Tariff;
-import ru.noleg.scootrent.exception.NotFoundException;
-import ru.noleg.scootrent.exception.ServiceException;
-import ru.noleg.scootrent.repository.TariffRepository;
-import ru.noleg.scootrent.repository.UserSubscriptionRepository;
-import ru.noleg.scootrent.repository.UserTariffRepository;
+import ru.noleg.scootrent.exception.BusinessLogicException;
+import ru.noleg.scootrent.exception.TariffSelectionException;
+import ru.noleg.scootrent.service.rental.tariffselect.strategy.TariffSelectionStrategy;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class TariffSelectionServiceImpl implements TariffSelectionService {
 
-    private final TariffRepository tariffRepository;
-    private final UserTariffRepository userTariffRepository;
-    private final UserSubscriptionRepository userSubscriptionRepository;
+    private static final Logger logger = LoggerFactory.getLogger(TariffSelectionServiceImpl.class);
 
-    public TariffSelectionServiceImpl(TariffRepository tariffRepository,
-                                      UserTariffRepository userTariffRepository,
-                                      UserSubscriptionRepository userSubscriptionRepository) {
-        this.tariffRepository = tariffRepository;
-        this.userTariffRepository = userTariffRepository;
-        this.userSubscriptionRepository = userSubscriptionRepository;
+    private final List<TariffSelectionStrategy> strategies;
+
+    public TariffSelectionServiceImpl(List<TariffSelectionStrategy> strategies) {
+        this.strategies = strategies.stream()
+                .sorted(Comparator.comparingInt(TariffSelectionStrategy::getPriority))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public SelectedTariff selectTariffForUser(Long userId) {
-        try {
-
-            Optional<UserSubscription> userSub =
-                    this.userSubscriptionRepository.findActiveSubscriptionByUserAndTime(userId, LocalDateTime.now());
-
-            if (userSub.isPresent()) {
-                return new SelectedTariff(userSub.get().getTariff(), userSub.get());
-            }
-
-            Optional<UserTariff> userTariff =
-                    this.userTariffRepository.findActiveTariffByUserAndTime(userId, LocalDateTime.now());
-
-            if (userTariff.isPresent()) {
-                return new SelectedTariff(userTariff.get().getTariff(), null);
-            }
-
-            // TODO добавить подгрузку default тарифа
-            Tariff defaultTariff = this.tariffRepository.findById(1L).orElseThrow(
-                    () -> new NotFoundException("Default tariff not found")
-            );
-
-            return new SelectedTariff(defaultTariff, null);
-        } catch (NotFoundException e) {
-
-            throw e;
-        } catch (Exception e) {
-
-            throw new ServiceException("Error on select tariff for user", e);
-        }
-    }
-
-    public record SelectedTariff(Tariff tariff, UserSubscription subscription) {
+    public Tariff selectTariffForUser(Long userId) {
+        logger.info("Поиск подходящего тарифа для пользователя с id: {}.", userId);
+        return this.strategies.stream()
+                .map(strategy -> {
+                    try {
+                        return strategy.selectTariffForUser(userId);
+                    } catch (Exception e) {
+                        logger.warn("Ошибка в выборе тарифа {} для пользователя id: {}.",
+                                strategy.getClass().getSimpleName(), userId, e);
+                        throw new TariffSelectionException("Error on selection tariff.", e);
+                    }
+                })
+                .filter(Objects::nonNull)
+                .findFirst()
+                .map(tariff -> {
+                    logger.info("Выбран тариф {} c типом: {} для пользователя с id: {}.",
+                            tariff.getTitle(), tariff.getType(), userId);
+                    return tariff;
+                })
+                .orElseThrow(
+                        () -> new BusinessLogicException("No tariff found for user with id: " + userId)
+                );
     }
 }

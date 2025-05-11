@@ -1,6 +1,5 @@
-package ru.noleg.scootrent.service;
+package ru.noleg.scootrent.service.scooter;
 
-import ru.noleg.scootrent.entity.scooter.Scooter;
 import ru.noleg.scootrent.entity.scooter.ScooterModel;
 
 import java.util.List;

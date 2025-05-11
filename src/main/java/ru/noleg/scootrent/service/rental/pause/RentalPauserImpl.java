@@ -1,18 +1,21 @@
 package ru.noleg.scootrent.service.rental.pause;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.noleg.scootrent.entity.rental.Rental;
 import ru.noleg.scootrent.entity.rental.RentalStatus;
 import ru.noleg.scootrent.exception.BusinessLogicException;
 import ru.noleg.scootrent.exception.NotFoundException;
-import ru.noleg.scootrent.exception.ServiceException;
 import ru.noleg.scootrent.repository.RentalRepository;
 
 import java.time.LocalDateTime;
 
 @Service
 public class RentalPauserImpl implements RentalPauser {
+
+    private static final Logger logger = LoggerFactory.getLogger(RentalPauserImpl.class);
 
     private final RentalRepository rentalRepository;
 
@@ -23,27 +26,39 @@ public class RentalPauserImpl implements RentalPauser {
     @Override
     @Transactional
     public void pauseRental(Long rentalId) {
-        try {
+        logger.info("Приостановление аренды с id: {}.", rentalId);
 
-            Rental rental = this.rentalRepository.findById(rentalId).orElseThrow(
-                    () -> new NotFoundException("Rental with id: " + rentalId + " not found.")
-            );
+        Rental rental = this.rentalRepository.findById(rentalId).orElseThrow(
+                () -> {
+                    logger.error("Аренда с id: {} не найдена.", rentalId);
+                    return new NotFoundException("Rental with id: " + rentalId + " not found.");
+                }
+        );
 
-            if (rental.getRentalStatus() == RentalStatus.COMPLETED) {
-                throw new BusinessLogicException("Rental is already completed.");
-            }
+        this.validateRentalStatusForPause(rentalId, rental);
+        logger.debug("Текущий статус аренды: {}.", rental.getRentalStatus());
 
-            if (rental.getRentalStatus() == RentalStatus.PAUSE) {
-                throw new BusinessLogicException("Rental is already paused.");
-            }
+        this.updateRentalStatus(rental);
+        logger.info("Аренда с id: {} успешно приостановлена. Время приостановки: {}.", rentalId, rental.getLastPauseTime());
+    }
 
-            rental.setRentalStatus(RentalStatus.PAUSE);
-            rental.setLastPauseTime(LocalDateTime.now());
-            this.rentalRepository.save(rental);
-        } catch (NotFoundException | BusinessLogicException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new ServiceException("Error on pause rental.", e);
+    private void validateRentalStatusForPause(Long rentalId, Rental rental) {
+        if (rental.getRentalStatus() == RentalStatus.COMPLETED) {
+            logger.warn("Попытка приостановить уже завершенную аренду с id: {}.", rentalId);
+            throw new BusinessLogicException("Rental is already completed.");
         }
+
+        if (rental.getRentalStatus() == RentalStatus.PAUSE) {
+            logger.warn("Попытка приостановить уже приостановленную аренду с id: {}.", rentalId);
+            throw new BusinessLogicException("Rental is already paused.");
+        }
+    }
+
+    private void updateRentalStatus(Rental rental) {
+        logger.debug("Обновление статуса аренды с {} на PAUSE", rental.getRentalStatus());
+
+        rental.setRentalStatus(RentalStatus.PAUSE);
+        rental.setLastPauseTime(LocalDateTime.now());
+        this.rentalRepository.save(rental);
     }
 }

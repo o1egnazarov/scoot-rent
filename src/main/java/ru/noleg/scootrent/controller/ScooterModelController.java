@@ -22,7 +22,7 @@ import ru.noleg.scootrent.dto.scooter.scootermodel.ScooterModelDto;
 import ru.noleg.scootrent.dto.scooter.scootermodel.UpdateScooterModelDto;
 import ru.noleg.scootrent.entity.scooter.ScooterModel;
 import ru.noleg.scootrent.mapper.ScooterModelMapper;
-import ru.noleg.scootrent.service.ScooterModelService;
+import ru.noleg.scootrent.service.scooter.ScooterModelService;
 
 import java.util.List;
 

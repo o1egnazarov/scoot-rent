@@ -1,6 +1,5 @@
-package ru.noleg.scootrent.service;
+package ru.noleg.scootrent.service.location;
 
-import jakarta.validation.constraints.Min;
 import ru.noleg.scootrent.entity.location.LocationNode;
 
 import java.math.BigDecimal;

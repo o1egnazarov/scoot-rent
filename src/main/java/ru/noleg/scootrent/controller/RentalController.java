@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.noleg.scootrent.dto.rental.ShortRentalDto;
 import ru.noleg.scootrent.entity.rental.Rental;
 import ru.noleg.scootrent.mapper.RentalMapper;
-import ru.noleg.scootrent.service.RentalService;
+import ru.noleg.scootrent.service.rental.RentalService;
 
 import java.util.List;
 

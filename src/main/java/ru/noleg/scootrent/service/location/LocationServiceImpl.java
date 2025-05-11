@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.service.impl;
+package ru.noleg.scootrent.service.location;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -6,7 +6,6 @@ import ru.noleg.scootrent.entity.location.LocationNode;
 import ru.noleg.scootrent.exception.NotFoundException;
 import ru.noleg.scootrent.exception.ServiceException;
 import ru.noleg.scootrent.repository.LocationRepository;
-import ru.noleg.scootrent.service.LocationService;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -24,8 +23,6 @@ public class LocationServiceImpl implements LocationService {
         this.locationRepository = locationRepository;
     }
 
-    // TODO обработка ошибок, как будто где вызов методов репозитория смысла нет оборачивать еще и в service exception
-
     @Override
     @Transactional
     public Long add(LocationNode locationNode) {
@@ -33,7 +30,6 @@ public class LocationServiceImpl implements LocationService {
         if (locationNode.getParent() != null && !this.locationRepository.existsById(locationNode.getParent().getId())) {
             throw new NotFoundException("Parent location with id " + locationNode.getParent().getId() + " does not exist.");
         }
-
         return this.locationRepository.save(locationNode).getId();
     }
 

@@ -4,7 +4,6 @@ import ru.noleg.scootrent.dto.location.ShortLocationDto;
 import ru.noleg.scootrent.dto.scooter.ShortScooterDtoWithModel;
 import ru.noleg.scootrent.dto.tariff.ShortTariffDto;
 import ru.noleg.scootrent.dto.user.ShortUserDto;
-import ru.noleg.scootrent.entity.UserSubscription;
 import ru.noleg.scootrent.entity.rental.RentalStatus;
 
 import java.math.BigDecimal;
@@ -19,6 +18,7 @@ public record ShortRentalDto(Long id,
                              ShortLocationDto endPoint,
                              RentalStatus rentalStatus,
                              BigDecimal cost,
+                             Duration durationOfRental,
                              LocalDateTime startTime,
                              LocalDateTime endTime,
                              Duration durationInPause) {

@@ -25,6 +25,7 @@ subscription:
 
 logging:
   level:
+    root: INFO
     ru.noleg.scootrent: DEBUG
     org.hibernate.SQL: ERROR
     org.hibernate.tool.schema: ERROR
