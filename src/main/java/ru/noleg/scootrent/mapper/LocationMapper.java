@@ -1,5 +1,6 @@
 package ru.noleg.scootrent.mapper;
 
+import org.mapstruct.AfterMapping;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,11 +18,31 @@ import java.util.List;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = {ScooterMapper.class})
 public interface LocationMapper extends BaseMapper<LocationNode, LocationDto> {
-    @Mapping(target = "parent.id", source = "parentId")
+    @Mapping(target = "parent", ignore = true)
     LocationNode mapToEntity(CreateLocationDto createLocationDto);
+
+    @AfterMapping
+    default void setParent(@MappingTarget LocationNode node, CreateLocationDto dto) {
+        if (dto.parentId() != null) {
+            LocationNode parent = new LocationNode();
+            parent.setId(dto.parentId());
+            node.setParent(parent);
+        }
+    }
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateRentalPointFromDto(UpdateLocationDto dto, @MappingTarget LocationNode entity);
+
+    @AfterMapping
+    default void updateParent(UpdateLocationDto dto, @MappingTarget LocationNode entity) {
+        if (dto.parentId() != null) {
+            LocationNode parent = new LocationNode();
+            parent.setId(dto.parentId());
+            entity.setParent(parent);
+        } else {
+            entity.setParent(null);
+        }
+    }
 
     @Mapping(target = "totalCount", expression = "java(scooters.size())")
     DetailLocationDto mapToDetailDto(LocationNode locationNode);

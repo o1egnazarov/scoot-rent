@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.noleg.scootrent.entity.location.LocationNode;
+import ru.noleg.scootrent.entity.location.LocationType;
 import ru.noleg.scootrent.exception.NotFoundException;
 import ru.noleg.scootrent.exception.ServiceException;
 import ru.noleg.scootrent.repository.LocationRepository;
@@ -32,6 +33,7 @@ public class LocationServiceImpl implements LocationService {
     public Long add(LocationNode locationNode) {
         logger.debug("Adding new location: {}.", locationNode.getTitle());
 
+
         if (locationNode.getParent() != null && !this.locationRepository.existsById(locationNode.getParent().getId())) {
             logger.error("Parent location with id: {} not found", locationNode.getParent().getId());
             throw new NotFoundException("Parent location with id " + locationNode.getParent().getId() + " does not exist.");
@@ -57,28 +59,40 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public LocationNode getLocationById(Long id) {
-        logger.debug("Fetching location by ID: {}.", id);
+        logger.debug("Fetching location by id: {}.", id);
 
         return this.locationRepository.findLocationById(id).orElseThrow(
                 () -> {
                     logger.error("Location with id: {} not found.", id);
-                    return new NotFoundException("Location with id " + id + " not found.");
+                    return new NotFoundException("Location with id: " + id + " not found.");
                 }
         );
     }
 
     @Override
     @Transactional(readOnly = true)
-    public LocationNode getLocationByCoordinates(BigDecimal latitude, BigDecimal longitude) {
-        logger.debug("Searching location by coordinates: {}, {}.", latitude, longitude);
+    public LocationNode getLocationByIdAndType(Long id, LocationType type) {
+        logger.debug("Fetching location by id: {} and type: {}.", id, type);
 
-        return this.locationRepository.findLocationByCoordinates(latitude, longitude).orElseThrow(
+        return this.locationRepository.findLocationByIdAndType(id, type).orElseThrow(
                 () -> {
-                    logger.error("Location with coordinates: {} not found.", latitude);
+                    logger.error("Location with id:{} and type: {} - not found.", id, type);
+                    return new NotFoundException("Location with id: " + id + "and type: " + type + " - not found.");
+                }
+        );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public LocationNode getLocationByCoordinatesAndType(BigDecimal latitude, BigDecimal longitude, LocationType type) {
+        logger.debug("Searching location by coordinates: {}, {} and type: {}.", latitude, longitude, type);
+
+        return this.locationRepository.findLocationByCoordinatesAndType(latitude, longitude, type).orElseThrow(
+                () -> {
+                    logger.error("Location with coordinates: {}, {} and type: {} not found.", latitude, longitude, type);
                     return new NotFoundException("Rental point with latitude: " + latitude +
-                            " and longitude: " + longitude + " not found."
+                            " and longitude: " + longitude + "and type: " + type + " not found."
                     );
                 }
         );

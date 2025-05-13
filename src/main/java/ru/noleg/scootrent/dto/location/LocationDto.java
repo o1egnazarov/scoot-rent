@@ -1,15 +1,32 @@
 package ru.noleg.scootrent.dto.location;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import ru.noleg.scootrent.entity.location.LocationType;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-public record LocationDto(Long id,
-                          String title,
-                          LocationType locationType,
-                          BigDecimal latitude,
-                          BigDecimal longitude,
-                          String address,
-                          List<LocationDto> children) {
+@Schema(description = "Краткая информация о локации")
+public record LocationDto(
+        @Schema(description = "Id локации", example = "1")
+        Long id,
+
+        @Schema(description = "Название локации", example = "Парковая зона")
+        String title,
+
+        @Schema(description = "Тип локации", example = "CITY")
+        LocationType locationType,
+
+        @Schema(description = "Широта", example = "54.96305600")
+        BigDecimal latitude,
+
+        @Schema(description = "Долгота", example = "73.38416700")
+        BigDecimal longitude,
+
+        @Schema(description = "Адрес локации", example = "Мира 55а")
+        String address,
+
+        @Schema(description = "Дочерние элементы локации")
+        List<LocationDto> children
+) {
 }

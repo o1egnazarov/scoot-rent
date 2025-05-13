@@ -26,7 +26,7 @@ public interface ScooterMapper extends BaseMapper<Scooter, ScooterDto> {
     @Mapping(source = "model.title", target = "modelTitle")
     ShortScooterDtoWithModel mapToShortDtoWithModel(Scooter scooter);
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "rentalPoint.id", source = "rentalPointId")
     void updateScooterFromDto(UpdateScooterDto dto, @MappingTarget Scooter entity);
 
     @Override

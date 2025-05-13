@@ -24,6 +24,7 @@ import ru.noleg.scootrent.dto.location.DetailLocationDto;
 import ru.noleg.scootrent.dto.location.LocationDto;
 import ru.noleg.scootrent.dto.location.UpdateLocationDto;
 import ru.noleg.scootrent.entity.location.LocationNode;
+import ru.noleg.scootrent.entity.location.LocationType;
 import ru.noleg.scootrent.mapper.LocationMapper;
 import ru.noleg.scootrent.service.location.LocationService;
 
@@ -73,12 +74,12 @@ public class LocationController {
     )
     public ResponseEntity<DetailLocationDto> updateLocation(
             @Parameter(description = "Идентификатор локации", required = true) @Min(1) @PathVariable("id") Long id,
-            @Valid @RequestBody UpdateLocationDto rentalPointDto
+            @Valid @RequestBody UpdateLocationDto locationDto
     ) {
         logger.info("Request: PUT update location with id: {}.", id);
         LocationNode locationNode = this.locationService.getLocationById(id);
 
-        this.locationMapper.updateRentalPointFromDto(rentalPointDto, locationNode);
+        this.locationMapper.updateRentalPointFromDto(locationDto, locationNode);
         this.locationService.add(locationNode);
 
         logger.info("Location with id: {} has been successfully updated.", id);
@@ -141,22 +142,19 @@ public class LocationController {
                 .body(this.locationMapper.mapToDetailDtos(locationNode));
     }
 
-    // TODO допустим выбрали город а там totalCount = 0 и scooters = [] - адекватно?
-    // TODO как лучше? возвращать любую локацию по id или проверять что переданный id это id локации с типом RENTAL_POINT,
-    // TODO иначе кидать BAD REQUEST
     @GetMapping("/{id}")
     @Operation(
-            summary = "Получение конкретной локации по id.",
-            description = "Позволяет получить локацию по id."
+            summary = "Получение точки проката по id.",
+            description = "Возвращает локацию с типом RENTAL_POINT по её id."
     )
-    public ResponseEntity<DetailLocationDto> getLocationById(
-            @Parameter(description = "Идентификатор локации", required = true) @Min(1) @PathVariable("id") Long id
+    public ResponseEntity<DetailLocationDto> getRentalPointById(
+            @Parameter(description = "Идентификатор точки проката", required = true) @Min(1) @PathVariable("id") Long id
     ) {
-        logger.info("Request: GET get location with id: {}.", id);
+        logger.info("Request: GET get rental point with id: {}.", id);
 
-        LocationNode locationNode = this.locationService.getLocationById(id);
+        LocationNode locationNode = this.locationService.getLocationByIdAndType(id, LocationType.RENTAL_POINT);
 
-        logger.debug("Received location with id: {}.", id);
+        logger.info("Received rental point with id: {}.", id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.locationMapper.mapToDetailDto(locationNode));
@@ -164,18 +162,18 @@ public class LocationController {
 
     @GetMapping("/coordinates")
     @Operation(
-            summary = "Получение конкретной локации по координатам.",
-            description = "Позволяет получить локацию и все ее дочерние точки (если такие есть) по широте и долготе."
+            summary = "Получение точки проката по координатам.",
+            description = "Возвращает локацию с типом RENTAL_POINT по широте и долготе."
     )
-    public ResponseEntity<DetailLocationDto> getLocationByCoordinates(
+    public ResponseEntity<DetailLocationDto> getRentalPointByCoordinates(
             @Parameter(description = "Широта", required = true) @RequestParam("latitude") BigDecimal latitude,
             @Parameter(description = "Долгота", required = true) @RequestParam("longitude") BigDecimal longitude
     ) {
         logger.info("Request: GET with param: latitude={}, longitude={}.", latitude, longitude);
 
-        LocationNode locationNode = this.locationService.getLocationByCoordinates(latitude, longitude);
+        LocationNode locationNode = this.locationService.getLocationByCoordinatesAndType(latitude, longitude, LocationType.RENTAL_POINT);
 
-        logger.info("Received location by coordinates with id: {}.", locationNode.getId());
+        logger.info("Received rental point by coordinates with id: {}.", locationNode.getId());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.locationMapper.mapToDetailDto(locationNode));
