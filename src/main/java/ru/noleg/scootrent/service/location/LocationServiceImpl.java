@@ -1,5 +1,7 @@
 package ru.noleg.scootrent.service.location;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.noleg.scootrent.entity.location.LocationNode;
@@ -15,7 +17,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class LocationServiceImpl implements LocationService {
+
+    private static final Logger logger = LoggerFactory.getLogger(LocationServiceImpl.class);
 
     private final LocationRepository locationRepository;
 
@@ -24,50 +29,87 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    @Transactional
     public Long add(LocationNode locationNode) {
+        logger.debug("Adding new location: {}.", locationNode.getTitle());
 
         if (locationNode.getParent() != null && !this.locationRepository.existsById(locationNode.getParent().getId())) {
+            logger.error("Parent location with id: {} not found", locationNode.getParent().getId());
             throw new NotFoundException("Parent location with id " + locationNode.getParent().getId() + " does not exist.");
         }
-        return this.locationRepository.save(locationNode).getId();
+
+        LocationNode savedLocation = locationRepository.save(locationNode);
+
+        logger.debug("Location successfully added. Id: {}, Title: {}.", savedLocation.getId(), savedLocation.getTitle());
+        return savedLocation.getId();
     }
 
     @Override
-    @Transactional
     public void delete(Long id) {
+        logger.debug("Deleting location with id: {}.", id);
+
         if (!this.locationRepository.existsById(id)) {
+            logger.error("Location with id: {} does not exist.", id);
             throw new NotFoundException("Location with id: " + id + " not found.");
         }
         this.locationRepository.delete(id);
+
+        logger.debug("Location with id: {} successfully deleted.", id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public LocationNode getLocationById(Long id) {
+        logger.debug("Fetching location by ID: {}.", id);
+
         return this.locationRepository.findLocationById(id).orElseThrow(
-                () -> new NotFoundException("Location with id " + id + " not found")
+                () -> {
+                    logger.error("Location with id: {} not found.", id);
+                    return new NotFoundException("Location with id " + id + " not found.");
+                }
         );
     }
 
     @Override
+    @Transactional(readOnly = true)
     public LocationNode getLocationByCoordinates(BigDecimal latitude, BigDecimal longitude) {
+        logger.debug("Searching location by coordinates: {}, {}.", latitude, longitude);
+
         return this.locationRepository.findLocationByCoordinates(latitude, longitude).orElseThrow(
-                () -> new NotFoundException("Rental point with latitude: " + latitude + " and longitude: " + longitude + " not found.")
+                () -> {
+                    logger.error("Location with coordinates: {} not found.", latitude);
+                    return new NotFoundException("Rental point with latitude: " + latitude +
+                            " and longitude: " + longitude + " not found."
+                    );
+                }
         );
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<LocationNode> getChildrenLocation(Long parentId) {
-        return this.locationRepository.findChildrenLocationByParentId(parentId);
+        logger.debug("Fetching child locations for parent id: {}.", parentId);
+
+        List<LocationNode> children = this.locationRepository.findChildrenLocationByParentId(parentId);
+
+        logger.info("Found {} child locations for parent id: {}.", children.size(), parentId);
+        return children;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<LocationNode> getAllLocations() {
         try {
+
             List<LocationNode> allNodes = this.locationRepository.findAll();
+            logger.debug("Found {} locations.", allNodes.size());
 
             Map<Long, LocationNode> idMap = allNodes.stream()
-                    .peek(node -> node.getChildren().clear())
+                    .peek(node -> {
+                        if (node.getChildren() != null) {
+                            logger.trace("Clearing children for location id: {}.", node.getId());
+                            node.getChildren().clear();
+                        }
+                    })
                     .collect(Collectors.toMap(LocationNode::getId, Function.identity()));
 
             List<LocationNode> roots = new ArrayList<>();
@@ -77,13 +119,17 @@ public class LocationServiceImpl implements LocationService {
                 if (parent != null && parent.getId() != null) {
 
                     idMap.get(parent.getId()).getChildren().add(node);
+                    logger.trace("Attached node id={} to parent id={}.", node.getId(), parent.getId());
                 } else {
 
                     roots.add(node);
                 }
             }
+
+            logger.info("Successfully built location hierarchy. Root count: {}", roots.size());
             return roots;
         } catch (Exception e) {
+            logger.error("Failed to get all locations.", e);
             throw new ServiceException("Error on get all locations.", e);
         }
     }

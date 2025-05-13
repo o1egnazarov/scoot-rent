@@ -29,26 +29,26 @@ public class RentalPauserImpl implements RentalPauser {
 
         Rental rental = this.rentalRepository.findById(rentalId).orElseThrow(
                 () -> {
-                    logger.error("Аренда с id: {} не найдена.", rentalId);
+                    logger.error("Rental with id: {} not found.", rentalId);
                     return new NotFoundException("Rental with id: " + rentalId + " not found.");
                 }
         );
 
         this.validateRentalStatusForPause(rentalId, rental);
-        logger.debug("Текущий статус аренды: {}.", rental.getRentalStatus());
+        logger.debug("Rental status: {}.", rental.getRentalStatus());
 
         this.updateRentalStatus(rental);
-        logger.debug("Аренда с id: {} успешно приостановлена. Время приостановки: {}.", rentalId, rental.getLastPauseTime());
+        logger.debug("Rental with id: {} successfully pause. Pause time: {}.", rentalId, rental.getLastPauseTime());
     }
 
     private void validateRentalStatusForPause(Long rentalId, Rental rental) {
         if (rental.getRentalStatus() == RentalStatus.COMPLETED) {
-            logger.warn("Попытка приостановить уже завершенную аренду с id: {}.", rentalId);
+            logger.warn("Attempt pause already completed rental with id: {}.", rentalId);
             throw new BusinessLogicException("Rental is already completed.");
         }
 
         if (rental.getRentalStatus() == RentalStatus.PAUSE) {
-            logger.warn("Попытка приостановить уже приостановленную аренду с id: {}.", rentalId);
+            logger.warn("Attempt pause already pause rental with id: {}.", rentalId);
             throw new BusinessLogicException("Rental is already paused.");
         }
     }

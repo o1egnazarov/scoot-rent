@@ -3,10 +3,10 @@ package ru.noleg.scootrent.service.rental.tariffselect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.noleg.scootrent.entity.tariff.BillingMode;
 import ru.noleg.scootrent.entity.tariff.Tariff;
 import ru.noleg.scootrent.exception.BusinessLogicException;
 import ru.noleg.scootrent.exception.TariffSelectionException;
-import ru.noleg.scootrent.entity.tariff.BillingMode;
 import ru.noleg.scootrent.service.rental.tariffselect.strategy.TariffSelectionStrategy;
 
 import java.util.Comparator;
@@ -29,13 +29,13 @@ public class TariffSelectionServiceImpl implements TariffSelectionService {
 
     @Override
     public Tariff selectTariffForUser(Long userId, BillingMode billingMode) {
-        logger.info("Поиск подходящего тарифа для пользователя с id: {}.", userId);
+        logger.info("Search for a suitable tariff for the user with id: {}.", userId);
         return this.strategies.stream()
                 .map(strategy -> {
                     try {
                         return strategy.selectTariff(userId, billingMode);
                     } catch (Exception e) {
-                        logger.warn("Ошибка в выборе тарифа {} для пользователя id: {}.",
+                        logger.warn("Error in selection tariff {} for user with id: {}.",
                                 strategy.getClass().getSimpleName(), userId, e);
                         throw new TariffSelectionException("Error on selection tariff.", e);
                     }
@@ -43,7 +43,7 @@ public class TariffSelectionServiceImpl implements TariffSelectionService {
                 .filter(Objects::nonNull)
                 .findFirst()
                 .map(tariff -> {
-                    logger.info("Выбран тариф {} c типом: {} для пользователя с id: {}.",
+                    logger.debug("Select tariff {} with type: {} for user with id: {}.",
                             tariff.getTitle(), tariff.getType(), userId);
                     return tariff;
                 })

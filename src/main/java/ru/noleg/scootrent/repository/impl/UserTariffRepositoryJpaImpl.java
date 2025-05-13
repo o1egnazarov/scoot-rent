@@ -1,6 +1,8 @@
 package ru.noleg.scootrent.repository.impl;
 
 import jakarta.persistence.TypedQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.noleg.scootrent.entity.UserTariff;
 import ru.noleg.scootrent.exception.RepositoryException;
@@ -13,6 +15,9 @@ import java.util.Optional;
 
 @Repository
 public class UserTariffRepositoryJpaImpl extends BaseRepositoryImpl<UserTariff, Long> implements UserTariffRepository {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserTariffRepositoryJpaImpl.class);
+
     @Override
     protected Class<UserTariff> getEntityClass() {
         return UserTariff.class;
@@ -30,7 +35,7 @@ public class UserTariffRepositoryJpaImpl extends BaseRepositoryImpl<UserTariff, 
             final String ql = """
                     SELECT ut FROM UserTariff ut
                     WHERE ut.user.id = :userId AND
-                    :time BETWEEN ut.validFrom AND ut.validUntil
+                    :time BETWEEN ut.startDate AND ut.endDate
                     """;
 
             TypedQuery<UserTariff> query = entityManager.createQuery(ql, UserTariff.class);
@@ -40,6 +45,7 @@ public class UserTariffRepositoryJpaImpl extends BaseRepositoryImpl<UserTariff, 
             List<UserTariff> resultList = query.getResultList();
             return resultList.isEmpty() ? Optional.empty() : Optional.of(resultList.get(0));
         } catch (Exception e) {
+            logger.error("Failed to find active special tariff for user with id: {} and by time: {}.", userId, time, e);
             throw new RepositoryException("Repository error on fetch special tariff by user and date.", e);
         }
     }

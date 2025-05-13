@@ -51,12 +51,12 @@ public class ScooterModelController {
             description = "Позволяет сохранить новую модель самоката."
     )
     public ResponseEntity<Long> addScooterModel(@Valid @RequestBody ScooterModelDto scooterModelDto) {
-        logger.info("Полученный запрос: POST добавления модели самоката: {}.", scooterModelDto.title());
+        logger.info("Request: POST added scooter model: {}.", scooterModelDto.title());
 
         ScooterModel scooterModel = this.scooterModelMapper.mapToEntity(scooterModelDto);
         Long scooterModelId = this.scooterModelService.add(scooterModel);
 
-        logger.debug("Модель самоката добавлена с ID: {}.", scooterModelId);
+        logger.info("Scooter model added with id: {}.", scooterModelId);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(scooterModelId);
@@ -71,14 +71,14 @@ public class ScooterModelController {
             @Parameter(description = "Идентификатор модели самоката", required = true) @Min(1) @PathVariable("id") Long id,
             @Valid @RequestBody UpdateScooterModelDto scooterModelDto
     ) {
-        logger.info("Полученный запрос: PUT обновление модели самоката с id: {}.", id);
+        logger.info("Request: PUT update scooter model with id: {}.", id);
 
         ScooterModel scooterModel = this.scooterModelService.getScooterModel(id);
 
         this.scooterModelMapper.updateScooterModelFromDto(scooterModelDto, scooterModel);
         this.scooterModelService.add(scooterModel);
 
-        logger.debug("Модель самоката с ID: {} успешно обновлена.", id);
+        logger.info("Scooter model with id: {} successfully updated.", id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.scooterModelMapper.mapToDto(scooterModel));
@@ -92,11 +92,11 @@ public class ScooterModelController {
     public ResponseEntity<Void> deleteScooter(
             @Parameter(description = "Идентификатор модели самоката", required = true) @Min(1) @PathVariable("id") Long id
     ) {
-        logger.info("Полученный запрос: DELETE удаления модели самоката с id: {}.", id);
+        logger.info("Request: DELETE delete scooter model with id: {}.", id);
 
         this.scooterModelService.delete(id);
 
-        logger.debug("Модель самоката с id: {}, успешно удалена.", id);
+        logger.info("Scooter with id: {}, successfully deleted.", id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();
@@ -108,12 +108,12 @@ public class ScooterModelController {
             description = "Позволяет получить всевозможные модели самокатов в системе."
     )
     public ResponseEntity<List<ScooterModelDto>> getAllScooterModels() {
-        logger.info("Полученный запрос: GET получения всех моделей самоката.");
+        logger.info("Request: GET fetch all scooter models.");
 
         List<ScooterModelDto> scooterModelDtos =
                 this.scooterModelMapper.mapToDtos(this.scooterModelService.getAllScooterModels());
 
-        logger.debug("Получено моделей самокатов: {}.", scooterModelDtos.size());
+        logger.info("Got {} scooter models.", scooterModelDtos.size());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(scooterModelDtos);

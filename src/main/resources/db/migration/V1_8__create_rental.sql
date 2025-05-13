@@ -2,8 +2,8 @@ CREATE TABLE t_rental
 (
     c_id                 BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     c_cost               NUMERIC(38, 2),
-    c_duration_in_pause  NUMERIC(21),
-    c_duration_of_rental NUMERIC(21),
+    c_duration_in_pause  BIGINT,
+    c_duration_of_rental BIGINT,
     c_start_time         TIMESTAMP(6),
     c_end_time           TIMESTAMP(6),
     c_last_pause_time    TIMESTAMP(6),

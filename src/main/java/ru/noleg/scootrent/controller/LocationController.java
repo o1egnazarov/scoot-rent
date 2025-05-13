@@ -55,12 +55,12 @@ public class LocationController {
             description = "Позволяет сохранить новую локацию."
     )
     public ResponseEntity<Long> addLocation(@Valid @RequestBody CreateLocationDto createLocationDto) {
-        logger.info("Полученный запрос: POST добавления локации с адресом: {}.", createLocationDto.address());
+        logger.info("Request: POST add location with address: {}.", createLocationDto.address());
 
         LocationNode locationNode = this.locationMapper.mapToEntity(createLocationDto);
         Long locationId = this.locationService.add(locationNode);
 
-        logger.debug("Локация добавлена с ID: {}.", locationId);
+        logger.info("Location added with id: {}.", locationId);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(locationId);
@@ -75,13 +75,13 @@ public class LocationController {
             @Parameter(description = "Идентификатор локации", required = true) @Min(1) @PathVariable("id") Long id,
             @Valid @RequestBody UpdateLocationDto rentalPointDto
     ) {
-        logger.info("Полученный запрос: PUT обновления локации с id: {}.", id);
+        logger.info("Request: PUT update location with id: {}.", id);
         LocationNode locationNode = this.locationService.getLocationById(id);
 
         this.locationMapper.updateRentalPointFromDto(rentalPointDto, locationNode);
         this.locationService.add(locationNode);
 
-        logger.debug("Локация с ID: {} успешно обновлена.", id);
+        logger.info("Location with id: {} has been successfully updated.", id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.locationMapper.mapToDetailDto(locationNode));
@@ -95,11 +95,11 @@ public class LocationController {
     public ResponseEntity<Void> deleteLocation(
             @Parameter(description = "Идентификатор локации", required = true) @Min(1) @PathVariable("id") Long id
     ) {
-        logger.info("Полученный запрос: DELETE удаления локации с id: {}.", id);
+        logger.info("Request: DELETE delete location with id: {}.", id);
 
         this.locationService.delete(id);
 
-        logger.debug("Локация с id: {}, успешно удалена.", id);
+        logger.info("Location with id: {}, has been successfully deleted.", id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();
@@ -111,13 +111,13 @@ public class LocationController {
             description = "Позволяет получить всевозможные локации системы."
     )
     public ResponseEntity<List<LocationDto>> getAllLocation() {
-        logger.info("Полученный запрос: GET получения всех локаций.");
+        logger.info("Request: GET get all locations.");
 
         List<LocationNode> allLocations = this.locationService.getAllLocations();
         List<LocationDto> locations =
                 this.locationMapper.mapToDtos(allLocations);
 
-        logger.debug("Все локации успешно получены.");
+        logger.info("All locations has been successfully retrieved.");
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(locations);
@@ -131,11 +131,11 @@ public class LocationController {
     public ResponseEntity<List<DetailLocationDto>> getChildrenLocation(
             @Parameter(description = "Идентификатор локации", required = true) @Min(1) @PathVariable("id") Long id
     ) {
-        logger.info("Полученный запрос: GET получения дочерних узлов локации с id: {}.", id);
+        logger.info("Request: GET getting child location nodes with id: {}.", id);
 
         List<LocationNode> locationNode = this.locationService.getChildrenLocation(id);
 
-        logger.debug("Получена локация с id: {} с дочерними узлами.", id);
+        logger.info("Received location with id: {} with child nodes.", id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.locationMapper.mapToDetailDtos(locationNode));
@@ -152,11 +152,11 @@ public class LocationController {
     public ResponseEntity<DetailLocationDto> getLocationById(
             @Parameter(description = "Идентификатор локации", required = true) @Min(1) @PathVariable("id") Long id
     ) {
-        logger.info("Полученный запрос: GET получения локации с id: {}.", id);
+        logger.info("Request: GET get location with id: {}.", id);
 
         LocationNode locationNode = this.locationService.getLocationById(id);
 
-        logger.debug("Получена локация id: {}.", id);
+        logger.debug("Received location with id: {}.", id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.locationMapper.mapToDetailDto(locationNode));
@@ -171,11 +171,11 @@ public class LocationController {
             @Parameter(description = "Широта", required = true) @RequestParam("latitude") BigDecimal latitude,
             @Parameter(description = "Долгота", required = true) @RequestParam("longitude") BigDecimal longitude
     ) {
-        logger.info("Полученный запрос: GET с параметрами: latitude={}, longitude={}.", latitude, longitude);
+        logger.info("Request: GET with param: latitude={}, longitude={}.", latitude, longitude);
 
         LocationNode locationNode = this.locationService.getLocationByCoordinates(latitude, longitude);
 
-        logger.debug("Получена локация по координатам с id: {}.", locationNode.getId());
+        logger.info("Received location by coordinates with id: {}.", locationNode.getId());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.locationMapper.mapToDetailDto(locationNode));

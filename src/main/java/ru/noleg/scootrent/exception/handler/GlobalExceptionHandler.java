@@ -123,7 +123,7 @@ public class GlobalExceptionHandler {
                 .getFieldErrors()
                 .stream()
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
-                .collect(Collectors.joining(",\n"));
+                .collect(Collectors.joining("; "));
 
         return this.buildResponse(
                 HttpStatus.BAD_REQUEST,

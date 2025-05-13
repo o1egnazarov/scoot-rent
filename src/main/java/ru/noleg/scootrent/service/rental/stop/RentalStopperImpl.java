@@ -52,19 +52,19 @@ public class RentalStopperImpl implements RentalStopper {
         BigDecimal cost = this.calculateCost(rentalId, rental.getUser(), rental.getTariff(), rentalDuration);
 
         this.completeRental(rental, endPoint, cost, rentalDuration);
-        logger.debug("Аренда id: {} успешно завершена. Стоимость: {}, Длительность: {}.", rentalId, cost, rentalDuration);
+        logger.debug("Rental with id: {} successfully stopped. Cost: {}, Duration: {}.", rentalId, cost, rentalDuration);
     }
 
     private Rental validateAndGetRental(Long rentalId) {
         Rental rental = this.rentalRepository.findById(rentalId).orElseThrow(
                 () -> {
-                    logger.error("Аренда с id: {} не найдена.", rentalId);
+                    logger.error("Rental with id: {} not found.", rentalId);
                     return new NotFoundException("Rental with id: " + rentalId + " not found.");
                 }
         );
 
         if (rental.getRentalStatus() == RentalStatus.COMPLETED) {
-            logger.warn("Аренда с id: {} уже завершена.", rentalId);
+            logger.warn("Rental with id: {} already completed.", rentalId);
             throw new BusinessLogicException("Rental is already completed.");
         }
         return rental;
@@ -73,13 +73,13 @@ public class RentalStopperImpl implements RentalStopper {
     private LocationNode validateAndGetLocation(Long endPointId) {
         LocationNode endPoint = this.locationRepository.findById(endPointId).orElseThrow(
                 () -> {
-                    logger.error("Точка завершения аренды с id: {} не найдена", endPointId);
+                    logger.error("Rental end point with id: {} not found.", endPointId);
                     return new NotFoundException("Rental point with id: " + endPointId + " not found.");
                 }
         );
 
         if (endPoint.getLocationType() != LocationType.RENTAL_POINT) {
-            logger.warn("Локация с id: {} не является точкой аренды.", endPointId);
+            logger.warn("Location with id: {} is not a rental point.", endPointId);
             throw new BusinessLogicException("Location is not a rental point.");
         }
         return endPoint;
@@ -96,8 +96,8 @@ public class RentalStopperImpl implements RentalStopper {
         try {
             return this.billingService.calculateRentalCost(user, tariff, rentalDuration);
         } catch (Exception e) {
-            logger.error("Ошибка в расчете стоимости для аренды с id: {}", rentalId, e);
-            throw new ServiceException("Ошибка в сервисе расчета стоимости за аренду с id " + rentalId, e);
+            logger.error("Error in calculate cost for rental with id: {}", rentalId, e);
+            throw new ServiceException("Error in BillingService by rental with id " + rentalId, e);
         }
     }
 

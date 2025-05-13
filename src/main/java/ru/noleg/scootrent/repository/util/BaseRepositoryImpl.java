@@ -30,11 +30,11 @@ public abstract class BaseRepositoryImpl<T, ID> implements BaseRepository<T, ID>
             if (id == null) {
 
                 this.entityManager.persist(entity);
-                logger.debug("Создана новая сущность {}.", type);
+                logger.debug("Persist new entity {}.", type);
             } else {
 
                 this.entityManager.merge(entity);
-                logger.debug("Обновлена сущность {} с id: {}.", type, id);
+                logger.debug("Update entity {} with id: {}.", type, id);
             }
 
             this.entityManager.flush();
@@ -42,7 +42,7 @@ public abstract class BaseRepositoryImpl<T, ID> implements BaseRepository<T, ID>
             return entity;
         } catch (Exception e) {
 
-            logger.error("Ошибка сохранения сущности {} с id: {}.", type, id, e);
+            logger.error("Error on save entity {} with id: {}.", type, id, e);
             throw new RepositoryException("Repository error on save entity.", e);
         }
     }
@@ -52,20 +52,20 @@ public abstract class BaseRepositoryImpl<T, ID> implements BaseRepository<T, ID>
 
         final String type = getEntityClass().getSimpleName();
         try {
-            logger.debug("Попытка удаления {} сущности с id: {}.", type, id);
+            logger.debug("Attempt delete {} entity with id: {}.", type, id);
 
             T entity = this.entityManager.find(getEntityClass(), id);
             if (entity == null) {
 
-                logger.warn("Сущность {} не найдена для удаления по id: {}.", type, id);
+                logger.warn("Entity {} with id: {} not found for delete.", type, id);
                 throw new RepositoryException("Entity not found");
             }
 
             this.entityManager.remove(entity);
-            logger.debug("Сущность {} c id: {} удалена успешно.", type, id);
+            logger.debug("Entity {} with id: {} successfully delete.", type, id);
         } catch (Exception e) {
 
-            logger.error("Ошибка удаления сущности {} с id: {}.", type, id, e);
+            logger.error("Error on delete entity {} with id: {}.", type, id, e);
             throw new RepositoryException("Repository error on remove entity.", e);
         }
     }
@@ -75,16 +75,16 @@ public abstract class BaseRepositoryImpl<T, ID> implements BaseRepository<T, ID>
 
         final String type = getEntityClass().getSimpleName();
         try {
-            logger.debug("Получение всех сущностей {}.", type);
+            logger.debug("Fetch all entities {}.", type);
 
             final String ql = "SELECT e FROM " + type + " e";
             List<T> entities = this.entityManager.createQuery(ql, getEntityClass()).getResultList();
 
-            logger.debug("Найдено {} {} сущностей.", entities.size(), type);
+            logger.debug("Found {} {} entities.", entities.size(), type);
             return entities;
         } catch (Exception e) {
 
-            logger.error("Ошибка получения списка сущностей {}.", type, e);
+            logger.error("Error on fetch list entities {}.", type, e);
             throw new RepositoryException("Repository error on fetch all entities.", e);
         }
     }
@@ -94,20 +94,20 @@ public abstract class BaseRepositoryImpl<T, ID> implements BaseRepository<T, ID>
 
         final String type = getEntityClass().getSimpleName();
         try {
-            logger.debug("Получение сущности {} с id: {}.", type, id);
+            logger.debug("Fetch entity {} with id: {}.", type, id);
 
             T entity = entityManager.find(getEntityClass(), id);
             if (entity != null) {
 
-                logger.debug("Найдена сущность {} с id: {}.", type, id);
+                logger.debug("Found entity {} with id: {}.", type, id);
             } else {
 
-                logger.warn("Сущность {} не найдена по id: {}.", type, id);
+                logger.warn("Entity {} with id: {} not found.", type, id);
             }
             return Optional.ofNullable(entity);
         } catch (Exception e) {
 
-            logger.error("Ошибка получения сущности {} по id: {}.", type, id, e);
+            logger.error("Error on fetch entity {} with id: {}.", type, id, e);
             throw new RepositoryException("Repository error on find entity by id.", e);
         }
     }
@@ -118,12 +118,12 @@ public abstract class BaseRepositoryImpl<T, ID> implements BaseRepository<T, ID>
         final String type = getEntityClass().getSimpleName();
         try {
             boolean exists = entityManager.find(getEntityClass(), id) != null;
-            logger.debug("{} с ID: {} {}существует.", type, id, exists ? "" : "не ");
+            logger.debug("{} with id: {} {}exist.", type, id, exists ? "" : "not ");
 
             return exists;
         } catch (Exception e) {
 
-            logger.error("Ошибка проверки существования сущности {} с id: {}.", type, id, e);
+            logger.error("Error on check existence entity {} with id: {}.", type, id, e);
             throw new RepositoryException("Repository error on check existence.", e);
         }
     }

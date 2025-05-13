@@ -1,6 +1,7 @@
 package ru.noleg.scootrent.entity.rental;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -15,6 +16,7 @@ import ru.noleg.scootrent.entity.scooter.Scooter;
 import ru.noleg.scootrent.entity.tariff.Tariff;
 import ru.noleg.scootrent.entity.user.User;
 import ru.noleg.scootrent.exception.BusinessLogicException;
+import ru.noleg.scootrent.jpa.converter.DurationToLongInMinutesConverter;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -63,9 +65,11 @@ public class Rental {
     private LocalDateTime lastPauseTime;
 
     @Column(name = "c_duration_in_pause")
+    @Convert(converter = DurationToLongInMinutesConverter.class)
     private Duration durationInPause = Duration.ZERO;
 
     @Column(name = "c_duration_of_rental")
+    @Convert(converter = DurationToLongInMinutesConverter.class)
     private Duration durationOfRental = Duration.ZERO;
 
     @Column(name = "c_end_time")

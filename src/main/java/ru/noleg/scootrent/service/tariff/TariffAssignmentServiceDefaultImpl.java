@@ -38,20 +38,20 @@ public class TariffAssignmentServiceDefaultImpl implements TariffAssignmentServi
 
     @Override
     public void assignTariffToUser(Long userId, Long tariffId, BigDecimal customPrice, Integer discountPct) {
-        logger.debug("Назначение тарифа с новой ценой = {}, скидка = {}.", customPrice, discountPct);
+        logger.debug("Assign tariff with new price = {}, discount = {}.", customPrice, discountPct);
 
         User user = this.getUser(userId);
         Tariff tariff = this.validateAndGetTariff(tariffId);
 
         UserTariff userTariff = this.createUserTariff(customPrice, discountPct, user, tariff);
         this.userTariffRepository.save(userTariff);
-        logger.debug("Тариф {} успешно назначен пользователю {}", tariffId, userId);
+        logger.debug("Tariff {} successfully assigned to user {}.", tariffId, userId);
     }
 
     private User getUser(Long userId) {
         return this.userRepository.findById(userId).orElseThrow(
                 () -> {
-                    logger.error("Пользователь с id: {} не найден.", userId);
+                    logger.error("User with id: {} not found.", userId);
                     return new UserNotFoundException("User with id " + userId + " not found.");
                 }
         );
@@ -60,18 +60,18 @@ public class TariffAssignmentServiceDefaultImpl implements TariffAssignmentServi
     private Tariff validateAndGetTariff(Long tariffId) {
         Tariff tariff = this.tariffRepository.findById(tariffId).orElseThrow(
                 () -> {
-                    logger.error("Тариф с id: {} не найден.", tariffId);
+                    logger.error("Tariff with id: {} not found.", tariffId);
                     return new NotFoundException("Tariff with id " + tariffId + " not found.");
                 }
         );
 
         if (!tariff.getActive()) {
-            logger.warn("Тариф с id: {} неактивен.", tariffId);
+            logger.warn("Tariff with id: {} is not active.", tariffId);
             throw new BusinessLogicException("Tariff with id: " + tariffId + " is not active.");
         }
 
         if (tariff.getType() == TariffType.SUBSCRIPTION) {
-            logger.warn("Тариф с id: {} является подпиской и не может быть назначен напрямую.", tariffId);
+            logger.warn("Tariff with id: {} is a subscription and cannot assigned.", tariffId);
             throw new BusinessLogicException("Tariff with id: " + tariffId + " is a subscription.");
         }
         return tariff;

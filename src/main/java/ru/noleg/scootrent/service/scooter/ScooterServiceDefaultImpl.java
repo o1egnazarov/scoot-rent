@@ -16,6 +16,7 @@ import ru.noleg.scootrent.repository.ScooterRepository;
 import java.util.List;
 
 @Service
+@Transactional
 public class ScooterServiceDefaultImpl implements ScooterService {
 
     private static final Logger logger = LoggerFactory.getLogger(ScooterServiceDefaultImpl.class);
@@ -33,75 +34,72 @@ public class ScooterServiceDefaultImpl implements ScooterService {
     }
 
     @Override
-    @Transactional
     public Long add(Scooter scooter) {
-        logger.debug("Добавление самоката  {}.", scooter.getNumberPlate());
+        logger.debug("Adding scooter with number plate: {}.", scooter.getNumberPlate());
 
         this.validateScooterModel(scooter);
         this.validateRentalPoint(scooter.getRentalPoint().getId());
 
         Long id = this.scooterRepository.save(scooter).getId();
 
-        logger.debug("Самокат успешно добавлен с id {}.", id);
+        logger.debug("Scooter successfully added with id: {}.", id);
         return id;
     }
 
     private void validateScooterModel(Scooter scooter) {
         if (!this.scooterModelRepository.existsById(scooter.getModel().getId())) {
 
-            logger.error("Модель самоката с id {} не найдена.", scooter.getModel().getId());
+            logger.error("Scooter model with id: {} not found.", scooter.getModel().getId());
             throw new NotFoundException("Scooter model with id " + scooter.getModel().getId() + " not found.");
         }
     }
 
     private void validateRentalPoint(Long rentalPointId) {
         LocationNode rentalPoint = this.locationRepository.findLocationById(rentalPointId).orElseThrow(() -> {
-            logger.error("Пункт проката с id {} не найден", rentalPointId);
-            return new NotFoundException("Пункт проката с id " + rentalPointId + " не найден.");
+            logger.error("Location with id: {} not found.", rentalPointId);
+            return new NotFoundException("Location with id " + rentalPointId + " not found.");
         });
 
         if (rentalPoint.getLocationType() != LocationType.RENTAL_POINT) {
 
-            logger.warn("Локация с id {} не является пунктом проката.", rentalPointId);
+            logger.warn("Location with id:{} is not a rental point.", rentalPointId);
             throw new BusinessLogicException("Location is not a rental point.");
         }
     }
 
     @Override
-    @Transactional
     public void delete(Long id) {
-        logger.debug("Удаление самоката с id {}.", id);
+        logger.debug("Deleting scooter with id: {}.", id);
 
         if (!this.scooterRepository.existsById(id)) {
 
-            logger.warn("Самокат с id {} не найден для удаления.", id);
+            logger.warn("Scooter with id: {} not found.", id);
             throw new NotFoundException("Scooter with id " + id + " not found.");
         }
 
         this.scooterRepository.delete(id);
-        logger.debug("Самокат с id {} успешно удалён.", id);
+        logger.debug("Scooter with id: {} successfully deleted.", id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Scooter getScooter(Long id) {
-        logger.debug("Получение самоката с id {}.", id);
+        logger.debug("Fetching scooter with id: {}.", id);
 
-        Scooter scooter = this.scooterRepository.findById(id).orElseThrow(() -> {
-            logger.warn("Самокат с id {} не найден.", id);
-            return new NotFoundException("Самокат с id " + id + " не найден.");
+        return this.scooterRepository.findById(id).orElseThrow(() -> {
+            logger.error("Scooter with id: {} not found.", id);
+            return new NotFoundException("Scooter with id " + id + " not found.");
         });
-
-        logger.debug("Самокат с id {} успешно получен.", id);
-        return scooter;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Scooter> getAllScooters() {
-        logger.debug("Получение всех самокатов");
+        logger.debug("Fetching all scooters.");
 
         List<Scooter> scooters = this.scooterRepository.findAll();
 
-        logger.debug("Получено {} самокатов", scooters.size());
+        logger.debug("Got {} scooters.", scooters.size());
         return scooters;
     }
 }

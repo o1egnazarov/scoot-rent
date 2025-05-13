@@ -1,6 +1,8 @@
 package ru.noleg.scootrent.repository.impl;
 
 import jakarta.persistence.TypedQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.noleg.scootrent.entity.rental.Rental;
 import ru.noleg.scootrent.exception.RepositoryException;
@@ -11,6 +13,9 @@ import java.util.List;
 
 @Repository
 public class RentalRepositoryJpaImpl extends BaseRepositoryImpl<Rental, Long> implements RentalRepository {
+
+    private static final Logger logger = LoggerFactory.getLogger(RentalRepositoryJpaImpl.class);
+
     @Override
     protected Class<Rental> getEntityClass() {
         return Rental.class;
@@ -25,14 +30,19 @@ public class RentalRepositoryJpaImpl extends BaseRepositoryImpl<Rental, Long> im
     public boolean isActiveRentalByUserId(Long userId) {
         try {
 
-            final String ql = "SELECT COUNT(r) > 0 FROM Rental r WHERE r.user.id = :userId AND r.rentalStatus ='ACTIVE'";
+            final String ql = """
+                    SELECT COUNT(r) > 0
+                    FROM Rental r
+                    WHERE r.user.id = :userId
+                    AND r.rentalStatus ='ACTIVE'
+                    """;
 
             TypedQuery<Boolean> query = entityManager.createQuery(ql, Boolean.class);
             query.setParameter("userId", userId);
 
-            List<Boolean> resultList = query.getResultList();
-            return !resultList.isEmpty() && resultList.get(0);
+            return query.getSingleResult();
         } catch (Exception e) {
+            logger.error("Failed to check active rental for user with id: {}.", userId, e);
             throw new RepositoryException("Repository error on fetch user by username", e);
         }
     }
@@ -53,9 +63,9 @@ public class RentalRepositoryJpaImpl extends BaseRepositoryImpl<Rental, Long> im
 
             TypedQuery<Rental> query = entityManager.createQuery(ql, Rental.class);
 
-            List<Rental> resultList = query.getResultList();
-            return resultList.isEmpty() ? List.of() : resultList;
+            return query.getResultList();
         } catch (Exception e) {
+            logger.error("Failed to find all rentals.", e);
             throw new RepositoryException("Repository error on fetch all rentals.", e);
         }
     }
@@ -77,9 +87,9 @@ public class RentalRepositoryJpaImpl extends BaseRepositoryImpl<Rental, Long> im
             TypedQuery<Rental> query = entityManager.createQuery(ql, Rental.class);
             query.setParameter("userId", userId);
 
-            List<Rental> resultList = query.getResultList();
-            return resultList.isEmpty() ? List.of() : resultList;
+            return query.getResultList();
         } catch (Exception e) {
+            logger.error("Failed to find rentals for user with id: {}.", userId, e);
             throw new RepositoryException("Repository error on get rental history for user.", e);
         }
     }
@@ -101,9 +111,9 @@ public class RentalRepositoryJpaImpl extends BaseRepositoryImpl<Rental, Long> im
             TypedQuery<Rental> query = entityManager.createQuery(ql, Rental.class);
             query.setParameter("scooterId", scooterId);
 
-            List<Rental> resultList = query.getResultList();
-            return resultList.isEmpty() ? List.of() : resultList;
+            return query.getResultList();
         } catch (Exception e) {
+            logger.error("Failed to find rentals by scooter with id: {}.", scooterId, e);
             throw new RepositoryException("Repository error on get rental history for scooter.", e);
         }
     }

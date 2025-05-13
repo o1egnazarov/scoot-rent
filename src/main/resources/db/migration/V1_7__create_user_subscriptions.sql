@@ -12,5 +12,5 @@ CREATE TABLE t_user_subscriptions
     CONSTRAINT fk_user_subscription_user FOREIGN KEY (c_user_id) REFERENCES t_user (c_id) ON DELETE CASCADE
 );
 
-CREATE INDEX idx_subscription_user_id ON t_user_subscriptions(c_user_id);
-CREATE INDEX idx_subscription_tariff_id ON t_user_subscriptions(c_tariff_id);
+CREATE INDEX idx_subscription_user_id ON t_user_subscriptions (c_user_id);
+CREATE INDEX idx_subscription_tariff_id ON t_user_subscriptions (c_tariff_id);

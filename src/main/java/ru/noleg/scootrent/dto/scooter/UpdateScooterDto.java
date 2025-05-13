@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import ru.noleg.scootrent.entity.scooter.ScooterStatus;
 
+import java.time.Duration;
+
 @Schema(description = "Обновление самоката")
 public record UpdateScooterDto(
         @Schema(description = "Номерной знак самоката", example = "T017PC") @NotBlank @Size(min = 4, max = 10)
@@ -13,6 +15,9 @@ public record UpdateScooterDto(
 
         @Schema(description = "Статус работы самоката", example = "TAKEN")
         ScooterStatus status,
+
+        @Schema(description = "Время в работе", example = "PT45M")
+        Duration durationInUsed,
 
         @Schema(description = "Id модели самоката", example = "1") @NotNull
         Long modelId,

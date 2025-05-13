@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = AdultValidator.class)
 public @interface Adult {
 
-    String message() default "Invalid age";
+    String message() default "Invalid age. Only adult users are accepted.";
 
     Class<?>[] groups() default {};
 

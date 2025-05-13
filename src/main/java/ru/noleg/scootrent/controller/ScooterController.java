@@ -51,12 +51,12 @@ public class ScooterController {
             description = "Позволяет сохранить новый самокат."
     )
     public ResponseEntity<Long> addScooter(@Valid @RequestBody ScooterDto scooterDto) {
-        logger.info("Полученный запрос: POST добавления самоката с номером: {}.", scooterDto.numberPlate());
+        logger.info("Request: POST added scooter with number plate: {}.", scooterDto.numberPlate());
 
         Scooter scooter = this.scooterMapper.mapToEntity(scooterDto);
         Long scooterId = this.scooterService.add(scooter);
 
-        logger.debug("Самокат добавлен с ID: {}.", scooterId);
+        logger.info("Scooter added with id: {}.", scooterId);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(scooterId);
@@ -71,13 +71,13 @@ public class ScooterController {
             @Parameter(description = "Идентификатор самоката", required = true) @Min(1) @PathVariable("id") Long id,
             @Valid @RequestBody UpdateScooterDto scooterDto
     ) {
-        logger.info("Полученный запрос: PUT обновления самоката с id: {}.", id);
+        logger.info("Request: PUT update scooter with id: {}.", id);
         Scooter scooter = this.scooterService.getScooter(id);
 
         this.scooterMapper.updateScooterFromDto(scooterDto, scooter);
         this.scooterService.add(scooter);
 
-        logger.debug("Самокат с ID: {} успешно обновлен.", id);
+        logger.info("Scooter with id: {} successfully updated.", id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.scooterMapper.mapToDto(scooter));
@@ -91,11 +91,11 @@ public class ScooterController {
     public ResponseEntity<Void> deleteScooter(
             @Parameter(description = "Идентификатор самоката", required = true) @Min(1) @PathVariable("id") Long id
     ) {
-        logger.info("Полученный запрос: DELETE удаления самоката с id: {}.", id);
+        logger.info("Request: DELETE delete scooter with id: {}.", id);
 
         this.scooterService.delete(id);
 
-        logger.debug("Самокат с id: {}, успешно удален.", id);
+        logger.info("Scooter with id: {}, successfully deleted.", id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();
@@ -107,11 +107,11 @@ public class ScooterController {
             description = "Позволяет получить всевозможные самокаты в системе."
     )
     public ResponseEntity<List<ScooterDto>> getAllScooters() {
-        logger.info("Полученный запрос: GET получения всех самокатов.");
+        logger.info("Request: GET fetch all scooters.");
 
         List<ScooterDto> scooterDtos = this.scooterMapper.mapToDtos(this.scooterService.getAllScooters());
 
-        logger.debug("Получено самокатов: {}.", scooterDtos.size());
+        logger.info("Got {} scooters.", scooterDtos.size());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(scooterDtos);

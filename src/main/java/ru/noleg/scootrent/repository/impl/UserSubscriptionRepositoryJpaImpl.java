@@ -1,6 +1,8 @@
 package ru.noleg.scootrent.repository.impl;
 
 import jakarta.persistence.TypedQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.noleg.scootrent.entity.UserSubscription;
 import ru.noleg.scootrent.exception.RepositoryException;
@@ -13,6 +15,8 @@ import java.util.Optional;
 
 @Repository
 public class UserSubscriptionRepositoryJpaImpl extends BaseRepositoryImpl<UserSubscription, Long> implements UserSubscriptionRepository {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserSubscriptionRepositoryJpaImpl.class);
 
     @Override
     protected Class<UserSubscription> getEntityClass() {
@@ -41,6 +45,7 @@ public class UserSubscriptionRepositoryJpaImpl extends BaseRepositoryImpl<UserSu
             List<UserSubscription> resultList = query.getResultList();
             return resultList.isEmpty() ? Optional.empty() : Optional.of(resultList.get(0));
         } catch (Exception e) {
+            logger.error("Failed to find active subscription for user with id: {} and by time: {}.", userId, time, e);
             throw new RepositoryException("Repository error on fetch subscription by user and date.", e);
         }
     }

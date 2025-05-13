@@ -51,12 +51,12 @@ public class TariffController {
             description = "Позволяет добавить новый тариф."
     )
     public ResponseEntity<Long> addTariff(@Valid @RequestBody TariffDto tariffDto) {
-        logger.info("Полученный запрос: POST добавления тарифа: {}.", tariffDto.title());
+        logger.info("Request: POST added tariff: {}.", tariffDto.title());
 
         Tariff tariff = this.tariffMapper.mapToEntity(tariffDto);
         Long tariffId = this.tariffService.createTariff(tariff);
 
-        logger.info("Тариф добавлен с id: {}.", tariffId);
+        logger.info("Tariff with id: {} added.", tariffId);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(tariffId);
@@ -71,13 +71,13 @@ public class TariffController {
             @Parameter(description = "Идентификатор тарифа", required = true) @Min(1) @PathVariable("id") Long id,
             @Valid @RequestBody UpdateTariffDto updateTariffDto
     ) {
-        logger.info("Полученный запрос: PUT обновления тарифа с id: {}.", id);
+        logger.info("Request: PUT update tariff with id: {}.", id);
         Tariff tariff = this.tariffService.getTariff(id);
 
         this.tariffMapper.updateTariffFromDto(updateTariffDto, tariff);
         this.tariffService.createTariff(tariff);
 
-        logger.info("Тариф с id: {} успешно обновлен.", id);
+        logger.info("Tariff with id: {} successfully updated.", id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.tariffMapper.mapToDto(tariff));
@@ -92,11 +92,11 @@ public class TariffController {
     public ResponseEntity<Void> disableTariff(
             @Parameter(description = "Идентификатор тарифа", required = true) @Min(1) @PathVariable("id") Long id
     ) {
-        logger.info("Полученный запрос: DELETE деактивации тарифа с id: {}.", id);
+        logger.info("Request: DELETE deactivate tariff with id: {}.", id);
 
         this.tariffService.deactivateTariff(id);
 
-        logger.info("Тариф с id: {}, успешно деактивирован.", id);
+        logger.info("Tariff with id: {}, deactivate.", id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();
@@ -108,11 +108,11 @@ public class TariffController {
             description = "Позволяет получить всевозможные активные тарифы."
     )
     public ResponseEntity<List<TariffDto>> getActiveTariffs() {
-        logger.info("Полученный запрос: GET получения всех активных тарифов.");
+        logger.info("Request: GET fetch all active tariff.");
 
         List<Tariff> tariffs = this.tariffService.getActiveTariffs();
 
-        logger.info("Получено тарифов: {}.", tariffs.size());
+        logger.info("Got {} tariffs.", tariffs.size());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.tariffMapper.mapToDtos(tariffs));

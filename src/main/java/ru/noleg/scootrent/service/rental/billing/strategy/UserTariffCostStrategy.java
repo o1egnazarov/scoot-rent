@@ -37,10 +37,10 @@ public class UserTariffCostStrategy implements RentalCostStrategy {
     @Override
     @Transactional
     public BigDecimal calculate(User user, Tariff tariff, Duration rentalDuration) {
-        logger.debug("Расчет стоимости аренды по специальному тарифу для пользователя с id: {}.", user.getId());
+        logger.debug("Calculate cost for rental by special tariff for user with id: {}.", user.getId());
 
         UserTariff userTariff = this.getUserTariff(user);
-        logger.debug("Найден специальный тариф {}. Цена за минуту: {}, скидка: {}",
+        logger.debug("Found special tariff {}. Price per minute: {}, discount: {}.",
                 userTariff.getTariff().getTitle(), userTariff.getCustomPricePerMinute(), userTariff.getDiscountPct());
 
         try {
@@ -49,12 +49,12 @@ public class UserTariffCostStrategy implements RentalCostStrategy {
 
             BigDecimal totalCost = calculateFinalCost(rentalDuration, price, userTariff);
 
-            logger.debug("Итоговая стоимость аренды для пользователя с id: {} = {}.", user.getId(), totalCost);
+            logger.debug("Total rental cost for user with id: {} = {}.", user.getId(), totalCost);
             return totalCost;
         } catch (Exception e) {
-            logger.error("Ошибка в расчете стоимости по тарифу {}", userTariff.getTariff().getTitle(), e);
+            logger.error("Error in calculate cost by tariff {}.", userTariff.getTariff().getTitle(), e);
             throw new CostCalculationException(
-                    String.format("Error calculation cost for user with id: %d by tariff %s",
+                    String.format("Error calculation cost for user with id: %d by tariff %s.",
                             user.getId(), userTariff.getTariff().getTitle()), e
             );
         }
@@ -63,7 +63,7 @@ public class UserTariffCostStrategy implements RentalCostStrategy {
     private UserTariff getUserTariff(User user) {
         return this.userTariffRepository.findActiveTariffByUserAndTime(user.getId(), LocalDateTime.now()).orElseThrow(
                 () -> {
-                    logger.error("Специальный тариф для пользователя с id: {} не найден.", user.getId());
+                    logger.error("Special tariff for user with id: {} not found.", user.getId());
                     return new NotFoundException("Special tariff for user " + user.getId() + " not found.");
                 }
         );
@@ -85,16 +85,16 @@ public class UserTariffCostStrategy implements RentalCostStrategy {
 
         price = price.subtract(price.multiply(discount));
 
-        logger.debug("Цена за минуту: {}.", price);
+        logger.debug("Price per minute: {}.", price);
         return price;
     }
 
     private BigDecimal calculateFinalCost(Duration rentalDuration, BigDecimal price, UserTariff userTariff) {
         BigDecimal rentalMinutes = BigDecimal.valueOf(rentalDuration.toMinutes());
-        logger.debug("Продолжительность аренды: {}.", rentalMinutes);
+        logger.debug("Duration rental: {}.", rentalMinutes);
 
         price = price.multiply(rentalMinutes);
-        logger.debug("Стоимость аренды (без учета разблокировки): {}", price);
+        logger.debug("Rental cost (without unlock fee): {}", price);
 
         return price.add(new BigDecimal(userTariff.getTariff().getUnlockFee()));
     }

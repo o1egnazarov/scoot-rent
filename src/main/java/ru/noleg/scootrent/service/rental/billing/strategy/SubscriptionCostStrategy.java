@@ -39,21 +39,21 @@ public class SubscriptionCostStrategy implements RentalCostStrategy {
     @Override
     @Transactional
     public BigDecimal calculate(User user, Tariff tariff, Duration rentalDuration) {
-        logger.debug("Расчет стоимости аренды по подписке для пользователя с id: {}.", user.getId());
+        logger.debug("Calculate rental cost by subscription for user with id: {}.", user.getId());
 
         UserSubscription userSubscription = this.getUserSubscription(user);
-        logger.debug("Найдена подписка {}. Всего бесплатных минут: {}, использовано: {}",
+        logger.debug("Found subscription {}. Total free minutes: {}, used: {}",
                 userSubscription.getTariff().getTitle(), userSubscription.getMinuteUsageLimit(), userSubscription.getMinutesUsed());
 
         long minutesLeft = userSubscription.getMinuteUsageLimit() - userSubscription.getMinutesUsed();
         long rentalMinutes = rentalDuration.toMinutes();
-        logger.debug("Осталось минут по подписке: {}, запрошено: {}.", rentalMinutes, minutesLeft);
+        logger.debug("Minutes left on subscription: {}, minutes requested: {}.", rentalMinutes, minutesLeft);
 
         this.updateSubscriptionUsage(userSubscription, rentalMinutes);
 
         BigDecimal totalCost = this.calculateFinalCost(minutesLeft, rentalMinutes, userSubscription);
 
-        logger.debug("Итоговая стоимость аренды для пользователя с id: {} = {}", user.getId(), totalCost);
+        logger.debug("Total rental cost for user with id: {} = {}.", user.getId(), totalCost);
         return totalCost;
     }
 
@@ -61,7 +61,7 @@ public class SubscriptionCostStrategy implements RentalCostStrategy {
         return this.userSubscriptionRepository.findActiveSubscriptionByUserAndTime(
                 user.getId(), LocalDateTime.now()).orElseThrow(
                 () -> {
-                    logger.error("Подписка для пользователя с id: {} не найдена. ", user.getId());
+                    logger.error("Subscription for user with id: {} not found.", user.getId());
                     return new NotFoundException("Subscription for user " + user.getId() + " not found.");
                 }
         );
@@ -70,7 +70,7 @@ public class SubscriptionCostStrategy implements RentalCostStrategy {
     private void updateSubscriptionUsage(UserSubscription subscription, long minutes) {
         subscription.addMinutes(minutes);
         this.userSubscriptionRepository.save(subscription);
-        logger.debug("Обновлено использование подписки: +{} минут.", minutes);
+        logger.debug("Updated subscription used: +{} minutes.", minutes);
     }
 
     private BigDecimal calculateFinalCost(long minutesLeft, long rentalMinutes, UserSubscription userSubscription) {
@@ -78,19 +78,16 @@ public class SubscriptionCostStrategy implements RentalCostStrategy {
 
             if (minutesLeft >= rentalMinutes) {
 
-                logger.debug("Аренда в пределах подписки.");
+                logger.debug("Rental within the subscription.");
                 return BigDecimal.ZERO;
             }
 
             long overused = rentalMinutes - minutesLeft;
-            logger.debug("Лимит превышен на {}", overused);
+            logger.debug("Limit exceeded by {}", overused);
 
-            BigDecimal result = BigDecimal.valueOf(overused).multiply(this.extraPricePerMinute);
-
-            logger.debug("Стоимость превышения лимита = {}.", result);
-            return result;
+            return BigDecimal.valueOf(overused).multiply(this.extraPricePerMinute);
         } catch (Exception e) {
-            logger.error("Ошибка в расчете стоимости по подписке {}", userSubscription.getTariff().getTitle(), e);
+            logger.error("Error in calculate cost by subscription {}.", userSubscription.getTariff().getTitle(), e);
             throw new CostCalculationException(
                     "Error calculation cost for tariff " + userSubscription.getTariff().getTitle(), e
             );

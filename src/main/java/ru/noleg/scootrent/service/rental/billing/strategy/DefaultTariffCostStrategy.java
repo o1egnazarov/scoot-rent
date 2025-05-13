@@ -27,11 +27,11 @@ public class DefaultTariffCostStrategy implements RentalCostStrategy {
 
     @Override
     public BigDecimal calculate(User user, Tariff tariff, Duration rentalDuration) {
-        logger.debug("Расчет стоимости аренды по умолчанию для пользователя с id: {}. ", user.getId());
+        logger.debug("Calculate rental cost by default tariff: {} for user with id: {}. ", tariff.getTitle(), user.getId());
 
         BigDecimal totalCost = this.calculateFinalCost(user, rentalDuration, tariff);
 
-        logger.debug("Итоговая стоимость аренды для пользователя с id: {} = {}", user.getId(), totalCost);
+        logger.debug("Total rental cost for user with id: {} = {}.", user.getId(), totalCost);
         return totalCost;
     }
 
@@ -51,10 +51,10 @@ public class DefaultTariffCostStrategy implements RentalCostStrategy {
 
             return cost.add(unlockFee);
         } catch (Exception e) {
-            logger.error("Ошибка в расчете стоимости по тарифу {}", tariff.getTitle(), e);
+            logger.error("Error in calculate cost by default tariff: {}.", tariff.getTitle(), e);
             throw new CostCalculationException(
-                    String.format("Error calculation cost for user with id: %d by tariff %s", user.getId(), tariff.getTitle()), e
-            );
+                    String.format("Error calculation cost for user with id: %d by tariff %s.",
+                            user.getId(), tariff.getTitle()), e);
         }
     }
 }

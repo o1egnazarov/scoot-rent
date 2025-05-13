@@ -48,10 +48,10 @@ public class AdminScooterController {
             @Parameter(description = "Идентификатор пользователя", required = true)
             @PathVariable("scooterId") @Min(1) Long scooterId
     ) {
-        logger.info("Полученный запрос: GET /{}/history", scooterId);
+        logger.info("Request: GET /{}/history", scooterId);
         List<Rental> rentalHistory = this.rentalService.getRentalHistoryForScooter(scooterId);
 
-        logger.debug("Получено {} записей истории аренды для самоката с id {}.", rentalHistory.size(), scooterId);
+        logger.debug("{} rental history records received for scooter with id: {}.", rentalHistory.size(), scooterId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.rentalHistoryMapper.mapToScooterRentalDtos(rentalHistory));

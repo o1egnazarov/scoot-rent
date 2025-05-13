@@ -63,7 +63,7 @@ public class RentalStarterImpl implements RentalStarter {
         scooter.setStatus(ScooterStatus.TAKEN);
         Long rentalId = this.createRental(user, scooter, tariff, startPoint);
 
-        logger.debug("Аренда успешно создана. id: {}.", rentalId);
+        logger.debug("Rental successfully created with id: {}.", rentalId);
         return rentalId;
     }
 
@@ -71,21 +71,21 @@ public class RentalStarterImpl implements RentalStarter {
         try {
             return this.tariffSelectionService.selectTariffForUser(userId, billingMode);
         } catch (Exception e) {
-            logger.error("Ошибка в выборе тарифа для пользователя с id: {}", userId, e);
-            throw new ServiceException("Ошибка в сервисе выбора тарифа для пользователя с id: " + userId, e);
+            logger.error("Error in select tariff for user with id: {}", userId, e);
+            throw new ServiceException("Error in TariffSelectionService for user with id: " + userId, e);
         }
     }
 
     private Scooter validateAndGetScooter(Long scooterId) {
         Scooter scooter = this.scooterRepository.findById(scooterId).orElseThrow(
                 () -> {
-                    logger.error("Самокат с id: {} не найден.", scooterId);
+                    logger.error("Scooter with id: {} not found.", scooterId);
                     return new NotFoundException("Scooter with id: " + scooterId + " not found.");
                 }
         );
 
         if (scooter.getStatus() != ScooterStatus.FREE) {
-            logger.warn("Самокат с id: {} не свободен. Текущий статус: {}.", scooterId, scooter.getStatus());
+            logger.warn("Scooter with id: {} is not free. Scooter status: {}.", scooterId, scooter.getStatus());
             throw new BusinessLogicException("Scooter with id: " + scooterId + " is not free.");
         }
         return scooter;
@@ -94,7 +94,7 @@ public class RentalStarterImpl implements RentalStarter {
     private User validateAndGetUser(Long userId) {
         return this.userRepository.findById(userId).orElseThrow(
                 () -> {
-                    logger.error("Пользователь с id: {} не найден.", userId);
+                    logger.error("User with id: {} not found.", userId);
                     return new UserNotFoundException("User with id: " + userId + " not found.");
                 }
         );
@@ -103,13 +103,13 @@ public class RentalStarterImpl implements RentalStarter {
     private LocationNode validateAndGetLocation(Long startPointId) {
         LocationNode startPoint = this.locationRepository.findById(startPointId).orElseThrow(
                 () -> {
-                    logger.error("Локация с id: {} не найдена.", startPointId);
+                    logger.error("Location with id: {} not found.", startPointId);
                     return new NotFoundException("Rental point with id: " + startPointId + " not found.");
                 }
         );
 
         if (startPoint.getLocationType() != LocationType.RENTAL_POINT) {
-            logger.warn("Локация с id: {} не является точкой аренды. Ее тип: {}.", startPointId, startPoint.getLocationType());
+            logger.warn("Location with id: {} is not a rental point. Its type: {}.", startPointId, startPoint.getLocationType());
             throw new BusinessLogicException("Location is not a rental point.");
         }
         return startPoint;
@@ -117,12 +117,12 @@ public class RentalStarterImpl implements RentalStarter {
 
     private void validateStartRental(Long userId, LocationNode startPoint, Scooter scooter) {
         if (this.rentalRepository.isActiveRentalByUserId(userId)) {
-            logger.warn("У пользователя с id: {} уже есть активная аренда", userId);
+            logger.warn("User with id: {} already has active rent.", userId);
             throw new BusinessLogicException("Rental for user with id: " + userId + " is already active.");
         }
 
         if (startPoint.getScooters() != null && !startPoint.getScooters().contains(scooter)) {
-            logger.warn("Самокат с id: {} не в точке аренда с id: {}.", scooter.getId(), startPoint.getId());
+            logger.warn("Scooter with id: {} is not at the rental point with id: {}.", scooter.getId(), startPoint.getId());
             throw new BusinessLogicException(
                     "Scooter with id: " + scooter.getId() + " is not at the rental point with id: " + startPoint.getId()
             );

@@ -11,6 +11,7 @@ import ru.noleg.scootrent.repository.TariffRepository;
 import java.util.List;
 
 @Service
+@Transactional
 public class TariffServiceImpl implements TariffService {
 
     private static final Logger logger = LoggerFactory.getLogger(TariffServiceImpl.class);
@@ -22,52 +23,51 @@ public class TariffServiceImpl implements TariffService {
     }
 
     @Override
-    @Transactional
     public Long createTariff(Tariff tariff) {
-        logger.debug("Создание нового тарифа: {}", tariff.getTitle());
+        logger.debug("Creating tariff: {}.", tariff.getTitle());
 
         Long id = tariffRepository.save(tariff).getId();
-        logger.debug("Тариф создан с ID: {}", id);
+        logger.debug("Tariff created with id: {}.", id);
         return id;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Tariff getTariff(Long id) {
-        logger.debug("Получение тарифа по id: {}.", id);
+        logger.debug("Fetching tariff by id: {}.", id);
         return this.tariffRepository.findById(id).orElseThrow(
                 () -> {
-                    logger.error("Тариф с id: {} не найден.", id);
+                    logger.error("Tariff with id: {} not found.", id);
                     return new NotFoundException("Tariff with id " + id + " not found");
                 }
         );
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Tariff> getAllTariffs() {
-        logger.debug("Получение списка всех тарифов.");
-
-        List<Tariff> tariffs = this.tariffRepository.findAll();
-        logger.debug("Найдено {} тарифов", tariffs.size());
-        return tariffs;
+        logger.debug("Fetching list tariffs.");
+        return this.tariffRepository.findAll();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Tariff> getActiveTariffs() {
-        logger.debug("Получение списка активных тарифов.");
+        logger.debug("Fetching list active tariffs.");
 
         List<Tariff> activeTariffs = this.tariffRepository.findByActiveTrue();
-        logger.debug("Найдено {} активных тарифов.", activeTariffs.size());
+        logger.debug("Got {} active tariffs.", activeTariffs.size());
         return activeTariffs;
     }
 
     @Override
-    @Transactional
     public void deactivateTariff(Long id) {
-        logger.debug("Деактивация тарифа с id: {}.", id);
+        logger.debug("Deactivating tariff with id: {}.", id);
 
         Tariff tariff = this.getTariff(id);
         tariff.deactivateTariff();
         this.tariffRepository.save(tariff);
-        logger.debug("Тариф с id {} успешно деактивирован.", id);
+
+        logger.debug("Tariff with id {} successfully deactivated.", id);
     }
 }

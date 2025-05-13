@@ -36,7 +36,7 @@ public class BillingServiceImpl implements BillingService {
                 throw new BusinessLogicException("Duplicate strategy for tariff type: " + type);
             }
             map.put(type, strategy);
-            logger.debug("Стратегия добавлена {} для тарифа с типом: {}.",
+            logger.debug("Strategy added {} for tariff with type: {}.",
                     strategy.getClass().getSimpleName(), type);
         });
         return map;
@@ -45,11 +45,11 @@ public class BillingServiceImpl implements BillingService {
     @Override
     public BigDecimal calculateRentalCost(User user, Tariff tariff, Duration rentalDuration) {
         TariffType type = tariff.getType();
-        logger.debug("Расчет стоимости для типа тарифа: {}.", type);
+        logger.debug("Calculation of the cost for tariff type: {}.", type);
 
         RentalCostStrategy strategy = Optional.ofNullable(this.strategyMap.get(type)).orElseThrow(
                 () -> {
-                    logger.error("Тариф с типом: {} не поддерживается.", type);
+                    logger.error("Tariff with type: {} unsupported.", type);
                     return new BusinessLogicException("Unsupported tariff type: " + type);
                 }
         );

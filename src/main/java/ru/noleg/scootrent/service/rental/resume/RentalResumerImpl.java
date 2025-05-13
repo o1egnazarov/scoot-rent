@@ -30,7 +30,7 @@ public class RentalResumerImpl implements RentalResumer {
 
         Rental rental = this.rentalRepository.findById(rentalId).orElseThrow(
                 () -> {
-                    logger.error("Аренда с id: {} не найдена.", rentalId);
+                    logger.error("Rental with id: {} not found.", rentalId);
                     return new NotFoundException("Rental with id: " + rentalId + " not found.");
                 }
         );
@@ -38,13 +38,13 @@ public class RentalResumerImpl implements RentalResumer {
         this.validateRentalStatusForResume(rentalId, rental);
 
         this.updateRentalStatus(rental);
-        logger.debug("Аренда с ID: {} успешно возобновлена. Общее время приостановки: {}",
+        logger.debug("Rental with id: {} successfully resume. Total pause time: {}",
                 rentalId, Duration.between(rental.getLastPauseTime(), LocalDateTime.now()));
     }
 
     private void validateRentalStatusForResume(Long rentalId, Rental rental) {
         if (rental.getRentalStatus() != RentalStatus.PAUSE) {
-            logger.warn("Попытка возобновить аренду с id: {}, в статусе: {}", rentalId, rental.getRentalStatus());
+            logger.warn("Attempt resume rental with id: {}, in rental status: {}", rentalId, rental.getRentalStatus());
             throw new BusinessLogicException("Rental is already used.");
         }
     }

@@ -1,6 +1,7 @@
 package ru.noleg.scootrent.entity.scooter;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -11,7 +12,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.Type;
 import ru.noleg.scootrent.entity.location.LocationNode;
+import ru.noleg.scootrent.entity.tariff.DurationType;
+import ru.noleg.scootrent.jpa.converter.DurationToLongInMinutesConverter;
 
 import java.time.Duration;
 
@@ -32,6 +36,7 @@ public class Scooter {
     private ScooterStatus status = ScooterStatus.FREE;
 
     @Column(name = "c_duration_in_used")
+    @Convert(converter = DurationToLongInMinutesConverter.class)
     private Duration durationInUsed = Duration.ZERO;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY) // TODO или просто запрос который подгружает все

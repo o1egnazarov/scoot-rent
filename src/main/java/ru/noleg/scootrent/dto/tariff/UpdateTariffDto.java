@@ -21,15 +21,13 @@ public record UpdateTariffDto(
         @Schema(description = "Цена за минуту (если подписка, то null)", example = "5.25")
         BigDecimal pricePerUnit,
 
-        // TODO сделать bigDecimal
         @Schema(description = "Цена старта", example = "5")
         int unlockFee,
 
-        // TODO доработать
-        @Schema(description = "Тип продолжительности", example = "WEEK") @NotNull
+        @Schema(description = "Единица периода действия тарифа", example = "WEEK") @NotNull
         DurationType durationUnit,
 
-        @Schema(description = "Количество", example = "10") @NotNull
+        @Schema(description = "Количество единиц периода", example = "10") @NotNull
         Integer durationValue,
 
         @Schema(description = "Количество дней в подписке", example = "30")

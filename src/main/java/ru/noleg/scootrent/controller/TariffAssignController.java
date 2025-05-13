@@ -41,8 +41,6 @@ public class TariffAssignController {
         this.subscriptionService = subscriptionService;
     }
 
-    // TODO добавить с какого по какое действует тариф/подписка
-
     @PostMapping("/{tariffId}")
     @Operation(
             summary = "Назначение специального тарифа.",
@@ -52,7 +50,7 @@ public class TariffAssignController {
             @Parameter(description = "Идентификатор тарифа", required = true) @Min(1) @PathVariable("tariffId") Long tariffId,
             @Valid @RequestBody AssignTariffDto tariffDto
     ) {
-        logger.info("Полученный запрос: POST назначения тарифа с id: {}, пользователя с id: {}.", tariffId, tariffDto.userId());
+        logger.info("Request: POST assign special tariff with id: {}, to user with id: {}.", tariffId, tariffDto.userId());
 
         this.tariffAssignmentService.assignTariffToUser(
                 tariffDto.userId(),
@@ -61,7 +59,7 @@ public class TariffAssignController {
                 tariffDto.discountPct()
         );
 
-        logger.info("Тариф успешно назначен с ID: {}.", tariffId);
+        logger.info("Special tariff with id: {} successfully assigned.", tariffId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();
@@ -76,11 +74,11 @@ public class TariffAssignController {
             @Parameter(description = "Идентификатор тарифа", required = true) @Min(1) @PathVariable("tariffId") Long tariffId,
             @Valid @RequestBody SubscribeUserDto subscribeDto
     ) {
-        logger.info("Полученный запрос: POST назначения подписки с id: {}, пользователя с id: {}.", tariffId, subscribeDto.userId());
+        logger.info("Request: POST assign subscription with id: {}, to user with id: {}.", tariffId, subscribeDto.userId());
 
         this.subscriptionService.subscribeUser(subscribeDto.userId(), tariffId, subscribeDto.minutesUsageLimit());
 
-        logger.info("Подписка успешно назначена с ID: {}.", tariffId);
+        logger.info("Subscription with id: {} successfully assigned.", tariffId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();

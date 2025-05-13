@@ -19,7 +19,7 @@ public record ScooterDto(
         @Schema(description = "Статус работы самоката", example = "TAKEN")
         ScooterStatus status,
 
-        @Schema(description = "Время в работе", example = "PT25M00", accessMode = Schema.AccessMode.READ_ONLY)
+        @Schema(description = "Время в работе", example = "PT45M")
         Duration durationInUsed,
 
         @Schema(description = "Id модели самоката", example = "1") @NotNull

@@ -1,6 +1,8 @@
 package ru.noleg.scootrent.repository.impl;
 
 import jakarta.persistence.TypedQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.noleg.scootrent.entity.tariff.BillingMode;
 import ru.noleg.scootrent.entity.tariff.Tariff;
@@ -14,6 +16,9 @@ import java.util.Optional;
 
 @Repository
 public class TariffRepositoryJpaImpl extends BaseRepositoryImpl<Tariff, Long> implements TariffRepository {
+
+    private static final Logger logger = LoggerFactory.getLogger(TariffRepositoryJpaImpl.class);
+
     @Override
     protected Class<Tariff> getEntityClass() {
         return Tariff.class;
@@ -28,7 +33,11 @@ public class TariffRepositoryJpaImpl extends BaseRepositoryImpl<Tariff, Long> im
     public Optional<Tariff> findDefaultTariffByBillingMode(BillingMode billingMode) {
         try {
 
-            final String ql = "SELECT t FROM Tariff t WHERE t.type = :type AND t.billingMode = :billingMode";
+            final String ql = """
+                    SELECT t FROM Tariff t
+                    WHERE t.type = :type
+                    AND t.billingMode = :billingMode
+                    """;
 
             TypedQuery<Tariff> query = entityManager.createQuery(ql, Tariff.class);
             query.setParameter("type", TariffType.DEFAULT_TARIFF);
@@ -37,6 +46,7 @@ public class TariffRepositoryJpaImpl extends BaseRepositoryImpl<Tariff, Long> im
             List<Tariff> resultList = query.getResultList();
             return resultList.isEmpty() ? Optional.empty() : Optional.of(resultList.get(0));
         } catch (Exception e) {
+            logger.error("Failed to find default tariff for billing mode: {}.", billingMode);
             throw new RepositoryException("Repository error on fetch default tariff.", e);
         }
     }
@@ -45,15 +55,16 @@ public class TariffRepositoryJpaImpl extends BaseRepositoryImpl<Tariff, Long> im
     public List<Tariff> findByActiveTrue() {
         try {
 
-            final String ql = "SELECT t FROM Tariff t WHERE t.isActive = True";
+            final String ql = """
+                    SELECT t FROM Tariff t
+                    WHERE t.isActive = True
+                    """;
 
             TypedQuery<Tariff> query = entityManager.createQuery(ql, Tariff.class);
-
             return query.getResultList();
         } catch (Exception e) {
+            logger.error("Failed to find active tariffs.", e);
             throw new RepositoryException("Repository error on fetch default tariff.", e);
         }
     }
-
-
 }
