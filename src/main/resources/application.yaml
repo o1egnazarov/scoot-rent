@@ -1,6 +1,6 @@
 spring:
   datasource:
-#    TODO не забыть исправить на db
+    #    TODO не забыть исправить на db
     url: jdbc:postgresql://0.0.0.0:5432/scootrent_db
     password: root
     username: noleg
@@ -25,3 +25,8 @@ logging:
 subscription:
   overused:
     pricePerMinute: 1.01
+
+token:
+  signing:
+    key: 53A73E5F1C4E0A2D3B5F2D784E6A1B423D6F247D1F6E5C3A596D635A75327855
+  expiration: 3600000

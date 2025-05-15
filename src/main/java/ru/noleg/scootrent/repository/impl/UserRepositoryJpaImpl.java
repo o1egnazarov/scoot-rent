@@ -66,4 +66,24 @@ public class UserRepositoryJpaImpl extends BaseRepositoryImpl<User, Long> implem
             throw new RepositoryException("Repository error on fetch user by email", e);
         }
     }
+
+    @Override
+    public Optional<User> findByPhone(String phone) {
+        try {
+
+            final String ql = """
+                    SELECT u FROM User u
+                    WHERE u.phone = :phone
+                    """;
+
+            TypedQuery<User> query = entityManager.createQuery(ql, User.class);
+            query.setParameter("phone", phone);
+
+            List<User> resultList = query.getResultList();
+            return resultList.isEmpty() ? Optional.empty() : Optional.of(resultList.get(0));
+        } catch (Exception e) {
+            logger.error("Failed to find user by phone: {}.", phone, e);
+            throw new RepositoryException("Repository error on fetch user by phone", e);
+        }
+    }
 }

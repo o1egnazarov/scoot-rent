@@ -1,7 +1,8 @@
-package ru.noleg.scootrent.controller.user;
+package ru.noleg.scootrent.controller.rolebased;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
 import org.slf4j.Logger;
@@ -21,20 +22,21 @@ import ru.noleg.scootrent.service.rental.RentalService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin/scooters")
+@RequestMapping("/api/moderator")
 @Validated
 @Tag(
-        name = "Контроллер админ-панели.",
-        description = "Управляет админ-функциями системы."
+        name = "Контроллер модератора.",
+        description = "Управляет сущностями системы."
 )
-public class AdminScooterController {
+@SecurityRequirement(name = "JWT")
+public class ModeratorController {
 
-    private static final Logger logger = LoggerFactory.getLogger(AdminScooterController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ModeratorController.class);
 
     private final RentalService rentalService;
     private final RentalHistoryMapper rentalHistoryMapper;
 
-    public AdminScooterController(RentalService rentalService, RentalHistoryMapper rentalHistoryMapper) {
+    public ModeratorController(RentalService rentalService, RentalHistoryMapper rentalHistoryMapper) {
         this.rentalService = rentalService;
         this.rentalHistoryMapper = rentalHistoryMapper;
     }
@@ -45,10 +47,10 @@ public class AdminScooterController {
             description = "Позволяет получить историю аренды конкретного самоката."
     )
     public ResponseEntity<List<ScooterRentalHistoryDto>> getRentalHistory(
-            @Parameter(description = "Идентификатор пользователя", required = true)
+            @Parameter(description = "Идентификатор самоката", required = true)
             @PathVariable("scooterId") @Min(1) Long scooterId
     ) {
-        logger.info("Request: GET /{}/history", scooterId);
+        logger.info("Request: GET /{}/history.", scooterId);
         List<Rental> rentalHistory = this.rentalService.getRentalHistoryForScooter(scooterId);
 
         logger.debug("{} rental history records received for scooter with id: {}.", rentalHistory.size(), scooterId);

@@ -2,6 +2,7 @@ package ru.noleg.scootrent.controller.tariff;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -9,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -26,6 +28,7 @@ import ru.noleg.scootrent.service.tariff.TariffService;
 
 import java.util.List;
 
+@PreAuthorize("hasRole('MODERATOR')")
 @RestController
 @RequestMapping("/api/tariffs")
 @Validated
@@ -33,6 +36,7 @@ import java.util.List;
         name = "Контроллер для тарифов.",
         description = "Позволяет добавлять/отключать/получать тарифы."
 )
+@SecurityRequirement(name = "JWT")
 public class TariffController {
 
     private static final Logger logger = LoggerFactory.getLogger(TariffController.class);

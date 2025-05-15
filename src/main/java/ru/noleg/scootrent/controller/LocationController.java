@@ -2,6 +2,7 @@ package ru.noleg.scootrent.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -9,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +40,7 @@ import java.util.List;
         name = "Контроллер для локаций.",
         description = "Позволяет управлять иерархией локаций (обновлять/удалять/получать)."
 )
+@SecurityRequirement(name = "JWT")
 public class LocationController {
 
     private static final Logger logger = LoggerFactory.getLogger(LocationController.class);
@@ -55,6 +58,7 @@ public class LocationController {
             summary = "Добавление локации.",
             description = "Позволяет сохранить новую локацию."
     )
+    @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<Long> addLocation(@Valid @RequestBody CreateLocationDto createLocationDto) {
         logger.info("Request: POST add location with address: {}.", createLocationDto.address());
 
@@ -72,6 +76,7 @@ public class LocationController {
             summary = "Обновление локации.",
             description = "Позволяет изменить конкретную локацию."
     )
+    @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<DetailLocationDto> updateLocation(
             @Parameter(description = "Идентификатор локации", required = true) @Min(1) @PathVariable("id") Long id,
             @Valid @RequestBody UpdateLocationDto locationDto
@@ -93,6 +98,7 @@ public class LocationController {
             summary = "Удаление локации.",
             description = "Позволяет удалить конкретную локацию."
     )
+    @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<Void> deleteLocation(
             @Parameter(description = "Идентификатор локации", required = true) @Min(1) @PathVariable("id") Long id
     ) {
@@ -111,6 +117,7 @@ public class LocationController {
             summary = "Получение всех локаций.",
             description = "Позволяет получить всевозможные локации системы."
     )
+    @PreAuthorize("hasAnyRole('USER', 'MODERATOR')")
     public ResponseEntity<List<LocationDto>> getAllLocation() {
         logger.info("Request: GET get all locations.");
 
@@ -129,6 +136,7 @@ public class LocationController {
             summary = "Получение дочерних узлов.",
             description = "Позволяет получить дочерние узлы конкретной локации."
     )
+    @PreAuthorize("hasAnyRole('USER', 'MODERATOR')")
     public ResponseEntity<List<DetailLocationDto>> getChildrenLocation(
             @Parameter(description = "Идентификатор локации", required = true) @Min(1) @PathVariable("id") Long id
     ) {
@@ -147,6 +155,7 @@ public class LocationController {
             summary = "Получение точки проката по id.",
             description = "Возвращает локацию с типом RENTAL_POINT по её id."
     )
+    @PreAuthorize("hasAnyRole('USER', 'MODERATOR')")
     public ResponseEntity<DetailLocationDto> getRentalPointById(
             @Parameter(description = "Идентификатор точки проката", required = true) @Min(1) @PathVariable("id") Long id
     ) {
@@ -165,6 +174,7 @@ public class LocationController {
             summary = "Получение точки проката по координатам.",
             description = "Возвращает локацию с типом RENTAL_POINT по широте и долготе."
     )
+    @PreAuthorize("hasAnyRole('USER', 'MODERATOR')")
     public ResponseEntity<DetailLocationDto> getRentalPointByCoordinates(
             @Parameter(description = "Широта", required = true) @RequestParam("latitude") BigDecimal latitude,
             @Parameter(description = "Долгота", required = true) @RequestParam("longitude") BigDecimal longitude

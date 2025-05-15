@@ -2,6 +2,7 @@ package ru.noleg.scootrent.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -9,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +23,7 @@ import ru.noleg.scootrent.entity.rental.Rental;
 import ru.noleg.scootrent.entity.tariff.BillingMode;
 import ru.noleg.scootrent.mapper.RentalMapper;
 import ru.noleg.scootrent.service.rental.RentalService;
+import ru.noleg.scootrent.service.security.UserDetailsImpl;
 
 import java.util.List;
 
@@ -30,6 +34,7 @@ import java.util.List;
         name = "Контроллер для аренды самокатов.",
         description = "Позволяет начать/приостановить/закончить аренду."
 )
+@SecurityRequirement(name = "JWT")
 public class RentalController {
 
     private static final Logger logger = LoggerFactory.getLogger(RentalController.class);
@@ -47,9 +52,9 @@ public class RentalController {
             summary = "Начало аренды.",
             description = "Позволяет начать аренду для конкретного пользователя, самоката и точки проката."
     )
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Long> startRental(
-            @Parameter(description = "Идентификатор пользователя", required = true) @Min(1) @RequestParam("userId")
-            Long userId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Parameter(description = "Идентификатор самоката", required = true) @Min(1) @RequestParam("scooterId")
             Long scooterId,
             @Parameter(description = "Идентификатор стартовой точки аренды", required = true) @Min(1) @RequestParam("startPointId")
@@ -57,6 +62,7 @@ public class RentalController {
             @Parameter(description = "Выбор оплаты почасовая/поминутная", required = true) @NotNull @RequestParam("billingMode")
             BillingMode billingMode
     ) {
+        Long userId = userDetails.getId();
         logger.info("Request: POST /start with param: userId={}, scooterId={}, rentalPointId={}, billingMode={} ",
                 userId, scooterId, startPointId, billingMode);
         Long rentalId = this.rentalService.startRental(userId, scooterId, startPointId, billingMode);
@@ -72,6 +78,7 @@ public class RentalController {
             summary = "Приостановление аренды.",
             description = "Позволяет поставить конкретную аренду на паузу."
     )
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Void> pauseRental(
             @Parameter(description = "Идентификатор аренды", required = true) @Min(1) @RequestParam("rentalId") Long rentalId
     ) {
@@ -89,6 +96,7 @@ public class RentalController {
             summary = "Возобновление аренды.",
             description = "Позволяет возобновить конкретную аренду."
     )
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Void> resumeRental(
             @Parameter(description = "Идентификатор аренды", required = true) @Min(1) @RequestParam("rentalId") Long rentalId
     ) {
@@ -106,6 +114,7 @@ public class RentalController {
             summary = "Окончание аренды.",
             description = "Позволяет закончить конкретную аренду на конкретной точке проката."
     )
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Void> endRental(
             @Parameter(description = "Идентификатор аренды", required = true) @Min(1) @RequestParam("rentalId") Long rentalId,
             @Parameter(description = "Идентификатор конечной точки проката", required = true) @Min(1) @RequestParam("endPointId") Long endPointId
@@ -122,6 +131,7 @@ public class RentalController {
             summary = "Получение всех аренд.",
             description = "Скорее всего будет убрано в админ-панель."
     )
+    @PreAuthorize("hasRole('MODERATOR')")
     public List<ShortRentalDto> getRentals() {
         logger.info("Request: GET.");
         List<Rental> rentals = this.rentalService.getRentals();

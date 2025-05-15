@@ -2,6 +2,7 @@ package ru.noleg.scootrent.controller.tariff;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -9,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +24,7 @@ import ru.noleg.scootrent.dto.tariff.SubscribeUserDto;
 import ru.noleg.scootrent.dto.tariff.UserSubscriptionDto;
 import ru.noleg.scootrent.entity.UserSubscription;
 import ru.noleg.scootrent.mapper.UserSubscriptionMapper;
+import ru.noleg.scootrent.service.security.UserDetailsImpl;
 import ru.noleg.scootrent.service.tariff.SubscriptionService;
 
 @RestController
@@ -30,6 +34,7 @@ import ru.noleg.scootrent.service.tariff.SubscriptionService;
         name = "Контроллер для назначения подписки.",
         description = "Позволяет назначать и управлять подписками пользователей."
 )
+@SecurityRequirement(name = "JWT")
 public class UserSubscriptionController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserSubscriptionController.class);
@@ -47,6 +52,7 @@ public class UserSubscriptionController {
             summary = "Назначение подписки.",
             description = "Позволяет назначить подписку пользователю."
     )
+    @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<Void> subscribeUserToTariff(
             @Parameter(description = "Идентификатор тарифа", required = true) @Min(1) @PathVariable("tariffId") Long tariffId,
             @Valid @RequestBody SubscribeUserDto subscribeDto
@@ -64,12 +70,33 @@ public class UserSubscriptionController {
     @DeleteMapping("/user/{userId}")
     @Operation(
             summary = "Отмена подписки.",
-            description = "Позволяет отменить подписку для пользователя по его id."
+            description = "Позволяет отменить (модератору) подписку для пользователя по его id."
     )
-    public ResponseEntity<Void> canselTariff(
+    @PreAuthorize("hasRole('MODERATOR')")
+    public ResponseEntity<Void> canselSubscriptionAsModerator(
             @Parameter(description = "Идентификатор пользователя", required = true) @Min(1) @PathVariable Long userId
     ) {
-        logger.info("Request: DELETE /user/{} cancel subscription for user.", userId);
+        logger.info("Request: DELETE /user/{} moderator cancel subscription for user.", userId);
+
+        this.subscriptionService.canselSubscriptionFromUser(userId);
+
+        logger.info("Subscription with id: {} successfully cancelled.", userId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .build();
+    }
+
+    @DeleteMapping("/me")
+    @Operation(
+            summary = "Отмена подписки.",
+            description = "Позволяет отменить пользователю свою подписку."
+    )
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Void> canselSubscriptionAsUser(
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        Long userId = userDetails.getId();
+        logger.info("Request: DELETE /me user with id: {} cancel subscription.", userId);
 
         this.subscriptionService.canselSubscriptionFromUser(userId);
 
@@ -81,13 +108,34 @@ public class UserSubscriptionController {
 
     @GetMapping("/user/{userId}")
     @Operation(
-            summary = "Получение подписки пользователя",
-            description = "Позволяет получить активную подписку пользователю по его id."
+            summary = "Получение подписки пользователя.",
+            description = "Позволяет получить модератору активную подписку пользователя по его id."
     )
-    public ResponseEntity<UserSubscriptionDto> getActiveSubscription(
+    @PreAuthorize("hasRole('MODERATOR')")
+    public ResponseEntity<UserSubscriptionDto> getActiveSubscriptionAsModerator(
             @Parameter(description = "Идентификатор пользователя", required = true) @Min(1) @PathVariable Long userId
     ) {
-        logger.info("Request: GET /user/{} fetch active user subscription.", userId);
+        logger.info("Request: GET /user/{} moderator fetch active user subscription.", userId);
+
+        UserSubscription userSubscription = this.subscriptionService.getActiveSubscription(userId);
+
+        logger.info("Subscription with id: {} found for user with id: {}.", userSubscription.getId(), userId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(this.userSubscriptionMapper.mapToDto(userSubscription));
+    }
+
+    @GetMapping("/me")
+    @Operation(
+            summary = "Получение подписки пользователя.",
+            description = "Позволяет получить пользователю свою активную подписку."
+    )
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<UserSubscriptionDto> getActiveSubscriptionAsUser(
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        Long userId = userDetails.getId();
+        logger.info("Request: GET /me user with id: {} fetch active subscription.", userId);
 
         UserSubscription userSubscription = this.subscriptionService.getActiveSubscription(userId);
 
