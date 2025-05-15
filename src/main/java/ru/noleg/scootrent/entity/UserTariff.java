@@ -37,7 +37,7 @@ public class UserTariff {
     @Column(name = "c_discount_pct")
     private Integer discountPct;
 
-    @Transient
+    @Column(name = "c_custom_price_per_minute")
     private BigDecimal customPricePerMinute;
 
     @Column(name = "c_start_date")

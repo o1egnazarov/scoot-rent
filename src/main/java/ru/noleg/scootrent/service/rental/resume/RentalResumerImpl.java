@@ -14,6 +14,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Service
+@Transactional
 public class RentalResumerImpl implements RentalResumer {
 
     private static final Logger logger = LoggerFactory.getLogger(RentalResumerImpl.class);
@@ -25,7 +26,6 @@ public class RentalResumerImpl implements RentalResumer {
     }
 
     @Override
-    @Transactional
     public void resumeRental(Long rentalId) {
 
         Rental rental = this.rentalRepository.findById(rentalId).orElseThrow(
@@ -39,7 +39,7 @@ public class RentalResumerImpl implements RentalResumer {
 
         this.updateRentalStatus(rental);
         logger.debug("Rental with id: {} successfully resume. Total pause time: {}",
-                rentalId, Duration.between(rental.getLastPauseTime(), LocalDateTime.now()));
+                rentalId, rental.getDurationInPause());
     }
 
     private void validateRentalStatusForResume(Long rentalId, Rental rental) {

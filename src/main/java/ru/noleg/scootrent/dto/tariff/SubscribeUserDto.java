@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 @Schema(description = "Назначение подписки")
 public record SubscribeUserDto(
-        @Schema(description = "Id пользователя") @NotNull Long userId,
-        @Schema(description = "Лимит использования минут") @NotNull @Min(10) @Max(10000) Integer minutesUsageLimit
+        @Schema(description = "Id пользователя", example = "1") @NotNull Long userId,
+        @Schema(description = "Лимит использования минут") @NotNull @Min(10) @Max(10000) int minutesUsageLimit
 ) {
 }

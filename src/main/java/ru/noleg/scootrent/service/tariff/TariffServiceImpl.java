@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.noleg.scootrent.entity.tariff.Tariff;
+import ru.noleg.scootrent.exception.BusinessLogicException;
 import ru.noleg.scootrent.exception.NotFoundException;
 import ru.noleg.scootrent.repository.TariffRepository;
 
@@ -65,9 +66,28 @@ public class TariffServiceImpl implements TariffService {
         logger.debug("Deactivating tariff with id: {}.", id);
 
         Tariff tariff = this.getTariff(id);
+        if (!tariff.getIsActive()) {
+            logger.warn("Tariff already deactivated.");
+            throw new BusinessLogicException("Tariff with id: " + id + " already deactivated.");
+        }
         tariff.deactivateTariff();
         this.tariffRepository.save(tariff);
 
         logger.debug("Tariff with id {} successfully deactivated.", id);
+    }
+
+    @Override
+    public void activateTariff(Long id) {
+        logger.debug("Activating tariff with id: {}.", id);
+
+        Tariff tariff = this.getTariff(id);
+        if (tariff.getIsActive()) {
+            logger.warn("Tariff already activated.");
+            throw new BusinessLogicException("Tariff with id: " + id + " already activated.");
+        }
+        tariff.activateTariff();
+        this.tariffRepository.save(tariff);
+
+        logger.debug("Tariff with id {} successfully activated.", id);
     }
 }

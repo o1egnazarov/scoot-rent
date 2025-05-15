@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import ru.noleg.scootrent.entity.tariff.BillingMode;
 import ru.noleg.scootrent.entity.tariff.DurationType;
 import ru.noleg.scootrent.entity.tariff.TariffType;
 
@@ -21,8 +22,11 @@ public record TariffDto(
         @Schema(description = "Тип тарифа", example = "SPECIAL_TARIFF") @NotNull
         TariffType type,
 
-        @Schema(description = "Цена за минуту (если подписка, то null)", example = "5.25")
-        BigDecimal pricePerMinute,
+        @Schema(description = "Тарификация почасовая/поминутная", example = "PER_MINUTE") @NotNull
+        BillingMode billingMode,
+
+        @Schema(description = "Цена за единицу времени (если подписка, то null)", example = "5.25")
+        BigDecimal pricePerUnit,
 
         @Schema(description = "Цена старта", example = "5")
         int unlockFee,
@@ -35,6 +39,9 @@ public record TariffDto(
 
         @Schema(description = "Количество дней в подписке", example = "30")
         Integer subDurationDays,
+
+        @Schema(description = "Активен ли тариф", example = "true")
+        Boolean isActive,
 
         @Schema(description = "Начало действия тарифа", example = "2025-05-01T16:51:45.6864356") @NotNull
         LocalDateTime validFrom,

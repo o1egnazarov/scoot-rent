@@ -32,7 +32,7 @@ public class UserSubscription {
     private Tariff tariff;
 
     @Column(name = "c_minute_usage_limit")
-    private Integer minuteUsageLimit;
+    private int minuteUsageLimit;
 
     @Column(name = "c_minutes_used")
     private int minutesUsed;

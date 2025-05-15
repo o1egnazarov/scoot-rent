@@ -34,7 +34,9 @@ public class UserTariffRepositoryJpaImpl extends BaseRepositoryImpl<UserTariff, 
 
             final String ql = """
                     SELECT ut FROM UserTariff ut
-                    WHERE ut.user.id = :userId AND
+                    LEFT JOIN FETCH ut.user u
+                    LEFT JOIN FETCH ut.tariff t
+                    WHERE u.id = :userId AND
                     :time BETWEEN ut.startDate AND ut.endDate
                     """;
 

@@ -140,7 +140,7 @@ public class LocationServiceImpl implements LocationService {
                 }
             }
 
-            logger.info("Successfully built location hierarchy. Root count: {}", roots.size());
+            logger.info("Successfully built location hierarchy. Root count: {}.", roots.size());
             return roots;
         } catch (Exception e) {
             logger.error("Failed to get all locations.", e);

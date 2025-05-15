@@ -17,20 +17,21 @@ import ru.noleg.scootrent.repository.UserTariffRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @Transactional
-public class TariffAssignmentServiceDefaultImpl implements TariffAssignmentService {
+public class TariffAssignmentServiceImpl implements TariffAssignmentService {
 
-    private static final Logger logger = LoggerFactory.getLogger(TariffAssignmentServiceDefaultImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(TariffAssignmentServiceImpl.class);
 
     private final UserRepository userRepository;
     private final TariffRepository tariffRepository;
     private final UserTariffRepository userTariffRepository;
 
-    public TariffAssignmentServiceDefaultImpl(UserRepository userRepository,
-                                              TariffRepository tariffRepository,
-                                              UserTariffRepository userTariffRepository) {
+    public TariffAssignmentServiceImpl(UserRepository userRepository,
+                                       TariffRepository tariffRepository,
+                                       UserTariffRepository userTariffRepository) {
         this.userRepository = userRepository;
         this.tariffRepository = tariffRepository;
         this.userTariffRepository = userTariffRepository;
@@ -41,6 +42,7 @@ public class TariffAssignmentServiceDefaultImpl implements TariffAssignmentServi
         logger.debug("Assign tariff with new price = {}, discount = {}.", customPrice, discountPct);
 
         User user = this.getUser(userId);
+        this.validateCurrentTariffs(userId);
         Tariff tariff = this.validateAndGetTariff(tariffId);
 
         UserTariff userTariff = this.createUserTariff(customPrice, discountPct, user, tariff);
@@ -57,6 +59,15 @@ public class TariffAssignmentServiceDefaultImpl implements TariffAssignmentServi
         );
     }
 
+    // TODO додумать
+    private void validateCurrentTariffs(Long userId) {
+        Optional<UserTariff> existing = userTariffRepository.findActiveTariffByUserAndTime(userId, LocalDateTime.now());
+        existing.ifPresent(userTariff -> {
+            logger.warn("User already been assigned a special tariff with id: {}.", userId);
+            throw new BusinessLogicException("User already been assigned a special tariff with id: " + userTariff.getId());
+        });
+    }
+
     private Tariff validateAndGetTariff(Long tariffId) {
         Tariff tariff = this.tariffRepository.findById(tariffId).orElseThrow(
                 () -> {
@@ -65,7 +76,7 @@ public class TariffAssignmentServiceDefaultImpl implements TariffAssignmentServi
                 }
         );
 
-        if (!tariff.getActive()) {
+        if (!tariff.getIsActive()) {
             logger.warn("Tariff with id: {} is not active.", tariffId);
             throw new BusinessLogicException("Tariff with id: " + tariffId + " is not active.");
         }
@@ -86,5 +97,32 @@ public class TariffAssignmentServiceDefaultImpl implements TariffAssignmentServi
         userTariff.setStartDate(LocalDateTime.now());
         userTariff.setEndDate(userTariff.getCalculatedEndDate());
         return userTariff;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserTariff getActiveUserTariff(Long userId) {
+        return this.userTariffRepository.findActiveTariffByUserAndTime(userId, LocalDateTime.now()).orElseThrow(
+                () -> {
+                    logger.error("Special tariff not found for user with id: {}.", userId);
+                    return new NotFoundException("Special tariff not found for user with id: " + userId);
+                }
+        );
+    }
+
+    @Override
+    public void canselTariffFromUser(Long userId) {
+        logger.debug("Cansel tariff from user {}.", userId);
+
+        UserTariff userTariff =
+                this.userTariffRepository.findActiveTariffByUserAndTime(userId, LocalDateTime.now()).orElseThrow(
+                        () -> {
+                            logger.error("Special tariff not found for user with id: {}.", userId);
+                            return new NotFoundException("Special tariff not found for user with id: " + userId);
+                        }
+                );
+
+        this.userTariffRepository.delete(userTariff.getId());
+        logger.debug("Tariff {} successfully canselt.", userTariff.getId());
     }
 }

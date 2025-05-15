@@ -24,6 +24,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Service
+@Transactional
 public class RentalStopperImpl implements RentalStopper {
 
     private static final Logger logger = LoggerFactory.getLogger(RentalStopperImpl.class);
@@ -41,7 +42,6 @@ public class RentalStopperImpl implements RentalStopper {
     }
 
     @Override
-    @Transactional
     public void stopRental(Long rentalId, Long endPointId) {
 
         Rental rental = this.validateAndGetRental(rentalId);
@@ -70,6 +70,7 @@ public class RentalStopperImpl implements RentalStopper {
         return rental;
     }
 
+    // TODO добавить проверку что точки в одном городе)
     private LocationNode validateAndGetLocation(Long endPointId) {
         LocationNode endPoint = this.locationRepository.findById(endPointId).orElseThrow(
                 () -> {
@@ -91,7 +92,6 @@ public class RentalStopperImpl implements RentalStopper {
         return totalDuration.minus(pause);
     }
 
-    // TODO доработать
     private BigDecimal calculateCost(Long rentalId, User user, Tariff tariff, Duration rentalDuration) {
         try {
             return this.billingService.calculateRentalCost(user, tariff, rentalDuration);
@@ -104,7 +104,6 @@ public class RentalStopperImpl implements RentalStopper {
     private void completeRental(Rental rental, LocationNode endPoint, BigDecimal cost, Duration rentalDuration) {
         rental.stopRental(endPoint, cost, rentalDuration);
 
-        // TODO проследить за самокатом (за его сохранением)
         Scooter scooter = rental.getScooter();
         scooter.addDurationInUsed(rentalDuration);
         scooter.setRentalPoint(endPoint);

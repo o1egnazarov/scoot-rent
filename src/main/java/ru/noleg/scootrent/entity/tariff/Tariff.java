@@ -88,6 +88,12 @@ public class Tariff {
         this.validUntil = LocalDateTime.now();
     }
 
+    public void activateTariff() {
+        this.isActive = true;
+        this.validFrom = LocalDateTime.now();
+        this.validUntil = LocalDateTime.now().plusYears(1);
+    }
+
     public Long getId() {
         return id;
     }
@@ -152,12 +158,12 @@ public class Tariff {
         this.subDurationDays = subDurationDays;
     }
 
-    public Boolean getActive() {
+    public Boolean getIsActive() {
         return isActive;
     }
 
-    public void setActive(Boolean active) {
-        isActive = active;
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
     }
 
     public LocalDateTime getValidFrom() {

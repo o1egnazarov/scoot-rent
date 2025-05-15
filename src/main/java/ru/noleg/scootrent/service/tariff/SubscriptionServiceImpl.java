@@ -16,30 +16,32 @@ import ru.noleg.scootrent.repository.UserRepository;
 import ru.noleg.scootrent.repository.UserSubscriptionRepository;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @Transactional
-public class SubscriptionAssignmentServiceImpl implements SubscriptionService {
+public class SubscriptionServiceImpl implements SubscriptionService {
 
-    private static final Logger logger = LoggerFactory.getLogger(SubscriptionAssignmentServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(SubscriptionServiceImpl.class);
 
     private final UserRepository userRepository;
     private final TariffRepository tariffRepository;
     private final UserSubscriptionRepository userSubscriptionRepository;
 
-    public SubscriptionAssignmentServiceImpl(UserRepository userRepository,
-                                             TariffRepository tariffRepository,
-                                             UserSubscriptionRepository userSubscriptionRepository) {
+    public SubscriptionServiceImpl(UserRepository userRepository,
+                                   TariffRepository tariffRepository,
+                                   UserSubscriptionRepository userSubscriptionRepository) {
         this.userRepository = userRepository;
         this.tariffRepository = tariffRepository;
         this.userSubscriptionRepository = userSubscriptionRepository;
     }
 
     @Override
-    public void subscribeUser(Long userId, Long tariffId, Integer minutesUsageLimit) {
+    public void subscribeUser(Long userId, Long tariffId, int minutesUsageLimit) {
         logger.debug("Assign subscription with limit = {}.", minutesUsageLimit);
 
         User user = this.getUser(userId);
+        this.validateCurrentSubscription(userId);
         Tariff tariff = this.validateAndGetTariff(tariffId);
 
         UserSubscription userSubscription = this.createUserSubscription(minutesUsageLimit, tariff, user);
@@ -56,6 +58,16 @@ public class SubscriptionAssignmentServiceImpl implements SubscriptionService {
         );
     }
 
+    // TODO додумать
+    private void validateCurrentSubscription(Long userId) {
+        Optional<UserSubscription> existing =
+                this.userSubscriptionRepository.findActiveSubscriptionByUserAndTime(userId, LocalDateTime.now());
+        existing.ifPresent(userTariff -> {
+            logger.warn("User already been assigned a subscription with id: {}.", userId);
+            throw new BusinessLogicException("User already been assigned a subscription with id: " + userTariff.getId());
+        });
+    }
+
     private Tariff validateAndGetTariff(Long tariffId) {
         Tariff tariff = this.tariffRepository.findById(tariffId).orElseThrow(
                 () -> {
@@ -64,7 +76,7 @@ public class SubscriptionAssignmentServiceImpl implements SubscriptionService {
                 }
         );
 
-        if (!tariff.getActive()) {
+        if (!tariff.getIsActive()) {
             logger.warn("Tariff with id: {} is not active.", tariffId);
             throw new BusinessLogicException("Tariff with id: " + tariffId + " is not active.");
         }
@@ -76,7 +88,7 @@ public class SubscriptionAssignmentServiceImpl implements SubscriptionService {
         return tariff;
     }
 
-    private UserSubscription createUserSubscription(Integer minutesUsageLimit, Tariff tariff, User user) {
+    private UserSubscription createUserSubscription(int minutesUsageLimit, Tariff tariff, User user) {
         LocalDateTime startDate = LocalDateTime.now();
         LocalDateTime endDate = startDate.plusDays(tariff.getSubDurationDays());
         int minuteUsed = 0;
@@ -90,5 +102,32 @@ public class SubscriptionAssignmentServiceImpl implements SubscriptionService {
                 startDate,
                 endDate
         );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserSubscription getActiveSubscription(Long userId) {
+        return this.userSubscriptionRepository.findActiveSubscriptionByUserAndTime(userId, LocalDateTime.now()).orElseThrow(
+                () -> {
+                    logger.error("Subscription not found for user with id: {}.", userId);
+                    return new NotFoundException("Subscription not found for user with id: " + userId);
+                }
+        );
+    }
+
+    @Override
+    public void canselSubscriptionFromUser(Long userId) {
+        logger.debug("Cansel subscription from user {}.", userId);
+
+        UserSubscription userSubscription =
+                this.userSubscriptionRepository.findActiveSubscriptionByUserAndTime(userId, LocalDateTime.now()).orElseThrow(
+                        () -> {
+                            logger.error("Subscription not found for user with id: {}.", userId);
+                            return new NotFoundException("Subscription not found for user with id: " + userId);
+                        }
+                );
+
+        this.userSubscriptionRepository.delete(userSubscription.getId());
+        logger.debug("Subscription {} successfully canselt.", userSubscription.getId());
     }
 }

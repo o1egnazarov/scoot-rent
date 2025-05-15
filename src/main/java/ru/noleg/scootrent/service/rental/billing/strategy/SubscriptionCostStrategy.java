@@ -47,7 +47,7 @@ public class SubscriptionCostStrategy implements RentalCostStrategy {
 
         long minutesLeft = userSubscription.getMinuteUsageLimit() - userSubscription.getMinutesUsed();
         long rentalMinutes = rentalDuration.toMinutes();
-        logger.debug("Minutes left on subscription: {}, minutes requested: {}.", rentalMinutes, minutesLeft);
+        logger.debug("Minutes left on subscription: {}, minutes requested: {}.", minutesLeft, rentalMinutes);
 
         this.updateSubscriptionUsage(userSubscription, rentalMinutes);
 

@@ -26,6 +26,7 @@ import ru.noleg.scootrent.service.rental.tariffselect.TariffSelectionService;
 import java.time.LocalDateTime;
 
 @Service
+@Transactional
 public class RentalStarterImpl implements RentalStarter {
 
     private static final Logger logger = LoggerFactory.getLogger(RentalStarterImpl.class);
@@ -49,7 +50,6 @@ public class RentalStarterImpl implements RentalStarter {
     }
 
     @Override
-    @Transactional
     public Long startRental(Long userId, Long scooterId, Long startPointId, BillingMode billingMode) {
 
         Scooter scooter = this.validateAndGetScooter(scooterId);

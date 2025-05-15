@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.controller;
+package ru.noleg.scootrent.controller.tariff;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -83,8 +83,7 @@ public class TariffController {
                 .body(this.tariffMapper.mapToDto(tariff));
     }
 
-    // TODO наверное добавить и активацию тарифа
-    @DeleteMapping("/{id}")
+    @PatchMapping("/{id}/deactivate")
     @Operation(
             summary = "Деактивация тарифа.",
             description = "Позволяет деактивировать конкретный тариф."
@@ -92,7 +91,7 @@ public class TariffController {
     public ResponseEntity<Void> disableTariff(
             @Parameter(description = "Идентификатор тарифа", required = true) @Min(1) @PathVariable("id") Long id
     ) {
-        logger.info("Request: DELETE deactivate tariff with id: {}.", id);
+        logger.info("Request: PATCH /deactivate deactivate tariff with id: {}.", id);
 
         this.tariffService.deactivateTariff(id);
 
@@ -102,17 +101,49 @@ public class TariffController {
                 .build();
     }
 
-    @GetMapping
+    @PatchMapping("/{id}/activate")
+    @Operation(
+            summary = "Активация тарифа.",
+            description = "Позволяет активировать ранее деактивированный тариф."
+    )
+    public ResponseEntity<Void> activateTariff(
+            @Parameter(description = "Идентификатор тарифа", required = true) @Min(1) @PathVariable("id") Long id
+    ) {
+        logger.info("Request: PATCH activate tariff with id: {}.", id);
+
+        this.tariffService.activateTariff(id);
+
+        logger.info("Tariff with id: {} activated.", id);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/active")
     @Operation(
             summary = "Получение всех активных тарифов.",
             description = "Позволяет получить всевозможные активные тарифы."
     )
     public ResponseEntity<List<TariffDto>> getActiveTariffs() {
-        logger.info("Request: GET fetch all active tariff.");
+        logger.info("Request: GET /active fetch all active tariff.");
 
         List<Tariff> tariffs = this.tariffService.getActiveTariffs();
 
-        logger.info("Got {} tariffs.", tariffs.size());
+        logger.info("Got {} active tariffs.", tariffs.size());
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(this.tariffMapper.mapToDtos(tariffs));
+    }
+
+    @GetMapping
+    @Operation(
+            summary = "Получение всех тарифов.",
+            description = "Позволяет получить всевозможные тарифы."
+    )
+    public ResponseEntity<List<TariffDto>> getTariffs() {
+        logger.info("Request: GET fetch all tariff.");
+
+        List<Tariff> tariffs = this.tariffService.getAllTariffs();
+
+        logger.info("Got {} all tariff.", tariffs.size());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.tariffMapper.mapToDtos(tariffs));

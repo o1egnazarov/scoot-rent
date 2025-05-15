@@ -1,17 +1,17 @@
 services:
 
-  app:
-    container_name: scoot_rent_app
-    image: scootrent-app:latest
-    ports:
-      - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/scootrent_db
-      SPRING_DATASOURCE_USERNAME: noleg
-      SPRING_DATASOURCE_PASSWORD: root
-    depends_on:
-      db:
-        condition: service_healthy
+#  app:
+#    container_name: scoot_rent_app
+#    image: scootrent-app:latest
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/scootrent_db
+#      SPRING_DATASOURCE_USERNAME: noleg
+#      SPRING_DATASOURCE_PASSWORD: root
+#    depends_on:
+#      db:
+#        condition: service_healthy
 
   db:
     container_name: scoot_rent_database_postgres

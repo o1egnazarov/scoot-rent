@@ -34,7 +34,9 @@ public class UserSubscriptionRepositoryJpaImpl extends BaseRepositoryImpl<UserSu
 
             final String ql = """
                     SELECT us FROM UserSubscription us
-                    WHERE us.user.id = :userId AND
+                    LEFT JOIN FETCH us.user u
+                    LEFT JOIN FETCH us.tariff t
+                    WHERE u.id = :userId AND
                     :time BETWEEN us.startDate AND us.endDate
                     """;
 
