@@ -23,7 +23,7 @@ import ru.noleg.scootrent.entity.rental.Rental;
 import ru.noleg.scootrent.entity.tariff.BillingMode;
 import ru.noleg.scootrent.mapper.RentalMapper;
 import ru.noleg.scootrent.service.rental.RentalService;
-import ru.noleg.scootrent.service.security.UserDetailsImpl;
+import ru.noleg.scootrent.service.user.UserDetailsImpl;
 
 import java.util.List;
 
@@ -129,14 +129,16 @@ public class RentalController {
     @GetMapping
     @Operation(
             summary = "Получение всех аренд.",
-            description = "Скорее всего будет убрано в админ-панель."
+            description = "Получает все активные/завершенные аренды."
     )
     @PreAuthorize("hasRole('MODERATOR')")
-    public List<ShortRentalDto> getRentals() {
+    public ResponseEntity<List<ShortRentalDto>> getRentals() {
         logger.info("Request: GET.");
         List<Rental> rentals = this.rentalService.getRentals();
 
         logger.info("Got {} rentals.", rentals.size());
-        return this.rentalMapper.mapToDtos(rentals);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(this.rentalMapper.mapToDtos(rentals));
     }
 }

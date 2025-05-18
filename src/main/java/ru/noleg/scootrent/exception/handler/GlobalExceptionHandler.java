@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,7 +18,6 @@ import ru.noleg.scootrent.exception.RepositoryException;
 import ru.noleg.scootrent.exception.ServiceException;
 import ru.noleg.scootrent.exception.UserNotFoundException;
 
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
@@ -134,23 +134,23 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ExceptionResponse> handleAccessDeniedException(AccessDeniedException ex, HttpServletRequest request) {
-        return this.buildResponse(
-                HttpStatus.FORBIDDEN,
-                ex.getMessage(),
-                ErrorCode.NO_ACCESS_TO_RECOURSE,
-                request.getRequestURI(),
-                ex
-        );
-    }
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleCommonException(Exception ex, HttpServletRequest request) {
         return this.buildResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 ex.getMessage(),
                 ErrorCode.UNKNOWN_ERROR,
+                request.getRequestURI(),
+                ex
+        );
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ExceptionResponse> handleBadCredentials(BadCredentialsException ex, HttpServletRequest request) {
+        return buildResponse(
+                HttpStatus.UNAUTHORIZED,
+                "Invalid login or password",
+                ErrorCode.UNAUTHORIZED,
                 request.getRequestURI(),
                 ex
         );

@@ -1,7 +1,7 @@
 CREATE TABLE t_user
 (
     c_id               BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    c_date_of_birthday DATE        NOT NULL,
+    c_date_of_birthday DATE,
     c_email            VARCHAR(50) NOT NULL UNIQUE,
     c_password         VARCHAR(255),
     c_phone            VARCHAR(16) NOT NULL UNIQUE,

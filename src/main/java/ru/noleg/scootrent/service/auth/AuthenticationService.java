@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.service.security;
+package ru.noleg.scootrent.service.auth;
 
 import ru.noleg.scootrent.entity.user.User;
 

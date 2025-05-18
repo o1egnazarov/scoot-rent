@@ -1,18 +1,5 @@
 INSERT INTO t_user(c_date_of_birthday, c_email, c_password, c_phone, c_role, c_username)
 VALUES
--- Администраторы (2 пользователя)
-('1980-04-12', 'admin1@company.com', '$2a$10$X5z4W9U8vR3eBqNQ2YsZVuYb5Jk7GdK8T1VlLmNcDh7rSf0kLZJ1C', '+79111234567',
- 'ROLE_ADMIN', 'alex_admin'),
-('1985-06-25', 'admin2@company.com', '$2a$10$X5z4W9U8vR3eBqNQ2YsZVuYb5Jk7GdK8T1VlLmNcDh7rSf0kLZJ1C', '+79119876543',
- 'ROLE_ADMIN', 'olga_admin'),
-
--- Модераторы (3 пользователя)
-('1992-03-18', 'moderator1@company.com', '$2a$10$Y3h7M6P9R2tT4wXvBn8rKuJl1Nk3CfV5bG8dF7hJ2kLmNp0qW1ZxY', '+79031237865',
- 'ROLE_MODERATOR', 'ivan_moder'),
-('1988-07-22', 'moderator2@company.com', '$2a$10$Y3h7M6P9R2tT4wXvBn8rKuJl1Nk3CfV5bG8dF7hJ2kLmNp0qW1ZxY', '+79162348765',
- 'ROLE_MODERATOR', 'anna_moder'),
-('1995-05-30', 'moderator3@company.com', '$2a$10$Y3h7M6P9R2tT4wXvBn8rKuJl1Nk3CfV5bG8dF7hJ2kLmNp0qW1ZxY', '+79265432178',
- 'ROLE_MODERATOR', 'sergey_mod'),
 
 -- Обычные пользователи (35 пользователей)
 ('1998-02-10', 'user1@gmail.com', '$2a$10$A5b6C7D8E9F0G1H2I3J4K5L6M7N8O9P0Q1R2S3T4U5V6W7X8Y9Z', '+79271234567',

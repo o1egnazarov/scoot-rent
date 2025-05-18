@@ -78,7 +78,7 @@ public class LocationServiceImpl implements LocationService {
         return this.locationRepository.findLocationByIdAndType(id, type).orElseThrow(
                 () -> {
                     logger.error("Location with id:{} and type: {} - not found.", id, type);
-                    return new NotFoundException("Location with id: " + id + "and type: " + type + " - not found.");
+                    return new NotFoundException("Location with id: " + id + " and type: " + type + " - not found.");
                 }
         );
     }
@@ -92,7 +92,7 @@ public class LocationServiceImpl implements LocationService {
                 () -> {
                     logger.error("Location with coordinates: {}, {} and type: {} not found.", latitude, longitude, type);
                     return new NotFoundException("Rental point with latitude: " + latitude +
-                            " and longitude: " + longitude + "and type: " + type + " not found."
+                            " and longitude: " + longitude + " and type: " + type + " not found."
                     );
                 }
         );

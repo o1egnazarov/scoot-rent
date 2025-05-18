@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.service.security;
+package ru.noleg.scootrent.service.user;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

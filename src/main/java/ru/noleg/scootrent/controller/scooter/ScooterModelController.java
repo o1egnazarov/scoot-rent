@@ -93,7 +93,7 @@ public class ScooterModelController {
             summary = "Удаление модели самоката.",
             description = "Позволяет удалить конкретную модель самоката."
     )
-    public ResponseEntity<Void> deleteScooter(
+    public ResponseEntity<Void> deleteScooterModel(
             @Parameter(description = "Идентификатор модели самоката", required = true) @Min(1) @PathVariable("id") Long id
     ) {
         logger.info("Request: DELETE delete scooter model with id: {}.", id);

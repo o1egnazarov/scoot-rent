@@ -7,7 +7,7 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import ru.noleg.scootrent.service.security.UserDetailsImpl;
+import ru.noleg.scootrent.service.user.UserDetailsImpl;
 
 import javax.crypto.SecretKey;
 import java.util.Date;

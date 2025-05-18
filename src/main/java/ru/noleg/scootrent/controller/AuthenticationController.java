@@ -16,7 +16,7 @@ import ru.noleg.scootrent.dto.security.SignIn;
 import ru.noleg.scootrent.dto.security.SignUp;
 import ru.noleg.scootrent.entity.user.User;
 import ru.noleg.scootrent.mapper.UserMapper;
-import ru.noleg.scootrent.service.security.AuthenticationService;
+import ru.noleg.scootrent.service.auth.AuthenticationService;
 
 @RestController
 @RequestMapping("/api/auth")

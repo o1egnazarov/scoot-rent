@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.service.security;
+package ru.noleg.scootrent.service.user;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

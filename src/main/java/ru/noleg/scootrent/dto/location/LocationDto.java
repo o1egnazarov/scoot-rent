@@ -6,7 +6,7 @@ import ru.noleg.scootrent.entity.location.LocationType;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Schema(description = "Краткая информация о локации")
+@Schema(description = "Локация")
 public record LocationDto(
         @Schema(description = "Id локации", example = "1")
         Long id,

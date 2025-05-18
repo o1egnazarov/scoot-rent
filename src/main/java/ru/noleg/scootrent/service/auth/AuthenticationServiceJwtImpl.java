@@ -1,6 +1,8 @@
-package ru.noleg.scootrent.service.security;
+package ru.noleg.scootrent.service.auth;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +18,8 @@ import ru.noleg.scootrent.service.security.jwt.JwtUtil;
 @Service
 @Transactional
 public class AuthenticationServiceJwtImpl implements AuthenticationService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationServiceJwtImpl.class);
 
     private final UserRepository userRepository;
     private final UserDetailsService userDetailsService;
@@ -37,23 +41,30 @@ public class AuthenticationServiceJwtImpl implements AuthenticationService {
 
     @Override
     public Long signUp(User user) {
+        logger.debug("Signing up user: {}.", user.getUsername());
 
         this.validateUserData(user);
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
 
-        return this.userRepository.save(user).getId();
+        Long userId = this.userRepository.save(user).getId();
+
+        logger.debug("User successfully signUp with id: {}.", userId);
+        return userId;
     }
 
     private void validateUserData(User user) {
         if (this.userRepository.findByUsername(user.getUsername()).isPresent()) {
+            logger.error("User with username {} already exists.", user.getUsername());
             throw new BusinessLogicException("User with username: " + user.getUsername() + " already exists.");
         }
 
         if (this.userRepository.findByEmail(user.getEmail()).isPresent()) {
+            logger.error("User with email {} already exists.", user.getEmail());
             throw new BusinessLogicException("User with email: " + user.getEmail() + " already exists.");
         }
 
         if (this.userRepository.findByPhone(user.getPhone()).isPresent()) {
+            logger.error("User with phone {} already exists.", user.getPhone());
             throw new BusinessLogicException("User with phone: " + user.getPhone() + " already exists.");
         }
     }
@@ -61,13 +72,16 @@ public class AuthenticationServiceJwtImpl implements AuthenticationService {
     @Override
     @Transactional(readOnly = true)
     public String signIn(String username, String password) {
-        System.out.println(passwordEncoder.encode("admin"));
+        logger.debug("Signing up user: {}.", username);
 
         this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 username, password
         ));
 
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-        return this.jwtUtil.generateToken(userDetails);
+        String token = this.jwtUtil.generateToken(userDetails);
+
+        logger.debug("User: {}, successfully signIn.", username);
+        return token;
     }
 }

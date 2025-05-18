@@ -92,7 +92,7 @@ public class TariffController {
             summary = "Деактивация тарифа.",
             description = "Позволяет деактивировать конкретный тариф."
     )
-    public ResponseEntity<Void> disableTariff(
+    public ResponseEntity<Void> deactivateTariff(
             @Parameter(description = "Идентификатор тарифа", required = true) @Min(1) @PathVariable("id") Long id
     ) {
         logger.info("Request: PATCH /deactivate deactivate tariff with id: {}.", id);

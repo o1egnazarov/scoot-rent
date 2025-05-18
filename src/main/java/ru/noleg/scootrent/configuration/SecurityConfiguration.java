@@ -14,6 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import ru.noleg.scootrent.exception.handler.security.RestAccessDeniedHandler;
+import ru.noleg.scootrent.exception.handler.security.RestAuthenticationEntryPoint;
 import ru.noleg.scootrent.service.security.jwt.JwtRequestFilter;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
@@ -50,7 +52,10 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   RestAuthenticationEntryPoint authEntryPoint,
+                                                   RestAccessDeniedHandler accessDeniedHandler
+    ) throws Exception {
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
@@ -58,13 +63,12 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/moderator/**").hasRole("MODERATOR")
-                        .requestMatchers(
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**",
-                                "/swagger-resources/**",
-                                "/swagger-ui.html",
-                                "/webjars/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                         .anyRequest().authenticated())
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(authEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler)
+                )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(this.jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);

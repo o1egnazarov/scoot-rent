@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.noleg.scootrent.dto.user.UserDto;
 import ru.noleg.scootrent.entity.user.Role;
+import ru.noleg.scootrent.entity.user.User;
 import ru.noleg.scootrent.mapper.UserMapper;
 import ru.noleg.scootrent.service.user.UserService;
 
@@ -29,7 +30,7 @@ import java.util.List;
 @RequestMapping("/api/admin")
 @Validated
 @Tag(
-        name = "Контроллер администратора.",
+        name = "Контроллер для администратора.",
         description = "Управляет пользователями системы."
 )
 @SecurityRequirement(name = "JWT")
@@ -53,9 +54,10 @@ public class AdminController {
     public ResponseEntity<List<UserDto>> getAllUsers() {
         logger.info("Request: GET fetching all users.");
 
-        List<UserDto> userDtos = this.userMapper.mapToDtos(this.userService.getAllUsers());
+        List<User> allUsers = this.userService.getAllUsers();
+        List<UserDto> userDtos = this.userMapper.mapToDtos(allUsers);
 
-        logger.debug("Got {} users.", userDtos.size());
+        logger.info("Got {} users.", userDtos.size());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(userDtos);
@@ -64,7 +66,7 @@ public class AdminController {
     @DeleteMapping("/users/{userId}")
     @Operation(
             summary = "Удаление пользователя.",
-            description = "Позволяет удалить любого пользователя по id, кроме тех у кого роль: ADMIN."
+            description = "Позволяет удалить любого пользователя по id (кроме администраторов)."
     )
     public ResponseEntity<Void> deleteUser(
             @Parameter(description = "Идентификатор пользователя", required = true)

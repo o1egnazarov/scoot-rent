@@ -24,7 +24,7 @@ import ru.noleg.scootrent.entity.user.User;
 import ru.noleg.scootrent.mapper.RentalHistoryMapper;
 import ru.noleg.scootrent.mapper.UserMapper;
 import ru.noleg.scootrent.service.rental.RentalService;
-import ru.noleg.scootrent.service.security.UserDetailsImpl;
+import ru.noleg.scootrent.service.user.UserDetailsImpl;
 import ru.noleg.scootrent.service.user.UserService;
 
 import java.util.List;
@@ -73,7 +73,7 @@ public class UserController {
         this.userMapper.updateUserFromDto(updateUserDto, user);
         User updateUser = this.userService.save(user);
 
-        logger.debug("Profile for user with id: {} successfully updated.", id);
+        logger.info("Profile for user with id: {} successfully updated.", id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.userMapper.mapToDto(updateUser));
@@ -91,7 +91,7 @@ public class UserController {
         logger.info("Request: GET /me/history fetching rental history by user with id: {}.", id);
         List<Rental> rentalHistory = this.rentalService.getRentalHistoryForUser(id);
 
-        logger.debug("Got {} records rental history for user with id {}.", rentalHistory.size(), id);
+        logger.info("Got {} records rental history for user with id {}.", rentalHistory.size(), id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.rentalHistoryMapper.mapToUserRentalDtos(rentalHistory));

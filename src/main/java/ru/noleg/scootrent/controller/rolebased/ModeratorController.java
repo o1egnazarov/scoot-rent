@@ -25,7 +25,7 @@ import java.util.List;
 @RequestMapping("/api/moderator")
 @Validated
 @Tag(
-        name = "Контроллер модератора.",
+        name = "Контроллер для модератора.",
         description = "Управляет сущностями системы."
 )
 @SecurityRequirement(name = "JWT")
@@ -53,7 +53,7 @@ public class ModeratorController {
         logger.info("Request: GET /{}/history.", scooterId);
         List<Rental> rentalHistory = this.rentalService.getRentalHistoryForScooter(scooterId);
 
-        logger.debug("{} rental history records received for scooter with id: {}.", rentalHistory.size(), scooterId);
+        logger.info("{} rental history records received for scooter with id: {}.", rentalHistory.size(), scooterId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.rentalHistoryMapper.mapToScooterRentalDtos(rentalHistory));

@@ -54,11 +54,10 @@ public class UserServiceDefaultImpl implements UserService {
         return this.userRepository.findAll();
     }
 
+    // TODO изменил - проверить
     @Override
     public void updateUserRole(Long userId, Role role) {
-        User user = this.userRepository.findById(userId).orElseThrow(
-                () -> new NotFoundException("User with ID: " + userId + " not found.")
-        );
+        User user = this.getUser(userId);
         user.setRole(role);
         this.userRepository.save(user);
     }
