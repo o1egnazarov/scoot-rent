@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.service.security.jwt;
+package ru.noleg.scootrent.security.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,12 +26,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private static final String BEARER_PREFIX = "Bearer ";
     private static final String HEADER_NAME = "Authorization";
 
-    private final JwtUtil jwtUtil;
+    private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailsService userDetailService;
 
 
-    public JwtRequestFilter(JwtUtil jwtUtil, UserDetailsService userDetailService) {
-        this.jwtUtil = jwtUtil;
+    public JwtRequestFilter(JwtTokenProvider jwtTokenProvider, UserDetailsService userDetailService) {
+        this.jwtTokenProvider = jwtTokenProvider;
         this.userDetailService = userDetailService;
     }
 
@@ -53,14 +53,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         try {
 
             final String jwt = authHeader.substring(BEARER_PREFIX.length());
-            final String username = this.jwtUtil.extractUsername(jwt);
+            final String username = this.jwtTokenProvider.extractUsername(jwt);
 
             if (StringUtils.hasLength(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
                 logger.debug("Authenticating user {}.", username);
 
                 UserDetails userDetails = this.userDetailService.loadUserByUsername(username);
 
-                if (this.jwtUtil.isTokenValid(jwt, userDetails)) {
+                if (this.jwtTokenProvider.isTokenValid(jwt, userDetails)) {
                     logger.debug("JWT token is valid for user: {}.", username);
 
                     SecurityContext context = SecurityContextHolder.createEmptyContext();

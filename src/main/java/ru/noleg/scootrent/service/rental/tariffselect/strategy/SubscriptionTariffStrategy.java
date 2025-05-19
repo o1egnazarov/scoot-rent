@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Component
 public class SubscriptionTariffStrategy implements TariffSelectionStrategy {
 
-    public static final int HIGHEST_PRIORITY = 1;
+    private static final int HIGHEST_PRIORITY = 1;
     private static final Logger logger = LoggerFactory.getLogger(SubscriptionTariffStrategy.class);
 
     private final UserSubscriptionRepository subscriptionRepository;

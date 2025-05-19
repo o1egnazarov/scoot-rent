@@ -49,9 +49,7 @@ public class DefaultTariffCostStrategy implements RentalCostStrategy {
                 case PER_MINUTE -> cost = cost.multiply(minutes);
                 case PER_HOUR -> {
 
-                    cost = cost
-                            .multiply(MINUTES_IN_HOUR)
-                            .multiply(minutes.divide(MINUTES_IN_HOUR, 2, RoundingMode.HALF_UP));
+                    cost = cost.multiply(minutes.divide(MINUTES_IN_HOUR, 2, RoundingMode.HALF_UP));
 
                     if (minutes.compareTo(SHORT_RIDE_THRESHOLD_MINUTES) < 0) {
                         cost = cost.multiply(SHORT_RIDE_SURCHARGE);
@@ -65,26 +63,6 @@ public class DefaultTariffCostStrategy implements RentalCostStrategy {
                 }
                 default -> throw new IllegalArgumentException("Unsupported billing mode: " + tariff.getBillingMode());
             }
-
-//            if (tariff.getBillingMode() == BillingMode.PER_HOUR) {
-//
-//                cost = cost
-//                        .multiply(MINUTES_IN_HOUR)
-//                        .multiply(minutes.divide(MINUTES_IN_HOUR, 2, RoundingMode.HALF_UP));
-//
-//                if (minutes.compareTo(SHORT_RIDE_THRESHOLD_MINUTES) < 0) {
-//                    cost = cost.multiply(SHORT_RIDE_SURCHARGE);
-//                    logger.debug("Short ride detected (<10 min). Applying surcharge: x{}", SHORT_RIDE_SURCHARGE);
-//                }
-//
-//                // Скидка за длинную поездку
-//                if (minutes.compareTo(LONG_RIDE_THRESHOLD_MINUTES) > 0) {
-//                    cost = cost.multiply(LONG_RIDE_DISCOUNT);
-//                    logger.debug("Long ride detected (>30 min). Applying discount: x{}", LONG_RIDE_DISCOUNT);
-//                }
-//            } else {
-//                cost = cost.multiply(minutes);
-//            }
 
             return cost.add(unlockFee);
         } catch (Exception e) {

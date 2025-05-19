@@ -8,14 +8,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.noleg.scootrent.entity.location.LocationNode;
 import ru.noleg.scootrent.entity.location.LocationType;
 import ru.noleg.scootrent.exception.NotFoundException;
+import ru.noleg.scootrent.exception.ServiceException;
 import ru.noleg.scootrent.repository.LocationRepository;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -234,27 +235,111 @@ class LocationServiceImplTest {
         verify(this.locationRepository, times(1)).findChildrenLocationByParentId(parentId);
     }
 
-//    @Test
-//    void getAllLocations_shouldReturnListLocation() {
-//        // Arrange
-//        LocationNode root = mock(LocationNode.class);
-//        LocationNode child = mock(LocationNode.class);
-//
-//        when(root.getChildren()).thenReturn(List.of(child));
-//        when(child.getParent()).thenReturn(root);
-//        when(child.getChildren()).thenReturn(List.of());
-//
-//        when(this.locationRepository.findAll()).thenReturn(List.of(root, child));
-//
-//        // Act
-//        List<LocationNode> result = this.locationService.getAllLocations();
-//
-//        // Assert
-//        assertEquals(1, result.size());
-//        assertEquals(1L, result.get(0).getId());
-//        assertEquals(1, result.get(0).getChildren().size());
-//        assertEquals(2L, result.get(0).getChildren().get(0).getId());
-//
-//        verify(this.locationRepository, times(1)).findAll();
-//    }
+    @Test
+    void getAllLocations_shouldBuildHierarchyCorrectly() {
+        // Arrange
+        LocationNode country = new LocationNode();
+        country.setId(1L);
+        country.setParent(null);
+        country.setChildren(new ArrayList<>());
+
+        LocationNode city = new LocationNode();
+        city.setId(2L);
+        city.setParent(country);
+        city.setChildren(new ArrayList<>());
+
+        LocationNode district = new LocationNode();
+        district.setId(3L);
+        district.setParent(city);
+        district.setChildren(new ArrayList<>());
+
+        List<LocationNode> allNodes = List.of(country, city, district);
+        when(this.locationRepository.findAll()).thenReturn(allNodes);
+
+        // Act
+        List<LocationNode> result = this.locationService.getAllLocations();
+
+        // Assert
+        assertEquals(1, result.size());
+        assertEquals(country, result.get(0));
+        assertEquals(1, country.getChildren().size());
+        assertEquals(city, country.getChildren().get(0));
+        assertEquals(1, city.getChildren().size());
+        assertEquals(district, city.getChildren().get(0));
+        assertTrue(district.getChildren().isEmpty());
+
+        verify(this.locationRepository, times(1)).findAll();
+    }
+
+    @Test
+    void getAllLocations_shouldTreatNodeAsRoot_whenParentIsNull() {
+        // Arrange
+        LocationNode root = new LocationNode();
+        root.setId(1L);
+        root.setParent(null);
+        root.setChildren(new ArrayList<>());
+
+        when(this.locationRepository.findAll()).thenReturn(List.of(root));
+
+        // Act
+        List<LocationNode> result = this.locationService.getAllLocations();
+
+        // Assert
+        assertEquals(1, result.size());
+        assertEquals(root, result.get(0));
+        assertTrue(root.getChildren().isEmpty());
+
+        verify(this.locationRepository, times(1)).findAll();
+    }
+
+    @Test
+    void getAllLocations_shouldTreatNodeAsRoot_whenParentIdIsNull() {
+        // Arrange
+        LocationNode parentLocation = new LocationNode();
+        LocationNode location = new LocationNode();
+        location.setId(1L);
+        location.setParent(parentLocation);
+        location.setChildren(new ArrayList<>());
+
+        when(this.locationRepository.findAll()).thenReturn(List.of(location));
+
+        // Act
+        List<LocationNode> result = this.locationService.getAllLocations();
+
+        // Assert
+        assertEquals(1, result.size());
+        assertEquals(location, result.get(0));
+        assertTrue(location.getChildren().isEmpty());
+
+        verify(this.locationRepository, times(1)).findAll();
+    }
+
+    @Test
+    void getAllLocations_shouldReturnEmptyList_whenNoLocationsFound() {
+        // Arrange
+        when(this.locationRepository.findAll()).thenReturn(List.of());
+
+        // Act
+        List<LocationNode> result = this.locationService.getAllLocations();
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+
+        verify(this.locationRepository, times(1)).findAll();
+    }
+
+    @Test
+    void getAllLocations_shouldThrowServiceException_whenRepositoryFails() {
+        // Arrange
+        when(this.locationRepository.findAll()).thenThrow(new RuntimeException("DB error"));
+
+        // Act | Assert
+        ServiceException ex = assertThrows(ServiceException.class,
+                () -> this.locationService.getAllLocations()
+        );
+        assertTrue(ex.getMessage().contains("Error on get all locations."));
+
+        verify(this.locationRepository, times(1)).findAll();
+    }
 }

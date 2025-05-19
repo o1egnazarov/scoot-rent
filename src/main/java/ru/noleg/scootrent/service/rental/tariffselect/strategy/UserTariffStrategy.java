@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Component
 public class UserTariffStrategy implements TariffSelectionStrategy {
 
-    public static final int PRIORITY = 2;
+    private static final int PRIORITY = 2;
     private static final Logger logger = LoggerFactory.getLogger(UserTariffStrategy.class);
 
     private final UserTariffRepository userTariffRepository;

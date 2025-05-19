@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.service.security;
+package ru.noleg.scootrent.service.user;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import ru.noleg.scootrent.entity.user.User;
 import ru.noleg.scootrent.repository.UserRepository;
-import ru.noleg.scootrent.service.user.UserDetailsServiceImpl;
 
 import java.util.Optional;
 

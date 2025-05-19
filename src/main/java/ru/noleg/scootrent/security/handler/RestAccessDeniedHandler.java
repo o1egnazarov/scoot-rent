@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.exception.handler.security;
+package ru.noleg.scootrent.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;

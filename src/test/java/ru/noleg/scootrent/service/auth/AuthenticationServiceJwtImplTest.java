@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.service.security;
+package ru.noleg.scootrent.service.auth;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,8 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.noleg.scootrent.entity.user.User;
 import ru.noleg.scootrent.exception.BusinessLogicException;
 import ru.noleg.scootrent.repository.UserRepository;
-import ru.noleg.scootrent.service.auth.AuthenticationServiceJwtImpl;
-import ru.noleg.scootrent.service.security.jwt.JwtUtil;
+import ru.noleg.scootrent.security.jwt.JwtTokenProvider;
 
 import java.util.Optional;
 
@@ -32,7 +31,7 @@ class AuthenticationServiceJwtImplTest {
     @Mock
     private PasswordEncoder passwordEncoder;
     @Mock
-    private JwtUtil jwtUtil;
+    private JwtTokenProvider jwtTokenProvider;
     @Mock
     private AuthenticationManager authenticationManager;
 
@@ -156,7 +155,7 @@ class AuthenticationServiceJwtImplTest {
         UserDetails userDetails = mock(UserDetails.class);
 
         when(this.userDetailsService.loadUserByUsername(username)).thenReturn(userDetails);
-        when(this.jwtUtil.generateToken(userDetails)).thenReturn(token);
+        when(this.jwtTokenProvider.generateToken(userDetails)).thenReturn(token);
 
         // Act
         String result = authService.signIn(username, password);
@@ -165,7 +164,7 @@ class AuthenticationServiceJwtImplTest {
         assertEquals(token, result);
 
         verify(this.authenticationManager).authenticate(any());
-        verify(this.jwtUtil).generateToken(userDetails);
+        verify(this.jwtTokenProvider).generateToken(userDetails);
     }
 
     @Test

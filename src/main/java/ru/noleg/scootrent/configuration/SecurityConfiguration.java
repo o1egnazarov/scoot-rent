@@ -14,9 +14,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import ru.noleg.scootrent.exception.handler.security.RestAccessDeniedHandler;
-import ru.noleg.scootrent.exception.handler.security.RestAuthenticationEntryPoint;
-import ru.noleg.scootrent.service.security.jwt.JwtRequestFilter;
+import ru.noleg.scootrent.security.handler.RestAccessDeniedHandler;
+import ru.noleg.scootrent.security.handler.RestAuthenticationEntryPoint;
+import ru.noleg.scootrent.security.jwt.JwtRequestFilter;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 

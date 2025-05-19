@@ -90,7 +90,7 @@ public class UserSubscription {
         this.tariff = tariff;
     }
 
-    public Integer getMinuteUsageLimit() {
+    public int getMinuteUsageLimit() {
         return minuteUsageLimit;
     }
 

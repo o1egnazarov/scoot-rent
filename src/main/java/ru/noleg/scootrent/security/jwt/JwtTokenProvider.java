@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.service.security.jwt;
+package ru.noleg.scootrent.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Component
-public class JwtUtil {
+public class JwtTokenProvider {
 
     @Value("${token.signing.key}")
     private String jwtSigningKey;

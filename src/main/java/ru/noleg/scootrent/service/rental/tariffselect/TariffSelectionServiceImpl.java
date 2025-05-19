@@ -48,7 +48,10 @@ public class TariffSelectionServiceImpl implements TariffSelectionService {
                     return tariff;
                 })
                 .orElseThrow(
-                        () -> new BusinessLogicException("No tariff found for user with id: " + userId)
+                        () -> {
+                            logger.error("No tariff found for user with id: {}.", userId);
+                            return new BusinessLogicException("No tariff found for user with id: " + userId);
+                        }
                 );
     }
 }

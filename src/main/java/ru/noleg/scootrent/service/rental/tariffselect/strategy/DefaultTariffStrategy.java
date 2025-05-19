@@ -11,7 +11,7 @@ import ru.noleg.scootrent.repository.TariffRepository;
 @Component
 public class DefaultTariffStrategy implements TariffSelectionStrategy {
 
-    public static final int LOWEST_PRIORITY = 100;
+    private static final int LOWEST_PRIORITY = 100;
     private static final Logger logger = LoggerFactory.getLogger(DefaultTariffStrategy.class);
 
     private final TariffRepository tariffRepository;

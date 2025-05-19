@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.noleg.scootrent.entity.user.User;
 import ru.noleg.scootrent.exception.BusinessLogicException;
 import ru.noleg.scootrent.repository.UserRepository;
-import ru.noleg.scootrent.service.security.jwt.JwtUtil;
+import ru.noleg.scootrent.security.jwt.JwtTokenProvider;
 
 @Service
 @Transactional
@@ -24,18 +24,18 @@ public class AuthenticationServiceJwtImpl implements AuthenticationService {
     private final UserRepository userRepository;
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
+    private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationServiceJwtImpl(UserRepository userRepository,
                                         UserDetailsService userDetailsService,
                                         PasswordEncoder passwordEncoder,
-                                        JwtUtil jwtUtil,
+                                        JwtTokenProvider jwtTokenProvider,
                                         AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
+        this.jwtTokenProvider = jwtTokenProvider;
         this.authenticationManager = authenticationManager;
     }
 
@@ -79,7 +79,7 @@ public class AuthenticationServiceJwtImpl implements AuthenticationService {
         ));
 
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-        String token = this.jwtUtil.generateToken(userDetails);
+        String token = this.jwtTokenProvider.generateToken(userDetails);
 
         logger.debug("User: {}, successfully signIn.", username);
         return token;

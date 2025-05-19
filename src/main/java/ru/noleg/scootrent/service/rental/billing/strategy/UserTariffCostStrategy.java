@@ -81,7 +81,7 @@ public class UserTariffCostStrategy implements RentalCostStrategy {
 
     private BigDecimal calculateDiscount(UserTariff userTariff, BigDecimal price) {
         BigDecimal discount = new BigDecimal(userTariff.getDiscountPct())
-                .divide(BigDecimal.valueOf(100), 3, RoundingMode.HALF_DOWN);
+                .divide(BigDecimal.valueOf(100), 1 ,RoundingMode.HALF_DOWN);
 
         price = price.subtract(price.multiply(discount));
 
