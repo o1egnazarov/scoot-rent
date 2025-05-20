@@ -18,6 +18,3 @@ endif
 
 rebuild: build down up
 
-
-logs:
-	docker compose logs -f app

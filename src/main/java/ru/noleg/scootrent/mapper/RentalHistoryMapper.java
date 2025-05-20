@@ -8,7 +8,6 @@ import ru.noleg.scootrent.dto.rental.UserRentalHistoryDto;
 import ru.noleg.scootrent.entity.rental.Rental;
 
 import java.util.List;
-
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface RentalHistoryMapper {
     @Mapping(target = "rentalId", source = "id")
@@ -17,7 +16,8 @@ public interface RentalHistoryMapper {
     @Mapping(target = "startPointTitle", source = "startPoint.title")
     @Mapping(target = "endPointTitle", source = "endPoint.title")
     @Mapping(target = "tariffTitle", source = "tariff.title")
-    @Mapping(target = "duration", source = "scooter.durationInUsed")
+    @Mapping(target = "durationOfUsedScooter", source = "scooter.durationInUsed")
+    @Mapping(target = "duration", source = "rental.durationOfRental")
     ScooterRentalHistoryDto mapToScooterRentalDto(Rental rental);
 
     List<ScooterRentalHistoryDto> mapToScooterRentalDtos(List<Rental> rentals);
@@ -26,7 +26,7 @@ public interface RentalHistoryMapper {
     @Mapping(target = "startPointTitle", source = "startPoint.title")
     @Mapping(target = "endPointTitle", source = "endPoint.title")
     @Mapping(target = "tariffTitle", source = "tariff.title")
-    @Mapping(target = "duration", source = "scooter.durationInUsed")
+    @Mapping(target = "duration", source = "rental.durationOfRental")
     UserRentalHistoryDto mapToUserRentalDto(Rental rental);
 
     List<UserRentalHistoryDto> mapToUserRentalDtos(List<Rental> rentals);
