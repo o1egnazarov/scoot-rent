@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -151,6 +152,17 @@ public class GlobalExceptionHandler {
                 HttpStatus.UNAUTHORIZED,
                 "Invalid login or password",
                 ErrorCode.UNAUTHORIZED,
+                request.getRequestURI(),
+                ex
+        );
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ExceptionResponse> handleAccessDenied(AccessDeniedException ex, HttpServletRequest request) {
+        return buildResponse(
+                HttpStatus.FORBIDDEN,
+                "Access denied: insufficient rights",
+                ErrorCode.NO_ACCESS_TO_RECOURSE,
                 request.getRequestURI(),
                 ex
         );

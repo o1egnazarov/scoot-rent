@@ -25,8 +25,18 @@ public class RentalPauserImpl implements RentalPauser {
 
     @Override
     @Transactional
-    public void pauseRental(Long rentalId) {
+    public void pauseRental(Long rentalId, Long userId) {
 
+        Rental rental = this.validateAndGetRental(rentalId, userId);
+
+        this.validateRentalStatusForPause(rentalId, rental);
+        logger.debug("Rental status: {}.", rental.getRentalStatus());
+
+        this.updateRentalStatus(rental);
+        logger.debug("Rental with id: {} successfully pause. Pause time: {}.", rentalId, rental.getLastPauseTime());
+    }
+
+    private Rental validateAndGetRental(Long rentalId, Long userId) {
         Rental rental = this.rentalRepository.findById(rentalId).orElseThrow(
                 () -> {
                     logger.error("Rental with id: {} not found.", rentalId);
@@ -34,11 +44,12 @@ public class RentalPauserImpl implements RentalPauser {
                 }
         );
 
-        this.validateRentalStatusForPause(rentalId, rental);
-        logger.debug("Rental status: {}.", rental.getRentalStatus());
+        if (!this.rentalRepository.isRentalOwnedByUser(rentalId, userId)) {
+            logger.warn("The user with id: {} does not have a rental with id: {}", userId, rentalId);
+            throw new BusinessLogicException("The user with id: " + userId + "  does not have a rental with id: " + rentalId);
+        }
 
-        this.updateRentalStatus(rental);
-        logger.debug("Rental with id: {} successfully pause. Pause time: {}.", rentalId, rental.getLastPauseTime());
+        return rental;
     }
 
     private void validateRentalStatusForPause(Long rentalId, Rental rental) {

@@ -61,38 +61,41 @@ class RentalServiceDefaultImplTest {
     @Test
     void pauseRental_shouldDelegateToRentalPauser() {
         // Arrange
+        Long userId = 1L;
         Long rentalId = 1L;
 
         // Act
-        this.rentalService.pauseRental(rentalId);
+        this.rentalService.pauseRental(rentalId, userId);
 
         // Assert
-        verify(this.rentalPauser).pauseRental(rentalId);
+        verify(this.rentalPauser).pauseRental(rentalId, userId);
     }
 
     @Test
     void resumeRental_shouldDelegateToRentalResumer() {
         // Arrange
+        Long userId = 1L;
         Long rentalId = 1L;
 
         // Act
-        this.rentalService.resumeRental(rentalId);
+        this.rentalService.resumeRental(rentalId, userId);
 
         // Assert
-        verify(this.rentalResumer).resumeRental(rentalId);
+        verify(this.rentalResumer).resumeRental(rentalId, userId);
     }
 
     @Test
     void stopRental_shouldDelegateToRentalStopper() {
         // Arrange
+        Long userId = 1L;
         Long rentalId = 1L;
         Long endPointId = 5L;
 
         // Act
-        this.rentalService.stopRental(rentalId, endPointId);
+        this.rentalService.stopRental(rentalId, endPointId, userId);
 
         // Assert
-        verify(this.rentalStopper).stopRental(rentalId, endPointId);
+        verify(this.rentalStopper).stopRental(rentalId, endPointId, userId);
     }
 
     @Test

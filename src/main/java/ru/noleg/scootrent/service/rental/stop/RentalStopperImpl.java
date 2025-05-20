@@ -42,10 +42,10 @@ public class RentalStopperImpl implements RentalStopper {
     }
 
     @Override
-    public void stopRental(Long rentalId, Long endPointId) {
+    public void stopRental(Long rentalId, Long endPointId, Long userId) {
 
-        Rental rental = this.validateAndGetRental(rentalId);
-        LocationNode endPoint = this.validateAndGetLocation(endPointId);
+        Rental rental = this.validateAndGetRental(rentalId, userId);
+        LocationNode endPoint = this.validateAndGetLocation(endPointId, rental.getStartPoint());
 
         Duration rentalDuration = this.calculateRentalDuration(rental);
 
@@ -55,13 +55,18 @@ public class RentalStopperImpl implements RentalStopper {
         logger.debug("Rental with id: {} successfully stopped. Cost: {}, Duration: {}.", rentalId, cost, rentalDuration);
     }
 
-    private Rental validateAndGetRental(Long rentalId) {
+    private Rental validateAndGetRental(Long rentalId, Long userId) {
         Rental rental = this.rentalRepository.findById(rentalId).orElseThrow(
                 () -> {
                     logger.error("Rental with id: {} not found.", rentalId);
                     return new NotFoundException("Rental with id: " + rentalId + " not found.");
                 }
         );
+
+        if (!this.rentalRepository.isRentalOwnedByUser(rentalId, userId)) {
+            logger.warn("The user with id: {} does not have a rental with id: {}", userId, rentalId);
+            throw new BusinessLogicException("The user with id: " + userId + " does not have a rental with id: " + rentalId);
+        }
 
         if (rental.getRentalStatus() == RentalStatus.COMPLETED) {
             logger.warn("Rental with id: {} already completed.", rentalId);
@@ -70,20 +75,35 @@ public class RentalStopperImpl implements RentalStopper {
         return rental;
     }
 
-    // TODO добавить проверку что точки в одном городе)
-    private LocationNode validateAndGetLocation(Long endPointId) {
-        LocationNode endPoint = this.locationRepository.findById(endPointId).orElseThrow(
+    private LocationNode validateAndGetLocation(Long endPointId, LocationNode startPoint) {
+        LocationNode endPoint = this.locationRepository.findLocationById(endPointId).orElseThrow(
                 () -> {
                     logger.error("Rental end point with id: {} not found.", endPointId);
                     return new NotFoundException("Rental point with id: " + endPointId + " not found.");
                 }
         );
 
+        LocationNode startCity = this.getCityAncestor(startPoint);
+        LocationNode endCity = this.getCityAncestor(endPoint);
+
+        if (startCity == null || endCity == null || !startCity.getId().equals(endCity.getId())) {
+            logger.warn("Rental start and end points belong to different cities. Start: {}, End: {}", startCity, endCity);
+            throw new BusinessLogicException("Start and end rental points must belong to the same city.");
+        }
+
         if (endPoint.getLocationType() != LocationType.RENTAL_POINT) {
             logger.warn("Location with id: {} is not a rental point.", endPointId);
             throw new BusinessLogicException("Location is not a rental point.");
         }
         return endPoint;
+    }
+
+    private LocationNode getCityAncestor(LocationNode node) {
+        LocationNode current = node;
+        while (current != null && current.getLocationType() != LocationType.CITY) {
+            current = current.getParent();
+        }
+        return current;
     }
 
     private Duration calculateRentalDuration(Rental rental) {

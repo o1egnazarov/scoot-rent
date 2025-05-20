@@ -85,30 +85,36 @@ class RentalControllerTest {
     void pauseRental_shouldCallServiceAndReturnOk() {
         // Arrange
         Long rentalId = 1L;
+        Long userId = 1L;
+        UserDetailsImpl userDetails = mock(UserDetailsImpl.class);
+        when(userDetails.getId()).thenReturn(userId);
 
         // Act
-        ResponseEntity<Void> response = this.rentalController.pauseRental(rentalId);
+        ResponseEntity<Void> response = this.rentalController.pauseRental(userDetails, rentalId);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        verify(this.rentalService, times(1)).pauseRental(rentalId);
+        verify(this.rentalService, times(1)).pauseRental(rentalId, userId);
     }
 
     @Test
     void pauseRental_shouldThrownException_whenRentalNotFound() {
         // Arrange
         Long rentalId = 100L;
+        Long userId = 1L;
+        UserDetailsImpl userDetails = mock(UserDetailsImpl.class);
+        when(userDetails.getId()).thenReturn(userId);
 
         doThrow(new NotFoundException("Rental not found"))
-                .when(this.rentalService).pauseRental(rentalId);
+                .when(this.rentalService).pauseRental(rentalId, userId);
 
         // Act | Assert
         NotFoundException ex = assertThrows(NotFoundException.class, () ->
-                this.rentalController.pauseRental(rentalId)
+                this.rentalController.pauseRental(userDetails, rentalId)
         );
 
         assertEquals("Rental not found", ex.getMessage());
-        verify(rentalService, times(1)).pauseRental(rentalId);
+        verify(rentalService, times(1)).pauseRental(rentalId, userId);
     }
 
 
@@ -116,30 +122,36 @@ class RentalControllerTest {
     void resumeRental_shouldCallServiceAndReturnOk() {
         // Arrange
         Long rentalId = 2L;
+        Long userId = 1L;
+        UserDetailsImpl userDetails = mock(UserDetailsImpl.class);
+        when(userDetails.getId()).thenReturn(userId);
 
         // Act
-        ResponseEntity<Void> response = this.rentalController.resumeRental(rentalId);
+        ResponseEntity<Void> response = this.rentalController.resumeRental(userDetails, rentalId);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        verify(this.rentalService, times(1)).resumeRental(rentalId);
+        verify(this.rentalService, times(1)).resumeRental(rentalId, userId);
     }
 
     @Test
     void resumeRental_shouldThrownException_whenAlreadyStopped() {
         // Arrange
         Long rentalId = 7L;
+        Long userId = 1L;
+        UserDetailsImpl userDetails = mock(UserDetailsImpl.class);
+        when(userDetails.getId()).thenReturn(userId);
 
         doThrow(new BusinessLogicException("Rental is already stopped"))
-                .when(rentalService).resumeRental(rentalId);
+                .when(rentalService).resumeRental(rentalId, userId);
 
         // Act | Assert
         BusinessLogicException ex = assertThrows(BusinessLogicException.class, () ->
-                rentalController.resumeRental(rentalId)
+                rentalController.resumeRental(userDetails, rentalId)
         );
 
         assertEquals("Rental is already stopped", ex.getMessage());
-        verify(this.rentalService, times(1)).resumeRental(rentalId);
+        verify(this.rentalService, times(1)).resumeRental(rentalId, userId);
     }
 
     @Test
@@ -147,13 +159,16 @@ class RentalControllerTest {
         // Arrange
         Long rentalId = 3L;
         Long endPointId = 5L;
+        Long userId = 1L;
+        UserDetailsImpl userDetails = mock(UserDetailsImpl.class);
+        when(userDetails.getId()).thenReturn(userId);
 
         // Act
-        ResponseEntity<Void> response = this.rentalController.endRental(rentalId, endPointId);
+        ResponseEntity<Void> response = this.rentalController.endRental(userDetails, rentalId, endPointId);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        verify(this.rentalService, times(1)).stopRental(rentalId, endPointId);
+        verify(this.rentalService, times(1)).stopRental(rentalId, endPointId, userId);
     }
 
     @Test
@@ -161,17 +176,20 @@ class RentalControllerTest {
         // Arrange
         Long rentalId = 1L;
         Long endPointId = 100L;
+        Long userId = 1L;
+        UserDetailsImpl userDetails = mock(UserDetailsImpl.class);
+        when(userDetails.getId()).thenReturn(userId);
 
         doThrow(new BusinessLogicException("Invalid end point"))
-                .when(this.rentalService).stopRental(rentalId, endPointId);
+                .when(this.rentalService).stopRental(rentalId, endPointId, userId);
 
         // Act | Assert
         BusinessLogicException ex = assertThrows(BusinessLogicException.class, () ->
-                this.rentalController.endRental(rentalId, endPointId)
+                this.rentalController.endRental(userDetails, rentalId, endPointId)
         );
 
         assertEquals("Invalid end point", ex.getMessage());
-        verify(this.rentalService, times(1)).stopRental(rentalId, endPointId);
+        verify(this.rentalService, times(1)).stopRental(rentalId, endPointId, userId);
     }
 
     @Test

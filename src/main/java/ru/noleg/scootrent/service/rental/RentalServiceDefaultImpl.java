@@ -47,21 +47,21 @@ public class RentalServiceDefaultImpl implements RentalService {
     }
 
     @Override
-    public void pauseRental(Long rentalId) {
-        logger.debug("Pauser rental with id: {}.", rentalId);
-        this.rentalPauser.pauseRental(rentalId);
+    public void pauseRental(Long rentalId, Long userId) {
+        logger.debug("Pauser rental with id: {} for user with id: {}.", rentalId, userId);
+        this.rentalPauser.pauseRental(rentalId, userId);
     }
 
     @Override
-    public void resumeRental(Long rentalId) {
-        logger.debug("Resume rental with id: {}.", rentalId);
-        this.rentalResumer.resumeRental(rentalId);
+    public void resumeRental(Long rentalId, Long userId) {
+        logger.debug("Resume rental with id: {} for user with id: {}.", rentalId, userId);
+        this.rentalResumer.resumeRental(rentalId, userId);
     }
 
     @Override
-    public void stopRental(Long rentalId, Long endPointId) {
-        logger.debug("Stop rental with id: {}, rental point: {}.", rentalId, endPointId);
-        this.rentalStopper.stopRental(rentalId, endPointId);
+    public void stopRental(Long rentalId, Long endPointId, Long userId) {
+        logger.debug("Stop rental with id: {} for user with id: {}, rental point: {}.", rentalId, userId, endPointId);
+        this.rentalStopper.stopRental(rentalId, endPointId, userId);
     }
 
     @Override

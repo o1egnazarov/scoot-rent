@@ -30,7 +30,7 @@ public class RestAccessDeniedHandler implements AccessDeniedHandler {
         response.getWriter().write(this.objectMapper.writeValueAsString(
                 new ExceptionResponse(
                         ErrorCode.NO_ACCESS_TO_RECOURSE,
-                        "There is no access to the resource",
+                        "Access denied: insufficient rights",
                         request.getRequestURI(),
                         LocalDateTime.now()
                 )

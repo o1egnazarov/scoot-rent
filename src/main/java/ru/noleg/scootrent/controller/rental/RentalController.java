@@ -52,7 +52,7 @@ public class RentalController {
             summary = "Начало аренды.",
             description = "Позволяет начать аренду для конкретного пользователя, самоката и точки проката."
     )
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER', 'MODERATOR')")
     public ResponseEntity<Long> startRental(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Parameter(description = "Идентификатор самоката", required = true) @Min(1) @RequestParam("scooterId")
@@ -62,6 +62,7 @@ public class RentalController {
             @Parameter(description = "Выбор оплаты почасовая/поминутная", required = true) @NotNull @RequestParam("billingMode")
             BillingMode billingMode
     ) {
+        System.out.println("Authorities: " + userDetails.getAuthorities());
         Long userId = userDetails.getId();
         logger.info("Request: POST /start with param: userId={}, scooterId={}, rentalPointId={}, billingMode={} ",
                 userId, scooterId, startPointId, billingMode);
@@ -78,12 +79,14 @@ public class RentalController {
             summary = "Приостановление аренды.",
             description = "Позволяет поставить конкретную аренду на паузу."
     )
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER', 'MODERATOR')")
     public ResponseEntity<Void> pauseRental(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Parameter(description = "Идентификатор аренды", required = true) @Min(1) @RequestParam("rentalId") Long rentalId
     ) {
-        logger.info("Request: POST /pause с параметрами: rentalId={}.", rentalId);
-        this.rentalService.pauseRental(rentalId);
+        Long userId = userDetails.getId();
+        logger.info("Request: POST /pause с параметрами: rentalId={}, userId={}.", rentalId, userId);
+        this.rentalService.pauseRental(rentalId, userId);
 
         logger.info("Rental with id: {} paused.", rentalId);
         return ResponseEntity
@@ -96,12 +99,14 @@ public class RentalController {
             summary = "Возобновление аренды.",
             description = "Позволяет возобновить конкретную аренду."
     )
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER', 'MODERATOR')")
     public ResponseEntity<Void> resumeRental(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Parameter(description = "Идентификатор аренды", required = true) @Min(1) @RequestParam("rentalId") Long rentalId
     ) {
-        logger.info("Request: POST /resume with param: rentalId={}.", rentalId);
-        this.rentalService.resumeRental(rentalId);
+        Long userId = userDetails.getId();
+        logger.info("Request: POST /resume with param: rentalId={}, userId={}.", rentalId, userId);
+        this.rentalService.resumeRental(rentalId, userId);
 
         logger.info("Rental with id: {} resumed.", rentalId);
         return ResponseEntity
@@ -114,13 +119,15 @@ public class RentalController {
             summary = "Окончание аренды.",
             description = "Позволяет закончить конкретную аренду на конкретной точке проката."
     )
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER', 'MODERATOR')")
     public ResponseEntity<Void> endRental(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Parameter(description = "Идентификатор аренды", required = true) @Min(1) @RequestParam("rentalId") Long rentalId,
             @Parameter(description = "Идентификатор конечной точки проката", required = true) @Min(1) @RequestParam("endPointId") Long endPointId
     ) {
-        logger.info("Request: POST /end with param: rentalId={}, endPointId={}.", rentalId, endPointId);
-        this.rentalService.stopRental(rentalId, endPointId);
+        Long userId = userDetails.getId();
+        logger.info("Request: POST /end with param: rentalId={}, endPointId={}, userId={}.", rentalId, endPointId, userId);
+        this.rentalService.stopRental(rentalId, endPointId, userId);
 
         logger.info("Rental with id: {} stooped on rental point with id: {}.", rentalId, endPointId);
         return ResponseEntity.status(HttpStatus.OK).build();

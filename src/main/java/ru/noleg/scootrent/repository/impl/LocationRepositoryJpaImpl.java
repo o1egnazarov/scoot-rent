@@ -63,6 +63,7 @@ public class LocationRepositoryJpaImpl extends BaseRepositoryImpl<LocationNode, 
                     SELECT l FROM LocationNode l
                     LEFT JOIN FETCH l.scooters s
                     LEFT JOIN FETCH s.model m
+                    LEFT JOIN FETCH l.parent p
                     WHERE l.id = :id
                     """;
 

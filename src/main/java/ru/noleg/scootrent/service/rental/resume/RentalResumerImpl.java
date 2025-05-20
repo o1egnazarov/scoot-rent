@@ -26,8 +26,18 @@ public class RentalResumerImpl implements RentalResumer {
     }
 
     @Override
-    public void resumeRental(Long rentalId) {
+    public void resumeRental(Long rentalId, Long userId) {
 
+        Rental rental = this.validateAndGetRental(rentalId, userId);
+
+        this.validateRentalStatusForResume(rentalId, rental);
+
+        this.updateRentalStatus(rental);
+        logger.debug("Rental with id: {} successfully resume. Total pause time: {}",
+                rentalId, rental.getDurationInPause());
+    }
+
+    private Rental validateAndGetRental(Long rentalId, Long userId) {
         Rental rental = this.rentalRepository.findById(rentalId).orElseThrow(
                 () -> {
                     logger.error("Rental with id: {} not found.", rentalId);
@@ -35,11 +45,12 @@ public class RentalResumerImpl implements RentalResumer {
                 }
         );
 
-        this.validateRentalStatusForResume(rentalId, rental);
+        if (!this.rentalRepository.isRentalOwnedByUser(rentalId, userId)) {
+            logger.warn("The user with id: {} does not have a rental with id: {}", userId, rentalId);
+            throw new BusinessLogicException("The user with id: " + userId + "  does not have a rental with id: " + rentalId);
+        }
 
-        this.updateRentalStatus(rental);
-        logger.debug("Rental with id: {} successfully resume. Total pause time: {}",
-                rentalId, rental.getDurationInPause());
+        return rental;
     }
 
     private void validateRentalStatusForResume(Long rentalId, Rental rental) {

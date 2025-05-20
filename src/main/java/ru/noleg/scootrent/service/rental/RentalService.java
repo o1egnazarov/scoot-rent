@@ -8,11 +8,11 @@ import java.util.List;
 public interface RentalService {
     Long startRental(Long userId, Long scooterId, Long startPointId, BillingMode billingMode);
 
-    void pauseRental(Long rentalId);
+    void pauseRental(Long rentalId, Long userId);
 
-    void resumeRental(Long rentalId);
+    void resumeRental(Long rentalId, Long userId);
 
-    void stopRental(Long rentalId, Long endPointId);
+    void stopRental(Long rentalId, Long endPointId, Long userId);
 
     List<Rental> getRentals();
 

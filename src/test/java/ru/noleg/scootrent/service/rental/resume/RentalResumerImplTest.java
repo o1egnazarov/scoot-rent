@@ -34,6 +34,7 @@ class RentalResumerImplTest {
     void resumeRental_shouldUpdateStatusAndSave_whenDataIsValid() {
         // Arrange
         Long rentalId = 1L;
+        Long userId = 5L;
         Rental rental = mock(Rental.class);
         LocalDateTime lastPauseTime = LocalDateTime.now().minusMinutes(10);
 
@@ -41,9 +42,10 @@ class RentalResumerImplTest {
         when(rental.getLastPauseTime()).thenReturn(lastPauseTime);
 
         when(this.rentalRepository.findById(rentalId)).thenReturn(Optional.of(rental));
+        when(this.rentalRepository.isRentalOwnedByUser(rentalId, userId)).thenReturn(true);
 
         // Act
-        this.rentalResumer.resumeRental(rentalId);
+        this.rentalResumer.resumeRental(rentalId, userId);
 
         // Assert
         verify(rental).addPause(any(Duration.class));
@@ -56,13 +58,32 @@ class RentalResumerImplTest {
     void resumeRental_shouldThrowNotFoundException_whenRentalNotExists() {
         // Arrange
         Long rentalId = 1L;
+        Long userId = 5L;
 
         when(this.rentalRepository.findById(rentalId)).thenReturn(Optional.empty());
 
         // Act | Assert
         NotFoundException ex = assertThrows(NotFoundException.class,
-                () -> this.rentalResumer.resumeRental(rentalId));
+                () -> this.rentalResumer.resumeRental(rentalId, userId));
         assertEquals("Rental with id: 1 not found.", ex.getMessage());
+
+        verify(this.rentalRepository, never()).save(any(Rental.class));
+    }
+
+    @Test
+    void resumeRental_shouldThrowBusinessLogicException_whenUserNotOwnerRental() {
+        // Arrange
+        Long userId = 5L;
+        Long rentalId = 1L;
+        Rental rental = mock(Rental.class);
+
+        when(this.rentalRepository.findById(rentalId)).thenReturn(Optional.of(rental));
+        when(this.rentalRepository.isRentalOwnedByUser(rentalId, userId)).thenReturn(false);
+
+        // Act | Assert
+        BusinessLogicException ex = assertThrows(BusinessLogicException.class,
+                () -> this.rentalResumer.resumeRental(rentalId, userId));
+        assertEquals("The user with id: 5  does not have a rental with id: 1", ex.getMessage());
 
         verify(this.rentalRepository, never()).save(any(Rental.class));
     }
@@ -71,14 +92,16 @@ class RentalResumerImplTest {
     void resumeRental_shouldThrowException_whenRentalStatusIsNotPause() {
         // Arrange
         Long rentalId = 1L;
+        Long userId = 5L;
         Rental rental = mock(Rental.class);
         when(rental.getRentalStatus()).thenReturn(RentalStatus.ACTIVE);
 
         when(this.rentalRepository.findById(rentalId)).thenReturn(Optional.of(rental));
+        when(this.rentalRepository.isRentalOwnedByUser(rentalId, userId)).thenReturn(true);
 
         // Act | Assert
         BusinessLogicException ex = assertThrows(BusinessLogicException.class,
-                () -> this.rentalResumer.resumeRental(rentalId));
+                () -> this.rentalResumer.resumeRental(rentalId, userId));
         assertEquals("Rental is already used.", ex.getMessage());
 
         verify(this.rentalRepository, never()).save(any(Rental.class));

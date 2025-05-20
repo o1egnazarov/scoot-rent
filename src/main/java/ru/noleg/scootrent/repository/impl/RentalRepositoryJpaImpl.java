@@ -47,6 +47,25 @@ public class RentalRepositoryJpaImpl extends BaseRepositoryImpl<Rental, Long> im
         }
     }
 
+    public boolean isRentalOwnedByUser(Long rentalId, Long userId) {
+        try {
+            String ql = """
+                SELECT COUNT(r) > 0
+                FROM Rental r
+                WHERE r.id = :rentalId AND r.user.id = :userId
+                """;
+
+            TypedQuery<Boolean> query = entityManager.createQuery(ql, Boolean.class);
+            query.setParameter("rentalId", rentalId);
+            query.setParameter("userId", userId);
+
+            return query.getSingleResult();
+        } catch (Exception e) {
+            logger.error("Failed to validate rental ownership. rentalId: {}, userId: {}.", rentalId, userId, e);
+            throw new RepositoryException("Failed to check rental ownership", e);
+        }
+    }
+
     @Override
     public List<Rental> findAllRentals() {
         try {
