@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.entity;
+package ru.noleg.scootrent.entity.tariff;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -7,11 +7,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import ru.noleg.scootrent.entity.tariff.Tariff;
 import ru.noleg.scootrent.entity.user.User;
 
 import java.math.BigDecimal;
@@ -69,13 +66,15 @@ public class UserTariff {
                       Tariff tariff,
                       Integer discountPct,
                       BigDecimal customPricePerMinute,
-                      LocalDateTime startDate) {
+                      LocalDateTime startDate,
+                      LocalDateTime endDate) {
         this.id = id;
         this.user = user;
         this.tariff = tariff;
         this.discountPct = discountPct;
         this.customPricePerMinute = customPricePerMinute;
         this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public Long getId() {

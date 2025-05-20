@@ -4,7 +4,7 @@ import jakarta.persistence.TypedQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import ru.noleg.scootrent.entity.UserTariff;
+import ru.noleg.scootrent.entity.tariff.UserTariff;
 import ru.noleg.scootrent.exception.RepositoryException;
 import ru.noleg.scootrent.repository.UserTariffRepository;
 import ru.noleg.scootrent.repository.util.BaseRepositoryImpl;

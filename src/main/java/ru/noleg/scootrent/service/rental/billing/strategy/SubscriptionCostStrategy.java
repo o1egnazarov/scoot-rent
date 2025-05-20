@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ru.noleg.scootrent.entity.UserSubscription;
+import ru.noleg.scootrent.entity.tariff.UserSubscription;
 import ru.noleg.scootrent.entity.tariff.Tariff;
 import ru.noleg.scootrent.entity.tariff.TariffType;
 import ru.noleg.scootrent.entity.user.User;

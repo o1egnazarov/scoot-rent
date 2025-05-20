@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.noleg.scootrent.entity.UserTariff;
+import ru.noleg.scootrent.entity.tariff.UserTariff;
 import ru.noleg.scootrent.entity.tariff.Tariff;
 import ru.noleg.scootrent.entity.tariff.TariffType;
 import ru.noleg.scootrent.entity.user.User;
@@ -59,7 +59,6 @@ public class TariffAssignmentServiceImpl implements TariffAssignmentService {
         );
     }
 
-    // TODO додумать
     private void validateCurrentTariffs(Long userId) {
         Optional<UserTariff> existing = userTariffRepository.findActiveTariffByUserAndTime(userId, LocalDateTime.now());
         existing.ifPresent(userTariff -> {

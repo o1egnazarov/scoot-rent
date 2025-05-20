@@ -61,10 +61,8 @@ public class PrivilegedUsersSetup implements CommandLineRunner {
         user.setUsername(username);
         user.setEmail(email);
         user.setPassword(this.passwordEncoder.encode(password));
-        user.setRole(role);
-        // TODO просто в миграциях not null уберу и это надо не забыть убрать
-        user.setDateOfBirth(LocalDate.of(2004, 8, 8));
         user.setPhone(phone);
+        user.setRole(role);
 
         this.userRepository.save(user);
         logger.info("Created default user: '{}'.", username);

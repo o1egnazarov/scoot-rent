@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.noleg.scootrent.dto.tariff.SubscribeUserDto;
 import ru.noleg.scootrent.dto.tariff.UserSubscriptionDto;
-import ru.noleg.scootrent.entity.UserSubscription;
+import ru.noleg.scootrent.entity.tariff.UserSubscription;
 import ru.noleg.scootrent.mapper.UserSubscriptionMapper;
 import ru.noleg.scootrent.service.user.UserDetailsImpl;
 import ru.noleg.scootrent.service.tariff.SubscriptionService;

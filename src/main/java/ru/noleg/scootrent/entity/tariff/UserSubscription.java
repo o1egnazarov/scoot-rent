@@ -1,5 +1,5 @@
 
-package ru.noleg.scootrent.entity;
+package ru.noleg.scootrent.entity.tariff;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import ru.noleg.scootrent.entity.tariff.Tariff;
 import ru.noleg.scootrent.entity.user.User;
 
 import java.time.LocalDateTime;

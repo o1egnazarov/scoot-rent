@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import ru.noleg.scootrent.controller.location.LocationController;
 import ru.noleg.scootrent.dto.location.CreateLocationDto;
 import ru.noleg.scootrent.dto.location.DetailLocationDto;
 import ru.noleg.scootrent.dto.location.LocationDto;

@@ -58,9 +58,6 @@ public class Rental {
     @Column(name = "c_cost")
     private BigDecimal cost;
 
-    @Column(name = "c_start_time")
-    private LocalDateTime startTime;
-
     @Column(name = "c_last_pause_time")
     private LocalDateTime lastPauseTime;
 
@@ -71,6 +68,9 @@ public class Rental {
     @Column(name = "c_duration_of_rental")
     @Convert(converter = DurationToLongInMinutesConverter.class)
     private Duration durationOfRental = Duration.ZERO;
+
+    @Column(name = "c_start_time")
+    private LocalDateTime startTime;
 
     @Column(name = "c_end_time")
     private LocalDateTime endTime;

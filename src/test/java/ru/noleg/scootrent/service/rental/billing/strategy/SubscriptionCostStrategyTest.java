@@ -7,7 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
-import ru.noleg.scootrent.entity.UserSubscription;
+import ru.noleg.scootrent.entity.tariff.UserSubscription;
 import ru.noleg.scootrent.entity.tariff.Tariff;
 import ru.noleg.scootrent.entity.tariff.TariffType;
 import ru.noleg.scootrent.entity.user.User;

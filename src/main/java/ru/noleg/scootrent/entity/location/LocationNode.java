@@ -34,6 +34,9 @@ public class LocationNode {
     @Column(name = "c_title", nullable = false, length = 50)
     private String title;
 
+    @Column(name = "c_address", length = 100)
+    private String address;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "c_location_type", nullable = false)
     private LocationType locationType;
@@ -43,9 +46,6 @@ public class LocationNode {
 
     @Column(name = "c_longitude", precision = 11, scale = 8)
     private BigDecimal longitude;
-
-    @Column(name = "c_address", length = 100)
-    private String address;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

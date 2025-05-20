@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import ru.noleg.scootrent.dto.tariff.SubscribeUserDto;
 import ru.noleg.scootrent.dto.tariff.UserSubscriptionDto;
-import ru.noleg.scootrent.entity.UserSubscription;
+import ru.noleg.scootrent.entity.tariff.UserSubscription;
 import ru.noleg.scootrent.exception.NotFoundException;
 import ru.noleg.scootrent.mapper.UserSubscriptionMapper;
 import ru.noleg.scootrent.service.user.UserDetailsImpl;

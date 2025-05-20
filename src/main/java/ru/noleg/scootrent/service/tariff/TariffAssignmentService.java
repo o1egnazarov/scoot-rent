@@ -1,7 +1,6 @@
 package ru.noleg.scootrent.service.tariff;
 
-import ru.noleg.scootrent.entity.UserSubscription;
-import ru.noleg.scootrent.entity.UserTariff;
+import ru.noleg.scootrent.entity.tariff.UserTariff;
 
 import java.math.BigDecimal;
 

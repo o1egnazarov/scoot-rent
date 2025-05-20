@@ -5,7 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.noleg.scootrent.entity.UserTariff;
+import ru.noleg.scootrent.entity.tariff.UserTariff;
 import ru.noleg.scootrent.entity.tariff.BillingMode;
 import ru.noleg.scootrent.entity.tariff.Tariff;
 import ru.noleg.scootrent.repository.UserTariffRepository;

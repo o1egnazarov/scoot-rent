@@ -11,13 +11,7 @@ import java.util.List;
         uses = {ScooterMapper.class, TariffMapper.class, LocationMapper.class})
 public interface RentalMapper extends BaseMapper<Rental, ShortRentalDto> {
     @Override
-    Rental mapToEntity(ShortRentalDto shortRentalDto);
-
-    @Override
     ShortRentalDto mapToDto(Rental rental);
-
-    @Override
-    List<Rental> mapToEntities(List<ShortRentalDto> dtos);
 
     @Override
     List<ShortRentalDto> mapToDtos(List<Rental> entities);

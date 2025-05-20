@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.noleg.scootrent.entity.UserSubscription;
+import ru.noleg.scootrent.entity.tariff.UserSubscription;
 import ru.noleg.scootrent.entity.tariff.Tariff;
 import ru.noleg.scootrent.entity.tariff.TariffType;
 import ru.noleg.scootrent.entity.user.User;
@@ -58,7 +58,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         );
     }
 
-    // TODO додумать
     private void validateCurrentSubscription(Long userId) {
         Optional<UserSubscription> existing =
                 this.userSubscriptionRepository.findActiveSubscriptionByUserAndTime(userId, LocalDateTime.now());

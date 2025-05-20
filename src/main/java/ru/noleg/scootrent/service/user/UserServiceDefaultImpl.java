@@ -54,7 +54,6 @@ public class UserServiceDefaultImpl implements UserService {
         return this.userRepository.findAll();
     }
 
-    // TODO изменил - проверить
     @Override
     public void updateUserRole(Long userId, Role role) {
         User user = this.getUser(userId);

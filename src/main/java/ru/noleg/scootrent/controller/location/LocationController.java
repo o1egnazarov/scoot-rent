@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.controller;
+package ru.noleg.scootrent.controller.location;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

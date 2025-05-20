@@ -1,6 +1,6 @@
 package ru.noleg.scootrent.repository;
 
-import ru.noleg.scootrent.entity.UserSubscription;
+import ru.noleg.scootrent.entity.tariff.UserSubscription;
 import ru.noleg.scootrent.repository.util.BaseRepository;
 
 import java.time.LocalDateTime;
