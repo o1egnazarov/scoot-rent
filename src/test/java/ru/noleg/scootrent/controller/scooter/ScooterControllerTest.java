@@ -10,11 +10,14 @@ import org.springframework.http.ResponseEntity;
 import ru.noleg.scootrent.dto.scooter.ScooterDto;
 import ru.noleg.scootrent.dto.scooter.UpdateScooterDto;
 import ru.noleg.scootrent.entity.scooter.Scooter;
+import ru.noleg.scootrent.entity.scooter.ScooterStatus;
 import ru.noleg.scootrent.exception.NotFoundException;
 import ru.noleg.scootrent.exception.RepositoryException;
 import ru.noleg.scootrent.mapper.ScooterMapper;
 import ru.noleg.scootrent.service.scooter.ScooterService;
+import ru.noleg.scootrent.service.scooter.UpdateScooterCommand;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 
@@ -58,16 +61,20 @@ class ScooterControllerTest {
 
     @Test
     void updateScooter_shouldUpdateAndReturnDto() {
-        // Arrange
         Long scooterId = 1L;
-        UpdateScooterDto updateDto = mock(UpdateScooterDto.class);
-        Scooter scooter = mock(Scooter.class);
+        UpdateScooterDto updateDto = new UpdateScooterDto(
+                "T017PC",
+                ScooterStatus.FREE,
+                Duration.ZERO,
+                2L,
+                3L
+        );
+
+        Scooter updatedScooter = mock(Scooter.class);
         ScooterDto expectedDto = mock(ScooterDto.class);
 
-        when(this.scooterService.getScooter(scooterId)).thenReturn(scooter);
-        doNothing().when(this.scooterMapper).updateScooterFromDto(updateDto, scooter);
-        when(this.scooterService.add(scooter)).thenReturn(scooterId);
-        when(this.scooterMapper.mapToDto(scooter)).thenReturn(expectedDto);
+        when(this.scooterService.update(eq(scooterId), any(UpdateScooterCommand.class))).thenReturn(updatedScooter);
+        when(this.scooterMapper.mapToDto(updatedScooter)).thenReturn(expectedDto);
 
         // Act
         ResponseEntity<ScooterDto> response = this.scooterController.updateScooter(scooterId, updateDto);
@@ -76,28 +83,8 @@ class ScooterControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedDto, response.getBody());
 
-        verify(this.scooterService, times(1)).getScooter(scooterId);
-        verify(this.scooterMapper, times(1)).updateScooterFromDto(updateDto, scooter);
-        verify(this.scooterService, times(1)).add(scooter);
-        verify(this.scooterMapper, times(1)).mapToDto(scooter);
-    }
-
-    @Test
-    void updateScooter_shouldThrowException_whenScooterNotFound() {
-        // Arrange
-        Long scooterId = 100L;
-        UpdateScooterDto dto = mock(UpdateScooterDto.class);
-        when(this.scooterService.getScooter(scooterId)).thenThrow(new NotFoundException("Scooter not found"));
-
-        // Act | Assert
-        NotFoundException ex = assertThrows(NotFoundException.class,
-                () -> this.scooterController.updateScooter(scooterId, dto)
-        );
-
-        assertEquals("Scooter not found", ex.getMessage());
-
-        verify(this.scooterService, times(1)).getScooter(scooterId);
-        verifyNoMoreInteractions(this.scooterService);
+        verify(this.scooterMapper, times(1)).mapToDto(updatedScooter);
+        verify(this.scooterService, times(1)).update(eq(scooterId), any(UpdateScooterCommand.class));
     }
 
     @Test

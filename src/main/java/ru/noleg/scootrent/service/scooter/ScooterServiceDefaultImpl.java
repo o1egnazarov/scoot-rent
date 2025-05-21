@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.noleg.scootrent.entity.location.LocationNode;
 import ru.noleg.scootrent.entity.location.LocationType;
 import ru.noleg.scootrent.entity.scooter.Scooter;
+import ru.noleg.scootrent.entity.scooter.ScooterModel;
 import ru.noleg.scootrent.exception.BusinessLogicException;
 import ru.noleg.scootrent.exception.NotFoundException;
 import ru.noleg.scootrent.repository.LocationRepository;
@@ -46,6 +47,34 @@ public class ScooterServiceDefaultImpl implements ScooterService {
         return id;
     }
 
+    @Override
+    public Scooter update(Long id, UpdateScooterCommand updateScooterCommand) {
+        logger.debug("Updating scooter with id: {}.", id);
+
+        Scooter scooter = this.getScooter(id);
+
+        this.mapToEntityFromUpdateCommand(updateScooterCommand, scooter);
+
+        this.validateScooterModel(scooter);
+        this.validateRentalPoint(scooter.getRentalPoint().getId());
+
+        Scooter updatedScooter = this.scooterRepository.save(scooter);
+        logger.debug("Scooter with id: {} successfully updated.", id);
+        return updatedScooter;
+    }
+
+    private void mapToEntityFromUpdateCommand(UpdateScooterCommand updateScooterCommand, Scooter scooter) {
+        scooter.setNumberPlate(updateScooterCommand.numberPlate());
+        scooter.setStatus(updateScooterCommand.status());
+        scooter.setDurationInUsed(updateScooterCommand.durationInUsed());
+
+        ScooterModel model = this.scooterModelRepository.getReference(updateScooterCommand.modelId());
+        scooter.setModel(model);
+
+        LocationNode rentalPoint = this.locationRepository.getReference(updateScooterCommand.rentalPointId());
+        scooter.setRentalPoint(rentalPoint);
+    }
+
     private void validateScooterModel(Scooter scooter) {
         if (!this.scooterModelRepository.existsById(scooter.getModel().getId())) {
 
@@ -62,7 +91,7 @@ public class ScooterServiceDefaultImpl implements ScooterService {
 
         if (rentalPoint.getLocationType() != LocationType.RENTAL_POINT) {
 
-            logger.warn("Location with id:{} is not a rental point.", rentalPointId);
+            logger.warn("Location with id: {} is not a rental point.", rentalPointId);
             throw new BusinessLogicException("Location is not a rental point.");
         }
     }

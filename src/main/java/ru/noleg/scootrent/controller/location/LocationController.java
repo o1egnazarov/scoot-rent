@@ -29,6 +29,7 @@ import ru.noleg.scootrent.entity.location.LocationNode;
 import ru.noleg.scootrent.entity.location.LocationType;
 import ru.noleg.scootrent.mapper.LocationMapper;
 import ru.noleg.scootrent.service.location.LocationService;
+import ru.noleg.scootrent.service.location.UpdateLocationCommand;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -82,10 +83,17 @@ public class LocationController {
             @Valid @RequestBody UpdateLocationDto locationDto
     ) {
         logger.info("Request: PUT update location with id: {}.", id);
-        LocationNode locationNode = this.locationService.getLocationById(id);
 
-        this.locationMapper.updateRentalPointFromDto(locationDto, locationNode);
-        this.locationService.add(locationNode);
+        var command = new UpdateLocationCommand(
+                locationDto.address(),
+                locationDto.locationType(),
+                locationDto.title(),
+                locationDto.latitude(),
+                locationDto.longitude(),
+                locationDto.parentId()
+        );
+
+        LocationNode locationNode = this.locationService.update(id, command);
 
         logger.info("Location with id: {} has been successfully updated.", id);
         return ResponseEntity

@@ -113,33 +113,4 @@ class ScooterMapperTest {
         assertEquals(scooter.getNumberPlate(), dto.numberPlate());
         assertEquals(model.getTitle(), dto.modelTitle());
     }
-
-    @Test
-    void updateScooterFromDto_shouldUpdateEntityFields() {
-        // Arrange
-        Scooter scooter = new Scooter();
-        scooter.setNumberPlate("OLDT017PC");
-        scooter.setStatus(ScooterStatus.FREE);
-        scooter.setDurationInUsed(Duration.ofMinutes(5));
-        scooter.setModel(new ScooterModel());
-        scooter.setRentalPoint(new LocationNode());
-
-        UpdateScooterDto dto = new UpdateScooterDto(
-                "NEWT017PC",
-                ScooterStatus.TAKEN,
-                Duration.ofMinutes(90),
-                111L,
-                222L
-        );
-
-        // Act
-        this.scooterMapper.updateScooterFromDto(dto, scooter);
-
-        // Assert
-        assertEquals(dto.numberPlate(), scooter.getNumberPlate());
-        assertEquals(dto.status(), scooter.getStatus());
-        assertEquals(dto.durationInUsed(), scooter.getDurationInUsed());
-        assertEquals(dto.modelId(), scooter.getModel().getId());
-        assertEquals(dto.rentalPointId(), scooter.getRentalPoint().getId());
-    }
 }

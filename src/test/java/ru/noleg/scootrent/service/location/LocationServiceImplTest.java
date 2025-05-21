@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.noleg.scootrent.entity.location.LocationNode;
 import ru.noleg.scootrent.entity.location.LocationType;
+import ru.noleg.scootrent.exception.BusinessLogicException;
 import ru.noleg.scootrent.exception.NotFoundException;
 import ru.noleg.scootrent.exception.ServiceException;
 import ru.noleg.scootrent.repository.LocationRepository;
@@ -76,6 +77,153 @@ class LocationServiceImplTest {
 
         verify(this.locationRepository, times(1)).existsById(missingParentId);
         verify(this.locationRepository, never()).save(any());
+    }
+
+    @Test
+    void update_shouldUpdateLocationAndReturnUpdatedEntity() {
+        // Arrange
+        Long locationId = 1L;
+        Long parentId = 2L;
+
+        UpdateLocationCommand command = new UpdateLocationCommand(
+                "Мира 55а",
+                LocationType.RENTAL_POINT,
+                "Университет ОМГУ",
+                BigDecimal.valueOf(56.112321),
+                BigDecimal.valueOf(78.123422),
+                parentId
+        );
+
+        LocationNode existing = mock(LocationNode.class);
+        LocationNode parent = mock(LocationNode.class);
+        LocationNode updated = mock(LocationNode.class);
+
+        when(this.locationRepository.findLocationById(locationId)).thenReturn(Optional.of(existing));
+        when(this.locationRepository.findById(parentId)).thenReturn(Optional.of(parent));
+        when(this.locationRepository.save(existing)).thenReturn(updated);
+
+        // Act
+        LocationNode result = this.locationService.update(locationId, command);
+
+        // Assert
+        assertEquals(updated, result);
+        verify(this.locationRepository, times(1)).save(existing);
+    }
+
+    @Test
+    void update_shouldThrowNotFoundException_whenLocationDoesNotExist() {
+        // Arrange
+        Long locationId = 1L;
+        Long parentId = 2L;
+
+        UpdateLocationCommand command = new UpdateLocationCommand(
+                "Мира 55а",
+                LocationType.RENTAL_POINT,
+                "Университет ОМГУ",
+                BigDecimal.valueOf(56.112321),
+                BigDecimal.valueOf(78.123422),
+                parentId
+        );
+
+        when(this.locationRepository.findLocationById(locationId)).thenReturn(Optional.empty());
+
+        // Act | Assert
+        NotFoundException ex = assertThrows(NotFoundException.class,
+                () -> this.locationService.update(locationId, command)
+        );
+        assertEquals("Location with id: 1 not found.", ex.getMessage());
+
+        verify(this.locationRepository, never()).save(any(LocationNode.class));
+    }
+
+    @Test
+    void update_shouldThrowNotFoundException_whenParentInLocationDoesNotExist() {
+        // Arrange
+        Long locationId = 1L;
+        Long parentId = 2L;
+
+        UpdateLocationCommand command = new UpdateLocationCommand(
+                "Мира 55а",
+                LocationType.RENTAL_POINT,
+                "Университет ОМГУ",
+                BigDecimal.valueOf(56.112321),
+                BigDecimal.valueOf(78.123422),
+                parentId
+        );
+
+        LocationNode location = new LocationNode();
+        LocationNode parent = new LocationNode();
+        parent.setId(parentId);
+        location.setParent(parent);
+
+        when(this.locationRepository.findLocationById(locationId)).thenReturn(Optional.of(location));
+        when(this.locationRepository.existsById(parentId)).thenReturn(false);
+
+        // Act | Assert
+        NotFoundException ex = assertThrows(NotFoundException.class,
+                () -> this.locationService.update(locationId, command)
+        );
+        assertEquals("Parent location with id 2 does not exist.", ex.getMessage());
+
+        verify(this.locationRepository, never()).save(any(LocationNode.class));
+    }
+
+    @Test
+    void update_shouldThrowBusinessLogicException_whenLocationIsItsOwnParent() {
+        // Arrange
+        Long locationId = 1L;
+
+        UpdateLocationCommand command = new UpdateLocationCommand(
+                "Мира 55а",
+                LocationType.RENTAL_POINT,
+                "Университет ОМГУ",
+                BigDecimal.valueOf(56.112321),
+                BigDecimal.valueOf(78.123422),
+                locationId
+        );
+
+        LocationNode location = new LocationNode();
+        location.setId(locationId);
+
+        when(this.locationRepository.findLocationById(locationId)).thenReturn(Optional.of(location));
+
+        // Act | Assert
+        BusinessLogicException ex = assertThrows(BusinessLogicException.class,
+                () -> this.locationService.update(locationId, command)
+        );
+        assertEquals("Location cannot be its parent.", ex.getMessage());
+
+        verify(this.locationRepository, never()).save(any(LocationNode.class));
+    }
+
+    @Test
+    void update_shouldThrowNotFoundException_whenNewParentNotFound() {
+        // Arrange
+        Long locationId = 1L;
+        Long newParentId = 99L;
+
+        UpdateLocationCommand command = new UpdateLocationCommand(
+                "Мира 55а",
+                LocationType.RENTAL_POINT,
+                "Университет ОМГУ",
+                BigDecimal.valueOf(56.112321),
+                BigDecimal.valueOf(78.123422),
+                newParentId
+        );
+
+        LocationNode location = new LocationNode();
+        location.setId(locationId);
+
+        when(this.locationRepository.findLocationById(locationId)).thenReturn(Optional.of(location));
+        when(this.locationRepository.findById(newParentId)).thenReturn(Optional.empty());
+
+        // Act | Assert
+        NotFoundException ex = assertThrows(NotFoundException.class,
+                () -> this.locationService.update(locationId, command)
+        );
+        assertEquals("Parent location with id 99 not found.", ex.getMessage());
+
+        verify(this.locationRepository, never()).save(any(LocationNode.class));
     }
 
     @Test

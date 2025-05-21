@@ -30,20 +30,6 @@ public interface LocationMapper extends BaseMapper<LocationNode, LocationDto> {
         }
     }
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateRentalPointFromDto(UpdateLocationDto dto, @MappingTarget LocationNode entity);
-
-    @AfterMapping
-    default void updateParent(UpdateLocationDto dto, @MappingTarget LocationNode entity) {
-        if (dto.parentId() != null) {
-            LocationNode parent = new LocationNode();
-            parent.setId(dto.parentId());
-            entity.setParent(parent);
-        } else {
-            entity.setParent(null);
-        }
-    }
-
     @Mapping(target = "totalCount", expression = "java(scooters.size())")
     DetailLocationDto mapToDetailDto(LocationNode locationNode);
 

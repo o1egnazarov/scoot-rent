@@ -1,4 +1,4 @@
-INSERT INTO t_scooter_model (c_id,c_max_speed, c_range_km, c_title)
+INSERT INTO t_scooter_model (c_id, c_max_speed, c_range_km, c_title)
 VALUES (1,25, 30, 'Xiaomi Mi Electric Scooter 1S'),
        (2,30, 45, 'Xiaomi Mi Electric Scooter Pro 2'),
        (3,25, 20, 'Xiaomi Mi Electric Scooter Essential'),

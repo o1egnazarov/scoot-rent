@@ -61,61 +61,6 @@ class LocationMapperTest {
     }
 
     @Test
-    void updateRentalPointFromDto_shouldUpdateFieldsAndParent() {
-        // Arrange
-        LocationNode entity = new LocationNode();
-        entity.setParent(new LocationNode());
-
-        UpdateLocationDto dto = new UpdateLocationDto(
-                "New address",
-                LocationType.DISTRICT,
-                "New title",
-                BigDecimal.valueOf(56.524908),
-                BigDecimal.valueOf(84.948017),
-                2L
-        );
-
-        // Act
-        this.locationMapper.updateRentalPointFromDto(dto, entity);
-
-        // Assert
-        assertEquals(dto.address(), entity.getAddress());
-        assertEquals(dto.title(), entity.getTitle());
-        assertEquals(dto.locationType(), entity.getLocationType());
-        assertEquals(dto.latitude(), entity.getLatitude());
-        assertEquals(dto.longitude(), entity.getLongitude());
-        assertNotNull(entity.getParent());
-        assertEquals(dto.parentId(), entity.getParent().getId());
-    }
-
-    @Test
-    void updateRentalPointFromDto_shouldClearParentIfNull() {
-        // Arrange
-        LocationNode entity = new LocationNode();
-        entity.setParent(new LocationNode());
-
-        UpdateLocationDto dto = new UpdateLocationDto(
-                "New address",
-                LocationType.COUNTRY,
-                "New title",
-                null,
-                null,
-                null
-        );
-
-        // Act
-        this.locationMapper.updateRentalPointFromDto(dto, entity);
-
-        // Assert
-        assertEquals(dto.address(), entity.getAddress());
-        assertEquals(dto.title(), entity.getTitle());
-        assertEquals(dto.locationType(), entity.getLocationType());
-        assertNull(entity.getLatitude());
-        assertNull(entity.getLongitude());
-        assertNull(entity.getParent());
-    }
-
-    @Test
     void mapToDto_shouldMapCorrectly() {
         LocationNode node = new LocationNode();
         node.setId(1L);

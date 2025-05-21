@@ -9,12 +9,14 @@ import ru.noleg.scootrent.entity.location.LocationNode;
 import ru.noleg.scootrent.entity.location.LocationType;
 import ru.noleg.scootrent.entity.scooter.Scooter;
 import ru.noleg.scootrent.entity.scooter.ScooterModel;
+import ru.noleg.scootrent.entity.scooter.ScooterStatus;
 import ru.noleg.scootrent.exception.BusinessLogicException;
 import ru.noleg.scootrent.exception.NotFoundException;
 import ru.noleg.scootrent.repository.LocationRepository;
 import ru.noleg.scootrent.repository.ScooterModelRepository;
 import ru.noleg.scootrent.repository.ScooterRepository;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,7 +61,7 @@ class ScooterServiceDefaultImplTest {
         when(this.scooterRepository.save(scooter)).thenReturn(savedScooter);
 
         // Act
-        Long result = scooterService.add(scooter);
+        Long result = this.scooterService.add(scooter);
 
         // Assert
         assertEquals(10L, result);
@@ -139,6 +141,168 @@ class ScooterServiceDefaultImplTest {
         verify(this.locationRepository, times(1)).findLocationById(2L);
         verify(this.scooterRepository, never()).save(any());
     }
+
+    @Test
+    void update_shouldUpdateScooterAndReturnUpdatedEntity() {
+        // Arrange
+        Long scooterId = 1L;
+        Long modelId = 10L;
+        Long rentalPointId = 20L;
+
+        UpdateScooterCommand command = new UpdateScooterCommand(
+                "T017PC",
+                ScooterStatus.FREE,
+                Duration.ZERO,
+                modelId,
+                rentalPointId
+        );
+
+        Scooter existingScooter = new Scooter();
+        existingScooter.setId(scooterId);
+
+        ScooterModel model = new ScooterModel();
+        model.setId(modelId);
+
+        LocationNode rentalPoint = new LocationNode();
+        rentalPoint.setId(rentalPointId);
+        rentalPoint.setLocationType(LocationType.RENTAL_POINT);
+
+        Scooter updatedScooter = new Scooter();
+        updatedScooter.setId(scooterId);
+        updatedScooter.setNumberPlate("T017PC");
+
+        when(this.scooterRepository.findById(scooterId)).thenReturn(Optional.of(existingScooter));
+        when(this.scooterModelRepository.getReference(modelId)).thenReturn(model);
+        when(this.scooterModelRepository.existsById(modelId)).thenReturn(true);
+        when(this.locationRepository.getReference(rentalPointId)).thenReturn(rentalPoint);
+        when(this.locationRepository.findLocationById(rentalPointId)).thenReturn(Optional.of(rentalPoint));
+        when(this.scooterRepository.save(existingScooter)).thenReturn(updatedScooter);
+
+        // Act
+        Scooter result = this.scooterService.update(scooterId, command);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(updatedScooter.getId(), result.getId());
+        assertEquals("T017PC", result.getNumberPlate());
+        assertEquals(ScooterStatus.FREE, result.getStatus());
+        assertEquals(Duration.ZERO, result.getDurationInUsed());
+
+        verify(this.scooterRepository).findById(scooterId);
+        verify(this.scooterModelRepository).getReference(modelId);
+        verify(this.scooterModelRepository).existsById(modelId);
+        verify(this.locationRepository).getReference(rentalPointId);
+        verify(this.locationRepository).findLocationById(rentalPointId);
+        verify(this.scooterRepository).save(existingScooter);
+    }
+
+    @Test
+    void update_shouldThrowNotFoundException_whenScooterNotFound() {
+        // Arrange
+        Long scooterId = 1L;
+        Long modelId = 10L;
+        Long rentalPointId = 20L;
+
+        UpdateScooterCommand command = new UpdateScooterCommand(
+                "T017PC",
+                ScooterStatus.FREE,
+                Duration.ZERO,
+                modelId,
+                rentalPointId
+        );
+
+        when(this.scooterRepository.findById(scooterId)).thenReturn(Optional.empty());
+
+        // Act | Assert
+        NotFoundException ex = assertThrows(NotFoundException.class, () ->
+                this.scooterService.update(scooterId, command)
+        );
+        assertEquals("Scooter with id 1 not found.", ex.getMessage());
+
+        verify(this.scooterRepository, times(1)).findById(scooterId);
+        verify(this.scooterRepository, never()).save(any(Scooter.class));
+    }
+
+    @Test
+    void update_shouldThrowNotFoundException_whenScooterModelNotExists() {
+        // Arrange
+        Long scooterId = 1L;
+        Long modelId = 10L;
+        Long rentalPointId = 20L;
+
+        UpdateScooterCommand command = new UpdateScooterCommand(
+                "T017PC",
+                ScooterStatus.FREE,
+                Duration.ZERO,
+                modelId,
+                rentalPointId
+        );
+
+        Scooter scooter = new Scooter();
+        scooter.setId(scooterId);
+
+        ScooterModel model = new ScooterModel();
+        model.setId(modelId);
+
+        LocationNode rentalPoint = new LocationNode();
+        rentalPoint.setId(rentalPointId);
+        rentalPoint.setLocationType(LocationType.RENTAL_POINT);
+
+        when(this.scooterRepository.findById(scooterId)).thenReturn(Optional.of(scooter));
+        when(this.scooterModelRepository.getReference(modelId)).thenReturn(model);
+        when(this.scooterModelRepository.existsById(modelId)).thenReturn(false);
+
+        // Act | Assert
+        NotFoundException ex = assertThrows(NotFoundException.class, () ->
+                this.scooterService.update(scooterId, command)
+        );
+        assertEquals("Scooter model with id 10 not found.", ex.getMessage());
+
+        verify(this.scooterModelRepository, times(1)).existsById(modelId);
+        verify(this.scooterRepository, never()).save(any(Scooter.class));
+    }
+
+    @Test
+    void update_shouldThrowBusinessLogicException_whenLocationIsNotRentalPoint() {
+        // Arrange
+        Long scooterId = 1L;
+        Long modelId = 10L;
+        Long rentalPointId = 20L;
+
+        UpdateScooterCommand command = new UpdateScooterCommand(
+                "T017PC",
+                ScooterStatus.FREE,
+                Duration.ZERO,
+                modelId,
+                rentalPointId
+        );
+
+        Scooter scooter = new Scooter();
+        scooter.setId(scooterId);
+
+        ScooterModel model = new ScooterModel();
+        model.setId(modelId);
+
+        LocationNode location = new LocationNode();
+        location.setId(rentalPointId);
+        location.setLocationType(LocationType.CITY);
+
+        when(this.scooterRepository.findById(scooterId)).thenReturn(Optional.of(scooter));
+        when(this.scooterModelRepository.getReference(modelId)).thenReturn(model);
+        when(this.scooterModelRepository.existsById(modelId)).thenReturn(true);
+        when(this.locationRepository.getReference(rentalPointId)).thenReturn(location);
+        when(this.locationRepository.findLocationById(rentalPointId)).thenReturn(Optional.of(location));
+
+        // Act | Assert
+        BusinessLogicException ex = assertThrows(BusinessLogicException.class, () ->
+                this.scooterService.update(scooterId, command)
+        );
+        assertEquals("Location is not a rental point.", ex.getMessage());
+
+        verify(this.locationRepository, times(1)).findLocationById(rentalPointId);
+        verify(this.scooterRepository, never()).save(any(Scooter.class));
+    }
+
 
     @Test
     void delete_shouldRemoveScooter_whenExists() {

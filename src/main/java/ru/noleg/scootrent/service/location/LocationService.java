@@ -9,6 +9,8 @@ import java.util.List;
 public interface LocationService {
     Long add(LocationNode locationNode);
 
+    LocationNode update(Long id, UpdateLocationCommand updateLocationCommand);
+
     void delete(Long id);
 
     LocationNode getLocationById(Long id);

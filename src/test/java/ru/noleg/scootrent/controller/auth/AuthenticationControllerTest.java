@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.controller;
+package ru.noleg.scootrent.controller.auth;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -7,7 +7,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import ru.noleg.scootrent.controller.auth.AuthenticationController;
 import ru.noleg.scootrent.dto.security.JwtResponse;
 import ru.noleg.scootrent.dto.security.SignIn;
 import ru.noleg.scootrent.dto.security.SignUp;

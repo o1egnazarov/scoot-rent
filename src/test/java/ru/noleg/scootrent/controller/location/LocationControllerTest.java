@@ -1,4 +1,4 @@
-package ru.noleg.scootrent.controller;
+package ru.noleg.scootrent.controller.location;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -7,7 +7,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import ru.noleg.scootrent.controller.location.LocationController;
 import ru.noleg.scootrent.dto.location.CreateLocationDto;
 import ru.noleg.scootrent.dto.location.DetailLocationDto;
 import ru.noleg.scootrent.dto.location.LocationDto;
@@ -18,6 +17,7 @@ import ru.noleg.scootrent.exception.NotFoundException;
 import ru.noleg.scootrent.exception.RepositoryException;
 import ru.noleg.scootrent.mapper.LocationMapper;
 import ru.noleg.scootrent.service.location.LocationService;
+import ru.noleg.scootrent.service.location.UpdateLocationCommand;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -81,47 +81,28 @@ class LocationControllerTest {
     @Test
     void updateLocation_shouldUpdateAndReturnDto() {
         // Arrange
-        Long id = 1L;
-        UpdateLocationDto dto = mock(UpdateLocationDto.class);
-        LocationNode locationNode = mock(LocationNode.class);
-        DetailLocationDto resultDto = mock(DetailLocationDto.class);
+        Long locationId = 1L;
+        UpdateLocationDto updateDto = new UpdateLocationDto(
+                "Мира 55а",
+                LocationType.RENTAL_POINT,
+                "Университет ОМГУ",
+                BigDecimal.valueOf(56.112321),
+                BigDecimal.valueOf(78.123422),
+                10L
+        );
 
-        when(this.locationService.getLocationById(id)).thenReturn(locationNode);
-        doNothing().when(this.locationMapper).updateRentalPointFromDto(dto, locationNode);
-        when(this.locationService.add(locationNode)).thenReturn(id);
-        when(this.locationMapper.mapToDetailDto(locationNode)).thenReturn(resultDto);
+        LocationNode updateLocation = mock(LocationNode.class);
+        DetailLocationDto locationDto = mock(DetailLocationDto.class);
+
+        when(this.locationService.update(eq(locationId), any(UpdateLocationCommand.class))).thenReturn(updateLocation);
+        when(this.locationMapper.mapToDetailDto(updateLocation)).thenReturn(locationDto);
 
         // Act
-        ResponseEntity<DetailLocationDto> response = this.locationController.updateLocation(id, dto);
+        ResponseEntity<DetailLocationDto> response = this.locationController.updateLocation(locationId, updateDto);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(resultDto, response.getBody());
-
-        verify(this.locationService, times(1)).getLocationById(id);
-        verify(this.locationMapper, times(1)).updateRentalPointFromDto(dto, locationNode);
-        verify(this.locationService, times(1)).add(locationNode);
-        verify(this.locationMapper, times(1)).mapToDetailDto(locationNode);
-    }
-
-    @Test
-    void updateLocation_shouldThrownException_whenLocationNotFound() {
-        // Arrange
-        Long locationId = 100L;
-        UpdateLocationDto dto = mock(UpdateLocationDto.class);
-
-        when(this.locationService.getLocationById(locationId))
-                .thenThrow(new NotFoundException("Location not found"));
-
-        // Act | Assert
-        NotFoundException exception = assertThrows(NotFoundException.class,
-                () -> this.locationController.updateLocation(locationId, dto)
-        );
-
-        assertEquals("Location not found", exception.getMessage());
-
-        verify(this.locationService, times(1)).getLocationById(locationId);
-        verifyNoMoreInteractions(this.locationService);
+        assertEquals(locationDto, response.getBody());
     }
 
     @Test

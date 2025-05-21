@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.noleg.scootrent.entity.location.LocationNode;
 import ru.noleg.scootrent.entity.location.LocationType;
+import ru.noleg.scootrent.exception.BusinessLogicException;
 import ru.noleg.scootrent.exception.NotFoundException;
 import ru.noleg.scootrent.exception.ServiceException;
 import ru.noleg.scootrent.repository.LocationRepository;
@@ -33,16 +34,62 @@ public class LocationServiceImpl implements LocationService {
     public Long add(LocationNode locationNode) {
         logger.debug("Adding new location: {}.", locationNode.getTitle());
 
+        this.validateRentalPoint(locationNode);
+        LocationNode savedLocation = this.locationRepository.save(locationNode);
 
+        logger.debug("Location successfully added. Id: {}, Title: {}.", savedLocation.getId(), savedLocation.getTitle());
+        return savedLocation.getId();
+    }
+
+    @Override
+    public LocationNode update(Long id, UpdateLocationCommand updateLocationCommand) {
+        logger.debug("Updating location with: {}.", id);
+
+        LocationNode locationNode = this.getLocationById(id);
+
+        this.validateRentalPoint(locationNode);
+
+        this.mapToLocationFromUpdateCommand(updateLocationCommand, locationNode);
+        this.updateParent(locationNode, updateLocationCommand.parentId());
+
+        LocationNode updatedLocationNode = this.locationRepository.save(locationNode);
+        logger.debug("Location with id: {} successfully updated.", id);
+        return updatedLocationNode;
+    }
+
+    private void validateRentalPoint(LocationNode locationNode) {
         if (locationNode.getParent() != null && !this.locationRepository.existsById(locationNode.getParent().getId())) {
             logger.error("Parent location with id: {} not found", locationNode.getParent().getId());
             throw new NotFoundException("Parent location with id " + locationNode.getParent().getId() + " does not exist.");
         }
+    }
 
-        LocationNode savedLocation = locationRepository.save(locationNode);
+    private void mapToLocationFromUpdateCommand(UpdateLocationCommand updateLocationCommand, LocationNode locationNode) {
+        locationNode.setTitle(updateLocationCommand.title());
+        locationNode.setTitle(updateLocationCommand.title());
+        locationNode.setLocationType(updateLocationCommand.locationType());
+        locationNode.setLatitude(updateLocationCommand.latitude());
+        locationNode.setLongitude(updateLocationCommand.longitude());
+    }
 
-        logger.debug("Location successfully added. Id: {}, Title: {}.", savedLocation.getId(), savedLocation.getTitle());
-        return savedLocation.getId();
+    private void updateParent(LocationNode locationNode, Long newParentId) {
+        if (newParentId == null) {
+            locationNode.setParent(null);
+            return;
+        }
+
+        if (newParentId.equals(locationNode.getId())) {
+            logger.warn("Location: {} cannot be its parent.", locationNode.getTitle());
+            throw new BusinessLogicException("Location cannot be its parent.");
+        }
+
+        LocationNode parent = this.locationRepository.findById(newParentId).orElseThrow(() -> {
+                    logger.error("Parent location with id: {} not found.", newParentId);
+                    return new NotFoundException("Parent location with id " + newParentId + " not found.");
+                }
+        );
+
+        locationNode.setParent(parent);
     }
 
     @Override

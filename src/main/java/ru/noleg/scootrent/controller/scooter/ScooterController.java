@@ -25,6 +25,7 @@ import ru.noleg.scootrent.dto.scooter.UpdateScooterDto;
 import ru.noleg.scootrent.entity.scooter.Scooter;
 import ru.noleg.scootrent.mapper.ScooterMapper;
 import ru.noleg.scootrent.service.scooter.ScooterService;
+import ru.noleg.scootrent.service.scooter.UpdateScooterCommand;
 
 import java.util.List;
 
@@ -76,12 +77,17 @@ public class ScooterController {
             @Valid @RequestBody UpdateScooterDto scooterDto
     ) {
         logger.info("Request: PUT update scooter with id: {}.", id);
-        Scooter scooter = this.scooterService.getScooter(id);
 
-        this.scooterMapper.updateScooterFromDto(scooterDto, scooter);
-        this.scooterService.add(scooter);
-
+        var command = new UpdateScooterCommand(
+                scooterDto.numberPlate(),
+                scooterDto.status(),
+                scooterDto.durationInUsed(),
+                scooterDto.modelId(),
+                scooterDto.rentalPointId()
+        );
+        Scooter scooter = this.scooterService.update(id ,command);
         logger.info("Scooter with id: {} successfully updated.", id);
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.scooterMapper.mapToDto(scooter));

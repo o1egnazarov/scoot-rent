@@ -1,6 +1,7 @@
 package ru.noleg.scootrent.repository.util;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,6 +126,23 @@ public abstract class BaseRepositoryImpl<T, ID> implements BaseRepository<T, ID>
 
             logger.error("Error on check existence entity {} with id: {}.", type, id, e);
             throw new RepositoryException("Repository error on check existence.", e);
+        }
+    }
+
+    @Override
+    public T getReference(ID id) {
+
+        final String type = getEntityClass().getSimpleName();
+        try {
+            logger.debug("Get reference to entity {} with id: {}.", type, id);
+
+            return this.entityManager.getReference(getEntityClass(), id);
+        } catch (EntityNotFoundException e) {
+            logger.warn("Entity {} with id: {} not found when getting reference.", type, id);
+            throw new RepositoryException("Entity not found", e);
+        } catch (Exception e) {
+            logger.error("Error on get reference to entity {} with id: {}.", type, id, e);
+            throw new RepositoryException("Repository error on getReference.", e);
         }
     }
 }

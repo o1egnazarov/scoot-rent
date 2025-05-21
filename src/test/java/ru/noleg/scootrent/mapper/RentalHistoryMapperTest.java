@@ -32,7 +32,7 @@ class RentalHistoryMapperTest {
         assertEquals(rental.getStartPoint().getTitle(), dto.startPointTitle());
         assertEquals(rental.getEndPoint().getTitle(), dto.endPointTitle());
         assertEquals(rental.getTariff().getTitle(), dto.tariffTitle());
-        assertEquals(rental.getScooter().getDurationInUsed(), dto.duration());
+        assertEquals(rental.getScooter().getDurationInUsed(), dto.durationOfUsedScooter());
     }
 
     @Test
@@ -48,7 +48,7 @@ class RentalHistoryMapperTest {
         assertEquals(rental.getStartPoint().getTitle(), dto.startPointTitle());
         assertEquals(rental.getEndPoint().getTitle(), dto.endPointTitle());
         assertEquals(rental.getTariff().getTitle(), dto.tariffTitle());
-        assertEquals(rental.getScooter().getDurationInUsed(), dto.duration());
+        assertEquals(rental.getDurationOfRental(), dto.duration());
     }
 
     private Rental getRental() {

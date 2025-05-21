@@ -7,6 +7,8 @@ import java.util.List;
 public interface ScooterService {
     Long add(Scooter scooter);
 
+    Scooter update(Long id, UpdateScooterCommand updateScooterCommand);
+
     void delete(Long id);
 
     Scooter getScooter(Long id);

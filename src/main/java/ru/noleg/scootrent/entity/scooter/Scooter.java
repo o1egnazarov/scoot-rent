@@ -12,9 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import org.hibernate.annotations.Type;
 import ru.noleg.scootrent.entity.location.LocationNode;
-import ru.noleg.scootrent.entity.tariff.DurationType;
 import ru.noleg.scootrent.jpa.converter.DurationToLongInMinutesConverter;
 
 import java.time.Duration;
@@ -39,7 +37,7 @@ public class Scooter {
     @Convert(converter = DurationToLongInMinutesConverter.class)
     private Duration durationInUsed = Duration.ZERO;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY) // TODO или просто запрос который подгружает все
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "c_model_id", nullable = false)
     private ScooterModel model;
 

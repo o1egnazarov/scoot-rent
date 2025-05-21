@@ -14,4 +14,6 @@ public interface BaseRepository<T, ID> {
     List<T> findAll();
 
     boolean existsById(ID id);
+
+    T getReference(ID id);
 }
