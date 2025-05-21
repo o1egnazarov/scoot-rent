@@ -211,6 +211,12 @@ class ScooterServiceDefaultImplTest {
                 rentalPointId
         );
 
+        LocationNode location = new LocationNode();
+        location.setId(rentalPointId);
+        location.setLocationType(LocationType.RENTAL_POINT);
+
+        when(this.scooterModelRepository.existsById(modelId)).thenReturn(true);
+        when(this.locationRepository.findLocationById(rentalPointId)).thenReturn(Optional.of(location));
         when(this.scooterRepository.findById(scooterId)).thenReturn(Optional.empty());
 
         // Act | Assert
@@ -238,18 +244,10 @@ class ScooterServiceDefaultImplTest {
                 rentalPointId
         );
 
-        Scooter scooter = new Scooter();
-        scooter.setId(scooterId);
-
-        ScooterModel model = new ScooterModel();
-        model.setId(modelId);
-
         LocationNode rentalPoint = new LocationNode();
         rentalPoint.setId(rentalPointId);
         rentalPoint.setLocationType(LocationType.RENTAL_POINT);
 
-        when(this.scooterRepository.findById(scooterId)).thenReturn(Optional.of(scooter));
-        when(this.scooterModelRepository.getReference(modelId)).thenReturn(model);
         when(this.scooterModelRepository.existsById(modelId)).thenReturn(false);
 
         // Act | Assert
@@ -277,20 +275,11 @@ class ScooterServiceDefaultImplTest {
                 rentalPointId
         );
 
-        Scooter scooter = new Scooter();
-        scooter.setId(scooterId);
-
-        ScooterModel model = new ScooterModel();
-        model.setId(modelId);
-
         LocationNode location = new LocationNode();
         location.setId(rentalPointId);
         location.setLocationType(LocationType.CITY);
 
-        when(this.scooterRepository.findById(scooterId)).thenReturn(Optional.of(scooter));
-        when(this.scooterModelRepository.getReference(modelId)).thenReturn(model);
         when(this.scooterModelRepository.existsById(modelId)).thenReturn(true);
-        when(this.locationRepository.getReference(rentalPointId)).thenReturn(location);
         when(this.locationRepository.findLocationById(rentalPointId)).thenReturn(Optional.of(location));
 
         // Act | Assert

@@ -74,7 +74,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BusinessLogicException.class)
     public ResponseEntity<ExceptionResponse> handleBusinessLogicException(BusinessLogicException ex, HttpServletRequest request) {
         return this.buildResponse(
-                HttpStatus.I_AM_A_TEAPOT,
+                HttpStatus.UNPROCESSABLE_ENTITY,
                 ex.getMessage(),
                 ErrorCode.BUSINESS_LOGIC_ERROR,
                 request.getRequestURI(),

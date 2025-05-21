@@ -157,13 +157,12 @@ class LocationServiceImplTest {
         location.setParent(parent);
 
         when(this.locationRepository.findLocationById(locationId)).thenReturn(Optional.of(location));
-        when(this.locationRepository.existsById(parentId)).thenReturn(false);
 
         // Act | Assert
         NotFoundException ex = assertThrows(NotFoundException.class,
                 () -> this.locationService.update(locationId, command)
         );
-        assertEquals("Parent location with id 2 does not exist.", ex.getMessage());
+        assertEquals("Parent location with id 2 not found.", ex.getMessage());
 
         verify(this.locationRepository, never()).save(any(LocationNode.class));
     }
@@ -358,7 +357,7 @@ class LocationServiceImplTest {
         NotFoundException ex = assertThrows(NotFoundException.class,
                 () -> this.locationService.getLocationByCoordinatesAndType(latitude, longitude, locationType)
         );
-        assertEquals("Rental point with latitude: 56.465390 and longitude: 84.950164 and type: CITY not found.",
+        assertEquals("Location with latitude: 56.465390 and longitude: 84.950164 and type: CITY not found.",
                 ex.getMessage());
 
         verify(this.locationRepository, times(1))

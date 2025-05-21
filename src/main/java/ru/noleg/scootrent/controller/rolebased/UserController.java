@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.noleg.scootrent.dto.rental.UserRentalHistoryDto;
 import ru.noleg.scootrent.dto.user.UpdateUserDto;
 import ru.noleg.scootrent.dto.user.UserDto;
+import ru.noleg.scootrent.dto.user.UserProfileDto;
 import ru.noleg.scootrent.entity.rental.Rental;
 import ru.noleg.scootrent.entity.user.User;
 import ru.noleg.scootrent.mapper.RentalHistoryMapper;
@@ -77,6 +78,25 @@ public class UserController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.userMapper.mapToDto(updateUser));
+    }
+
+    @GetMapping("/me")
+    @Operation(
+            summary = "Получение профиля пользователя.",
+            description = "Позволяет получить текущую информацию о профиле пользователя."
+    )
+    public ResponseEntity<UserProfileDto> getUserProfile(
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        Long id = userDetails.getId();
+        logger.info("Request: GET /me fetching profile for user with id: {}.", id);
+
+        User user = this.userService.getUser(id);
+
+        logger.info("Profile for user with id: {} successfully fetched.", id);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(this.userMapper.mapToProfileDto(user));
     }
 
     @GetMapping("/me/history")

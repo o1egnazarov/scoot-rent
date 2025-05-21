@@ -47,10 +47,7 @@ public class LocationServiceImpl implements LocationService {
 
         LocationNode locationNode = this.getLocationById(id);
 
-        this.validateRentalPoint(locationNode);
-
         this.mapToLocationFromUpdateCommand(updateLocationCommand, locationNode);
-        this.updateParent(locationNode, updateLocationCommand.parentId());
 
         LocationNode updatedLocationNode = this.locationRepository.save(locationNode);
         logger.debug("Location with id: {} successfully updated.", id);
@@ -66,10 +63,11 @@ public class LocationServiceImpl implements LocationService {
 
     private void mapToLocationFromUpdateCommand(UpdateLocationCommand updateLocationCommand, LocationNode locationNode) {
         locationNode.setTitle(updateLocationCommand.title());
-        locationNode.setTitle(updateLocationCommand.title());
+        locationNode.setAddress(updateLocationCommand.address());
         locationNode.setLocationType(updateLocationCommand.locationType());
         locationNode.setLatitude(updateLocationCommand.latitude());
         locationNode.setLongitude(updateLocationCommand.longitude());
+        this.updateParent(locationNode, updateLocationCommand.parentId());
     }
 
     private void updateParent(LocationNode locationNode, Long newParentId) {
@@ -138,7 +136,7 @@ public class LocationServiceImpl implements LocationService {
         return this.locationRepository.findLocationByCoordinatesAndType(latitude, longitude, type).orElseThrow(
                 () -> {
                     logger.error("Location with coordinates: {}, {} and type: {} not found.", latitude, longitude, type);
-                    return new NotFoundException("Rental point with latitude: " + latitude +
+                    return new NotFoundException("Location with latitude: " + latitude +
                             " and longitude: " + longitude + " and type: " + type + " not found."
                     );
                 }

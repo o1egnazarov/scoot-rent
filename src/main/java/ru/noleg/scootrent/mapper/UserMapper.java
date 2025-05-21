@@ -8,6 +8,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import ru.noleg.scootrent.dto.security.SignUp;
 import ru.noleg.scootrent.dto.user.UpdateUserDto;
 import ru.noleg.scootrent.dto.user.UserDto;
+import ru.noleg.scootrent.dto.user.UserProfileDto;
 import ru.noleg.scootrent.entity.user.User;
 
 import java.util.List;
@@ -22,6 +23,8 @@ public interface UserMapper extends BaseMapper<User, UserDto> {
 
     @Override
     UserDto mapToDto(User user);
+
+    UserProfileDto mapToProfileDto(User user);
 
     @Override
     List<UserDto> mapToDtos(List<User> entities);

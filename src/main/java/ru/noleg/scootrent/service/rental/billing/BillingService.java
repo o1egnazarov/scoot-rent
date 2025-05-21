@@ -1,6 +1,5 @@
 package ru.noleg.scootrent.service.rental.billing;
 
-import ru.noleg.scootrent.entity.rental.Rental;
 import ru.noleg.scootrent.entity.tariff.Tariff;
 import ru.noleg.scootrent.entity.user.User;
 

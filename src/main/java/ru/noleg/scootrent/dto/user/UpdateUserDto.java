@@ -21,5 +21,7 @@ public record UpdateUserDto(
         String phone,
 
         @Schema(description = "Дата рождения пользователя", example = "2004-08-08") @Adult
-        LocalDate dateOfBirth) {
+        LocalDate dateOfBirth
+) {
 }
+

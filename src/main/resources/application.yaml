@@ -1,7 +1,6 @@
 spring:
   datasource:
-    #    TODO не забыть исправить на db
-    url: jdbc:postgresql://0.0.0.0:5432/scootrent_db
+    url: jdbc:postgresql://db/scootrent_db
     password: root
     username: noleg
     driver-class-name: org.postgresql.Driver
@@ -13,8 +12,7 @@ spring:
 logging:
   level:
     root: INFO
-    org.springframework.transaction: TRACE
-    ru.noleg.scootrent: DEBUG
+    ru.noleg.scootrent: INFO
     org.hibernate.SQL: ERROR
     org.hibernate.tool.schema: ERROR
   file:

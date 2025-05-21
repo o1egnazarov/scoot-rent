@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ru.noleg.scootrent.entity.tariff.UserTariff;
 import ru.noleg.scootrent.entity.tariff.Tariff;
 import ru.noleg.scootrent.entity.tariff.TariffType;
+import ru.noleg.scootrent.entity.tariff.UserTariff;
 import ru.noleg.scootrent.entity.user.User;
 import ru.noleg.scootrent.exception.CostCalculationException;
 import ru.noleg.scootrent.exception.NotFoundException;
@@ -81,7 +81,7 @@ public class UserTariffCostStrategy implements RentalCostStrategy {
 
     private BigDecimal calculateDiscount(UserTariff userTariff, BigDecimal price) {
         BigDecimal discount = new BigDecimal(userTariff.getDiscountPct())
-                .divide(BigDecimal.valueOf(100), 1 ,RoundingMode.HALF_DOWN);
+                .divide(BigDecimal.valueOf(100), 1, RoundingMode.HALF_DOWN);
 
         price = price.subtract(price.multiply(discount));
 

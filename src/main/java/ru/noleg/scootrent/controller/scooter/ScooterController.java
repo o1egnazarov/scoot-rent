@@ -85,7 +85,7 @@ public class ScooterController {
                 scooterDto.modelId(),
                 scooterDto.rentalPointId()
         );
-        Scooter scooter = this.scooterService.update(id ,command);
+        Scooter scooter = this.scooterService.update(id, command);
         logger.info("Scooter with id: {} successfully updated.", id);
 
         return ResponseEntity

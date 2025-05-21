@@ -3,9 +3,9 @@ package ru.noleg.scootrent.service.rental.tariffselect.strategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ru.noleg.scootrent.entity.tariff.UserSubscription;
 import ru.noleg.scootrent.entity.tariff.BillingMode;
 import ru.noleg.scootrent.entity.tariff.Tariff;
+import ru.noleg.scootrent.entity.tariff.UserSubscription;
 import ru.noleg.scootrent.repository.UserSubscriptionRepository;
 
 import java.time.LocalDateTime;

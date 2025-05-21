@@ -50,10 +50,10 @@ public class RentalRepositoryJpaImpl extends BaseRepositoryImpl<Rental, Long> im
     public boolean isRentalOwnedByUser(Long rentalId, Long userId) {
         try {
             String ql = """
-                SELECT COUNT(r) > 0
-                FROM Rental r
-                WHERE r.id = :rentalId AND r.user.id = :userId
-                """;
+                    SELECT COUNT(r) > 0
+                    FROM Rental r
+                    WHERE r.id = :rentalId AND r.user.id = :userId
+                    """;
 
             TypedQuery<Boolean> query = entityManager.createQuery(ql, Boolean.class);
             query.setParameter("rentalId", rentalId);

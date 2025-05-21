@@ -38,7 +38,7 @@ public class ScooterServiceDefaultImpl implements ScooterService {
     public Long add(Scooter scooter) {
         logger.debug("Adding scooter with number plate: {}.", scooter.getNumberPlate());
 
-        this.validateScooterModel(scooter);
+        this.validateScooterModel(scooter.getModel().getId());
         this.validateRentalPoint(scooter.getRentalPoint().getId());
 
         Long id = this.scooterRepository.save(scooter).getId();
@@ -51,12 +51,11 @@ public class ScooterServiceDefaultImpl implements ScooterService {
     public Scooter update(Long id, UpdateScooterCommand updateScooterCommand) {
         logger.debug("Updating scooter with id: {}.", id);
 
+        this.validateScooterModel(updateScooterCommand.modelId());
+        this.validateRentalPoint(updateScooterCommand.rentalPointId());
+
         Scooter scooter = this.getScooter(id);
-
         this.mapToEntityFromUpdateCommand(updateScooterCommand, scooter);
-
-        this.validateScooterModel(scooter);
-        this.validateRentalPoint(scooter.getRentalPoint().getId());
 
         Scooter updatedScooter = this.scooterRepository.save(scooter);
         logger.debug("Scooter with id: {} successfully updated.", id);
@@ -75,11 +74,11 @@ public class ScooterServiceDefaultImpl implements ScooterService {
         scooter.setRentalPoint(rentalPoint);
     }
 
-    private void validateScooterModel(Scooter scooter) {
-        if (!this.scooterModelRepository.existsById(scooter.getModel().getId())) {
+    private void validateScooterModel(Long modelId) {
+        if (!this.scooterModelRepository.existsById(modelId)) {
 
-            logger.error("Scooter model with id: {} not found.", scooter.getModel().getId());
-            throw new NotFoundException("Scooter model with id " + scooter.getModel().getId() + " not found.");
+            logger.error("Scooter model with id: {} not found.", modelId);
+            throw new NotFoundException("Scooter model with id " + modelId + " not found.");
         }
     }
 

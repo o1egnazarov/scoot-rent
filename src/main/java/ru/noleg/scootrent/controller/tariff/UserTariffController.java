@@ -24,8 +24,8 @@ import ru.noleg.scootrent.dto.tariff.AssignTariffDto;
 import ru.noleg.scootrent.dto.tariff.UserTariffDto;
 import ru.noleg.scootrent.entity.tariff.UserTariff;
 import ru.noleg.scootrent.mapper.UserTariffMapper;
-import ru.noleg.scootrent.service.user.UserDetailsImpl;
 import ru.noleg.scootrent.service.tariff.TariffAssignmentService;
+import ru.noleg.scootrent.service.user.UserDetailsImpl;
 
 @RestController
 @RequestMapping("/api/user-tariffs")
@@ -77,7 +77,7 @@ public class UserTariffController {
             summary = "Отмена специального тарифа.",
             description = "Позволяет отменить (модератору) специальный тариф для пользователя по его id."
     )
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<Void> canselTariffAsModerator(
             @Parameter(description = "Идентификатор пользователя", required = true) @Min(1) @PathVariable Long userId
     ) {
@@ -116,7 +116,7 @@ public class UserTariffController {
             summary = "Получение специального тарифа пользователя.",
             description = "Позволяет получить (модератору) активный специальный тариф пользователя по его id."
     )
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<UserTariffDto> getActiveSpecialTariffAsModerator(
             @Parameter(description = "Идентификатор пользователя", required = true) @Min(1) @PathVariable Long userId
     ) {

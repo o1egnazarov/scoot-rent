@@ -10,4 +10,5 @@ public record UserTariffDto(
         Integer discountPct,
         LocalDateTime startDate,
         LocalDateTime endDate
-) {}
+) {
+}

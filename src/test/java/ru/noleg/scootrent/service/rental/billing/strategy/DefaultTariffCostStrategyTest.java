@@ -60,9 +60,9 @@ class DefaultTariffCostStrategyTest {
     void calculate_shouldApplyShortRideSurcharge_whenPerHourBillingAndShortRide() {
         // Arrange
         BigDecimal shortRideSurcharge = BigDecimal.valueOf(1.2);
-        Duration duration = Duration.ofMinutes(5);
+        Duration duration = Duration.ofMinutes(3);
         BigDecimal pricePerUnit = BigDecimal.valueOf(200);
-        int unlockFee = 25;
+        int unlockFee = 40;
 
         User user = mock(User.class);
         Tariff tariff = mock(Tariff.class);

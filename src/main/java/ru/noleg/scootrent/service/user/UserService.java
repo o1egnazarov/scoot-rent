@@ -1,6 +1,5 @@
 package ru.noleg.scootrent.service.user;
 
-import jakarta.validation.constraints.NotNull;
 import ru.noleg.scootrent.entity.user.Role;
 import ru.noleg.scootrent.entity.user.User;
 

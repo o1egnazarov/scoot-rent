@@ -2,7 +2,6 @@ package ru.noleg.scootrent.validator;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.springframework.stereotype.Component;
 import ru.noleg.scootrent.validator.annotation.Adult;
 
 import java.time.LocalDate;

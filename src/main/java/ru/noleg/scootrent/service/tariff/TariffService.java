@@ -1,6 +1,5 @@
 package ru.noleg.scootrent.service.tariff;
 
-import jakarta.validation.constraints.Min;
 import ru.noleg.scootrent.entity.tariff.Tariff;
 
 import java.util.List;

@@ -8,6 +8,7 @@ import ru.noleg.scootrent.dto.rental.UserRentalHistoryDto;
 import ru.noleg.scootrent.entity.rental.Rental;
 
 import java.util.List;
+
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface RentalHistoryMapper {
     @Mapping(target = "rentalId", source = "id")

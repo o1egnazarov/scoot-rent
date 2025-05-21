@@ -2,10 +2,10 @@ INSERT INTO t_tariff(c_id, c_duration_unit, c_duration_value, c_is_active, c_pri
                      c_title, c_type, c_billing_mode, c_unlock_fee, c_valid_from, c_valid_until)
 VALUES
 -- Дефолтные тарифы (по минутам/по часам)
-(1, null, null, true, 15, null, 'Default tariff per minute',
+(1, null, null, true, 3, null, 'Default tariff per minute',
  'DEFAULT_TARIFF', 'PER_MINUTE', 45, '2024-01-01 00:00:00', '2025-12-31 23:59:59'),
 
-(2, null, null, true, 13, null, 'Default tariff per hour',
+(2, null, null, true, 200, null, 'Default tariff per hour',
  'DEFAULT_TARIFF', 'PER_HOUR', 40, '2024-01-01 00:00:00', '2025-12-31 23:59:59'),
 
 
