@@ -4,11 +4,15 @@ services:
     container_name: scoot_rent_app
     image: scootrent-app:latest
     ports:
-      - "8080:8080"
+      - "${BACKEND_PORT}:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/scootrent_db
-      SPRING_DATASOURCE_USERNAME: noleg
-      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATASOURCE_URL: ${DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DATASOURCE_PASSWORD}
+      TOKEN_SIGNING_KEY: ${TOKEN_SIGNING_KEY}
+      TOKEN_EXPIRATION: ${TOKEN_EXPIRATION}
+      DEFAULT_ADMIN_PASSWORD: ${DEFAULT_ADMIN_PASSWORD}
+      DEFAULT_USER_PASSWORD: ${DEFAULT_USER_PASSWORD}
     depends_on:
       db:
         condition: service_healthy
@@ -18,13 +22,13 @@ services:
     image: postgres:16
     restart: always
     environment:
-      POSTGRES_DB: scootrent_db
-      POSTGRES_USER: noleg
-      POSTGRES_PASSWORD: root
+      POSTGRES_DB: ${DATASOURCE_NAME}
+      POSTGRES_USER: ${DATASOURCE_USERNAME}
+      POSTGRES_PASSWORD: ${DATASOURCE_PASSWORD}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT}:5432"
     healthcheck:
-      test: [ "CMD-SHELL", "psql -U noleg -d scootrent_db -c 'SELECT 1'" ]
+      test: [ "CMD-SHELL", "psql -U ${DATASOURCE_USERNAME} -d ${DATASOURCE_NAME} -c 'SELECT 1'" ]
       interval: 5s
       timeout: 5s
       retries: 10
