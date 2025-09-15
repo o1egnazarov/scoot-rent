@@ -1,13 +1,16 @@
 spring:
   datasource:
-    url: jdbc:postgresql://db/scootrent_db
-    password: root
-    username: noleg
+    url: ${DATASOURCE_URL}
+    password: ${DATASOURCE_PASSWORD}
+    username: ${DATASOURCE_USERNAME}
     driver-class-name: org.postgresql.Driver
   flyway:
     enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true
+  
+  config:
+    import: optional:file:.env[.properties]
 
 logging:
   level:
